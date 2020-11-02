@@ -1,6 +1,7 @@
 package application;
 
 import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
 import java.util.Random;
 
@@ -18,18 +19,55 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.shape.*;
+
+class Ball{
+	private int x;
+	private int y;
+	private int colour;
+	Image red;
+    Image yellow;
+    Image blue;
+    Image green;
+    public Ball() throws FileNotFoundException {
+    	 red = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\red.png") );
+         yellow = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\yellow.png") );
+         blue = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\blue.png") );
+         green = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\green.png") );
+         
+    }
+	/* 0=red
+	 * 1=blue
+	 * 2=yellow
+	 * 3=green
+	 */
+	public void change_colour(int a, int b) {
+		Random rand = new Random(); 
+		 this.colour = rand.nextInt(4); 
+	}
+	
+	public Image get_ball() {
+		if(this.colour==0)
+            return this.red;
+ if(this.colour==1)
+     return this.blue;
+ if(this.colour==2)
+     return this.yellow;
+ if(this.colour==3)
+     return this.green;
+ 
+ return this.red;
+		
+	}
+}
 public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
     final long startNanoTime = System.nanoTime();
-    Image red;
-    Image yellow;
-    Image blue;
-    Image green;
-    GraphicsContext gc;
+     GraphicsContext gc;
     private double leftPaddleDY;
-    private double rightPaddleDY;
+    Ball ball;
+    
     private double y=400;
     private int colour=0;
     @Override
@@ -44,18 +82,8 @@ public class Main extends Application {
         Canvas canvas = new Canvas( 512, 512 );
         root.getChildren().add( canvas );
         gc = canvas.getGraphicsContext2D();
-        
-        red = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\red.png") );
-        yellow = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\yellow.png") );
-        blue = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\blue.png") );
-        green = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\green.png") );
-        Circle circle = new Circle();
-        circle.setCenterX(100.0f);
-        circle.setCenterY(100.0f);
-        circle.setRadius(50.0f);
-        
-       // Image sun   = new Image( "sun.png" );
-        //Image space = new Image( "space.png" );
+        ball=new Ball();
+ 
      
         //final long startNanoTime = System.nanoTime();
         
@@ -74,32 +102,24 @@ public class Main extends Application {
         {
             double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
  
-            double x = 150;// + 128 * Math.cos(t);
-           // double x = 232 + 128 * Math.cos(t);
-           //  y =  128 * Math.sin(t);
-           // double y = 232 + 128 * Math.sin(t);
+            double x = 150; //set to middle of page
  y=y+leftPaddleDY+1;
  if (y>450)
 	 y=450;
  Random rand = new Random(); 
  if (y>=200 && y<=207) {
 	// y=y+10;
-	 colour = rand.nextInt(4); 
+	 ball.change_colour(200, 207);
+	 //colour = rand.nextInt(4); 
  }
-            // background image clears canvas
-           // gc.drawImage( space, 0, 0 );
+            // background clears canvas
+ 
+           
  gc.clearRect(0, 0,512,512);
- if(colour==0)
-            gc.drawImage( red, x, y );
- if(colour==1)
-     gc.drawImage( blue, x, y );
- if(colour==2)
-     gc.drawImage( yellow, x, y );
- if(colour==3)
-     gc.drawImage( green, x, y );
-           // gc.drawImage( sun, 196, 196 );
+ gc.drawImage(ball.get_ball(), x, y);
+ 
         }
-    };//.start();
+    };
     
     private EventHandler<KeyEvent> keyReleased = new EventHandler<KeyEvent>() {
 
@@ -109,14 +129,7 @@ public class Main extends Application {
             switch (event.getCode()) {
                 case UP:
                 	leftPaddleDY = 0;
-                	/*
-                case S:
-                    leftPaddleDY = 0;
-                    break;
-                case UP:
-                case DOWN:
-                    rightPaddleDY = 0;
-                    break;*/
+                	
             }
         }
 
@@ -129,19 +142,9 @@ public class Main extends Application {
             // start movement according to key pressed
             switch (event.getCode()) {
                 case UP:
-                    leftPaddleDY = -6;
+                    leftPaddleDY = -5;
                     break;
-                    
-                    /*
-                case S:
-                    leftPaddleDY = 6;
-                    break;
-                case UP:
-                    rightPaddleDY = -6;
-                    break;
-                case DOWN:
-                    rightPaddleDY = 6;
-                    break;*/
+                   
             }
 
         }
