@@ -60,6 +60,13 @@ class Ball{
 	}
 }
 public class Main extends Application {
+	
+	Image image = new Image("file:Color-Switch-icon.png");
+	AnchorPane pane = new AnchorPane();
+	StackPane pane2 = new StackPane();
+	Scene scene = new Scene(pane, 500, 500);
+	Stage stage = new Stage();
+	
     public static void main(String[] args) {
         launch(args);
     }
@@ -73,6 +80,7 @@ public class Main extends Application {
     @Override
     public void start(Stage theStage) throws FileNotFoundException
     {
+	showMainmenu(theStage);
         theStage.setTitle( "Timeline Example" );
      
         Group root = new Group();
@@ -103,14 +111,14 @@ public class Main extends Application {
             double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
  
             double x = 150; //set to middle of page
- y=y+leftPaddleDY+1;
- if (y>450)
-	 y=450;
- Random rand = new Random(); 
- if (y>=200 && y<=207) {
-	// y=y+10;
-	 ball.change_colour(200, 207);
-	 //colour = rand.nextInt(4); 
+		 y=y+leftPaddleDY+1;
+		 if (y>450)
+			 y=450;
+		 Random rand = new Random(); 
+		 if (y>=200 && y<=207) {
+			// y=y+10;
+			 ball.change_colour(200, 207);
+			 //colour = rand.nextInt(4); 
  }
             // background clears canvas
  
@@ -120,7 +128,67 @@ public class Main extends Application {
  
         }
     };
-    
+    private void showMainmenu(Stage theStage) {
+		
+		VBox vbox = new VBox(5);
+        stage = theStage;
+        Text t = new Text();
+    	t = new Text (10, 20, "Welcome to Color Switch!\n");
+    	t.setFont(Font.font ("Montserrat", 20));
+    	t.setFill(Color.BLACK);
+    	
+    	Button btn1 = new Button("Start new game");
+    	Button btn2 = new Button("Resume a saved game");
+    	Button btn3 = new Button("Exit");
+       
+    	buttonHandler bh = new buttonHandler();
+
+        btn1.setOnAction(bh);
+        btn2.setOnAction(bh);
+        btn3.setOnAction(bh);
+
+        vbox.getChildren().addAll(t, btn1, btn2, btn3);
+
+        AnchorPane.setTopAnchor(vbox, 10d);
+        AnchorPane.setLeftAnchor(vbox, 10d);
+
+        pane.getChildren().addAll(vbox);
+        theStage.setTitle("Colour Switch");
+        theStage.setScene(scene);
+        theStage.show();
+
+	}
+	private void startNewgame(Stage theStage) {
+        	singleRotatingCircle(theStage);
+	}
+	private void singleRotatingCircle(Stage theStage) {
+        
+		ImageView iv = new ImageView();
+		iv.setImage(image);
+		//iv.setX(-100); 
+		//iv.setY(25);
+		iv.setFitHeight(100); 
+		iv.setFitWidth(100);
+		iv.setPreserveRatio(true);
+
+		RotateTransition rotateTransition = new RotateTransition(Duration.seconds(3), pane2);
+		rotateTransition.setFromAngle(0);
+		rotateTransition.setToAngle(360);
+		rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
+		//rotateTransition.setCycleCount(2);
+		rotateTransition.setInterpolator(Interpolator.LINEAR);
+		rotateTransition.play();
+
+		VBox vbox = new VBox(50, pane2);
+		vbox.setStyle("-fx-background-color: black");
+
+		pane2.getChildren().add(iv);
+		Scene scene = new Scene(vbox, 500, 500);
+		theStage.setTitle("Colour Switch");
+		theStage.setScene(scene);
+		theStage.show();
+		
+	}
     private EventHandler<KeyEvent> keyReleased = new EventHandler<KeyEvent>() {
 
         @Override
@@ -134,7 +202,7 @@ public class Main extends Application {
         }
 
     };
-
+    
     private EventHandler<KeyEvent> keyPressed = new EventHandler<KeyEvent>() {
 
         @Override
@@ -149,6 +217,45 @@ public class Main extends Application {
 
         }
     };
-}
+	
+     private class buttonHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
 
+        	var src = (Button) event.getSource();
+        	if(src.getText().equals("Exit")) {
+        		Platform.exit();
+        	}
+        	else if(src.getText().equals("Start new game")) {
+        		pane.getChildren().clear();
+        		startNewgame(stage);
+        	}
+        	else if(src.getText().equals("Resume a saved game")) {
+        		
+        	}
+        }
+    }
+}
+//translate and path transition sample code
+////        Duration duration = Duration.millis(2500);
+////        TranslateTransition transition = new TranslateTransition(duration, pane);
+////        transition.setByX(500);
+////        transition.setByY(0);
+////        transition.setAutoReverse(true);
+////        transition.setCycleCount(TranslateTransition.INDEFINITE);
+////        transition.setInterpolator(Interpolator.LINEAR);
+////        transition.play();
+//        
+//        Polygon polygon = new Polygon();  
+//        polygon.getPoints().addAll(new Double[]{ 50.0, 200.0, 800.0, 200.0});  
+//        
+//        PathTransition pathTransition = new PathTransition();
+//        pathTransition.setDuration(Duration.millis(3000));
+//        pathTransition.setNode(pane);
+////        pathTransition.setPath(new Circle(200, 200, 50));
+////        pathTransition.play();
+//        pathTransition.setPath(polygon);
+//        pathTransition.setInterpolator(Interpolator.LINEAR);
+//        pathTransition.setCycleCount(TranslateTransition.INDEFINITE);
+//        pathTransition.play();
 
