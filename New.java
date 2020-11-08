@@ -43,11 +43,32 @@ public class Main extends Application {
 		homepage.displayMainmenu(theStage);
 	}
 }
+private class buttonHandler implements EventHandler<ActionEvent> {
+	Homepage homepage = new Homepage();
+        @Override
+        public void handle(ActionEvent event) {
+
+        	var src = (Button) event.getSource();
+        	if(src.getText().equals("Exit")) {
+        		Platform.exit();
+        	}
+        	else if(src.getText().equals("Start new game")) {
+        		pane.getChildren().clear();
+        		Homepage.startNewgame(stage);
+        	}
+        	else if(src.getText().equals("Resume a saved game")) {
+        		pane.getChildren().clear();
+			Homepage.showSavedgames(stage);
+        	}
+        }
+    }
 class Homepage{
 	private Game game;
 	private int bestscore;
 	
 	public Homepage(){
+		game = new Game();
+		bestscore = 0;
 	}
 	private void displayMainmenu(Stage theStage){
 		VBox vbox = new VBox(5);
