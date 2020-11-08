@@ -42,9 +42,35 @@ class Homepage{
 	
 }
 class Game{
-	
+	private String name;
+	private int level;
+	private int distance;
 }
 class Ball{
+	private int x;
+	private int y;
+	private int colour;
+	public void Ball() {
+		
+	}
+	public int getX() {
+		return this.x;
+	}
+	public int getY() {
+		return this.y;
+	}
+	public int getColour() {
+		return this.colour;
+	}
+	public void setX(int a) {
+		this.x=a;
+	}
+	public void setY(int a) {
+		this.y=a;
+	}
+	public void setColour(int a) {
+		this.colour=a;
+	}
 	
 }
 class Player{
