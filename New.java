@@ -28,6 +28,10 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 public class Main extends Application {
+    
+    Stage stage = new Stage();
+    AnchorPane pane = new AnchorPane();
+	
     public static void main(String[] args) {
         launch(args);
     }
@@ -35,11 +39,61 @@ public class Main extends Application {
 	@Override
 	public void start(Stage theStage) throws Exception {
 		// TODO Auto-generated method stub
-		
+		Homepage homepage = new Homepage();
+		homepage.displayMainmenu(theStage);
 	}
 }
 class Homepage{
+	private Game game;
+	private int bestscore;
 	
+	public Homepage(){
+	}
+	private void displayMainmenu(Stage theStage){
+		VBox vbox = new VBox(5);
+		stage = theStage;
+		Text t = new Text();
+		t = new Text (10, 20, "Welcome to Color Switch!\n");
+		t.setFont(Font.font ("Montserrat", 20));
+		t.setFill(Color.BLACK);
+
+		Button btn1 = new Button("Start new game");
+		Button btn2 = new Button("Resume a saved game");
+		Button btn3 = new Button("Exit");
+
+		buttonHandler bh = new buttonHandler();
+
+		btn1.setOnAction(bh);
+		btn2.setOnAction(bh);
+		btn3.setOnAction(bh);
+
+		vbox.getChildren().addAll(t, btn1, btn2, btn3);
+
+		AnchorPane.setTopAnchor(vbox, 10d);
+		AnchorPane.setLeftAnchor(vbox, 10d);
+
+		pane.getChildren().addAll(vbox);
+		theStage.setTitle("Colour Switch");
+		theStage.setScene(scene);
+		theStage.show();
+	}
+	private void startNewgame(){	
+	}
+	private void resumeGame(Game game){
+		
+	}
+	private void exit(){
+		
+	}
+	public void showSavedgames(){
+		
+	}
+	public int getBestscore(){
+		return this.bestscore;
+	}
+	public void setBestscore(int best){
+		this.bestscore = best;
+	}
 }
 class Game{
 	private String name;
