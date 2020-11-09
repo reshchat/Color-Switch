@@ -156,13 +156,100 @@ class Ball{
 	}
 	
 }
-class Player{
-	
+public class Player {
+	private int collectedstars;
+	private int score;
+	public Player() {
+	}
+	public Star getCollectedStars() {
+		return null;
+	}
+	public void setCollectedStars(int no) {
+		
+	}
+	public int getScore() {
+		return 0;
+	}
+	public void setScore(int s) {
+		
+	}
+	public void resurrect() {
+		
+	}
+	public void moveBall() {
+		
+	}
 }
-class ColourChanger{
-	
+public class Star {
+	private int y;
+	private Player player;
+	public Star() {
+		
+	}
+	public Star getY() {
+		return null;
+	}
+	public void setY(int y) {
+		
+	}
+	private void addLife(Player player) {
+		
+	}
 }
-abstract class Obstacle{
+public class Colourchanger {
+	private int[] colours;
+	private int y;
+	private Ball ball;
+	public Colourchanger() {
+		
+	}
+	public Star getColours() {
+		return null;
+	}
+	public void setColours(int colour) {
 	
+	}
+	public Star getY() {
+		return null;
+	}
+	public void setY(int y) {
+		
+	}
+	private void changeColour(Ball ball) {
+		
+	}
+}
+public abstract class Obstacle {
+	protected int noofcolours;
+	protected int passposition;
+	protected int y;
+	
+	public Obstacle() {
+		
+	}
+	public int getNoofcolours() {
+		return noofcolours;
+	}
+	public void setNoofcolours(int colours) {
+		
+	}
+	public int getPassposition() {
+		return noofcolours;
+	}
+	public Star getY() {
+		return null;
+	}
+	public void setY(int y) {
+		
+	}
+	public void setPassposition(int pass) {
+		
+	}
+	protected void obstacleHit() {
+		
+	}
+	protected void movement(float duration) {
+		
+	}
 }
 
