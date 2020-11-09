@@ -1,68 +1,56 @@
 package application;
 
-import java.io.FileInputStream;
-
-import java.io.FileNotFoundException;
-import java.util.Random;
-
-import javafx.animation.AnimationTimer;
+import javafx.util.Duration;
+import javafx.animation.Interpolator;
+import javafx.animation.PathTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-public class Main extends Application {
-    
-    Stage stage = new Stage();
-    AnchorPane pane = new AnchorPane();
-	
-    public static void main(String[] args) {
-        launch(args);
-    }
+import javafx.stage.*;
 
+public class Main extends Application{
+	
+    static AnchorPane pane = new AnchorPane();
+    static Scene scene = new Scene(pane, 500, 500);
+    static Stage stage;
+	Image image = new Image("file:Color-Switch-icon.png");
+	StackPane pane2 = new StackPane();
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		launch(args);
+	}
 	@Override
 	public void start(Stage theStage) throws Exception {
 		// TODO Auto-generated method stub
+		stage = theStage;
 		Homepage homepage = new Homepage();
-		homepage.displayMainmenu(theStage);
+		homepage.displayMainmenu(theStage, pane, scene);
 	}
-}
-private class buttonHandler implements EventHandler<ActionEvent> {
-	Homepage homepage = new Homepage();
-        @Override
-        public void handle(ActionEvent event) {
+}	
 
-        	var src = (Button) event.getSource();
-        	if(src.getText().equals("Exit")) {
-        		Platform.exit();
-        	}
-        	else if(src.getText().equals("Start new game")) {
-        		pane.getChildren().clear();
-        		Homepage.startNewgame(stage);
-        	}
-        	else if(src.getText().equals("Resume a saved game")) {
-        		pane.getChildren().clear();
-			Homepage.showSavedgames(stage);
-        	}
-        }
-    }
-class Homepage{
+public class Homepage {
+	
+	static AnchorPane pane = new AnchorPane();
+    static Scene scene = new Scene(pane, 500, 500);
+    static Stage stage;
 	private Game game;
 	private int bestscore;
 	
@@ -70,9 +58,9 @@ class Homepage{
 		game = new Game();
 		bestscore = 0;
 	}
-	private void displayMainmenu(Stage theStage){
-		VBox vbox = new VBox(5);
+	public void displayMainmenu(Stage theStage, AnchorPane pane, Scene scene){
 		stage = theStage;
+		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
 		t.setFont(Font.font ("Montserrat", 20));
@@ -98,7 +86,7 @@ class Homepage{
 		theStage.setScene(scene);
 		theStage.show();
 	}
-	private void startNewgame(){	
+	private void startNewgame(Stage stage){	
 	}
 	private void resumeGame(Game game){
 		
@@ -106,7 +94,7 @@ class Homepage{
 	private void exit(){
 		
 	}
-	public void showSavedgames(){
+	public void showSavedgames(Stage stage){
 		
 	}
 	public int getBestscore(){
@@ -115,7 +103,27 @@ class Homepage{
 	public void setBestscore(int best){
 		this.bestscore = best;
 	}
+	private class buttonHandler implements javafx.event.EventHandler<ActionEvent> {
+		Homepage homepage = new Homepage();
+        @Override
+        public void handle(ActionEvent event) {
+
+        	var src = (Button) event.getSource();
+        	if(src.getText().equals("Exit")) {
+        		Platform.exit();
+        	}
+        	else if(src.getText().equals("Start new game")) {
+        		pane.getChildren().clear();
+        		startNewgame(stage);
+        	}
+        	else if(src.getText().equals("Resume a saved game")) {
+        		pane.getChildren().clear();
+        		showSavedgames(stage);
+        	}
+        }
+	}
 }
+
 class Game{
 	private String name;
 	private int level;
