@@ -4,7 +4,9 @@ import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Random;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
@@ -14,10 +16,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.*;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -28,7 +33,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.*;
 
-public class Main extends Application{
+public class Main extends Application {
 	
     static AnchorPane pane = new AnchorPane();
     static Scene scene = new Scene(pane, 500, 500);
@@ -58,7 +63,7 @@ public class Main extends Application{
 	private Game game;
 	private int bestscore;
 	
-	public Homepage(){
+	public Homepage() {
 		game = new Game();
 		bestscore = 0;
 	}
@@ -90,7 +95,8 @@ public class Main extends Application{
 		theStage.setScene(scene);
 		theStage.show();
 	}
-	private void startNewgame(Stage stage){	
+	private void startNewgame(Stage stage) throws FileNotFoundException{	
+		game.start(stage);
 	}
 	private void resumeGame(Game game){
 		
@@ -117,8 +123,15 @@ public class Main extends Application{
         		Platform.exit();
         	}
         	else if(src.getText().equals("Start new game")) {
+        		
         		pane.getChildren().clear();
-        		startNewgame(stage);
+        		 stage = new Stage();
+        		try {
+					startNewgame(stage);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         	}
         	else if(src.getText().equals("Resume a saved game")) {
         		pane.getChildren().clear();
@@ -128,13 +141,200 @@ public class Main extends Application{
 	}
 }
 
-class Game{
+class Game extends Application{
 	private String name;
 	private int level;
 	private int distance;
-	public Game() {
-		
+	public Game Game()  {
+		 // launch();
+		//stage = new Stage(); 
+        //start(stage);
+        return this;
+    }
+    boolean pause=false;
+    final long startNanoTime = System.nanoTime();
+     GraphicsContext gc;
+    private double leftPaddleDY;
+    Ball ball;
+    
+    private double y=400;
+    private int colour=0;
+    Button button2;
+    Button button3;
+    Label l;
+    Group root;
+    int x3=0;
+    Canvas canvas;
+    Stage stage;
+    Scene scene;// = new Scene(pane, 500, 500);
+    AnchorPane pane;
+	@Override
+    public void start(Stage theStage) throws FileNotFoundException
+    {
+    	
+    	//stage =theStage;
+        theStage.setTitle( "Timeline Example" );
+     
+        //Group 
+        root = new Group();
+        Scene theScene = new Scene( root );
+        
+        theStage.setScene( theScene );
+     
+       canvas = new Canvas( 512, 512 );
+        root.getChildren().add( canvas );
+        button2 = new Button("Pause");
+        root.getChildren().add( button2 ); 
+        
+       
+        
+        
+        gc = canvas.getGraphicsContext2D();
+        ball=new Ball();
+        l = new Label("button not selected");
+        root.getChildren().add( l);
+        //root.getChildren().remove(l);
+        
+     
+        //final long startNanoTime = System.nanoTime();
+       
+        //canvas.setOnMouseClicked(event);
+        
+        
+        canvas.setFocusTraversable(true);
+       // canvas.requestFocus();
+        canvas.setOnKeyPressed(keyPressed);
+        canvas.setOnKeyReleased(keyReleased);
+        button2.setOnAction(event);
+     
+   timer.start();
+  // root.getChildren().add( button3 );
+        theStage.show();
+    }
+	
+    
+    private void showMainmenu(Stage theStage) {
+    	 pane = new AnchorPane();
+    	Scene scene = new Scene(pane, 500, 500);
+		VBox vbox = new VBox(5);
+        stage = theStage;
+        Text t = new Text();
+    	t = new Text (10, 20, "Welcome to Color Switch!\n");
+    	t.setFont(Font.font ("Montserrat", 20));
+    	t.setFill(Color.BLACK);
+    	Button btn1 = new Button("Save game");
+    	
+    	Button btn3 = new Button("Resume");
+    	buttonHandler bh = new buttonHandler();
+        btn1.setOnAction(bh);
+       
+        btn3.setOnAction(bh);
+        vbox.getChildren().addAll(t, btn1, btn3);
+        AnchorPane.setTopAnchor(vbox, 10d);
+        AnchorPane.setLeftAnchor(vbox, 10d);
+        pane.getChildren().addAll(vbox);
+        theStage.setTitle("Colour Switch");
+        theStage.setScene(scene);
+        theStage.show();
 	}
+    private class buttonHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+        	var src = (Button) event.getSource();
+        	if(src.getText().equals("Resume")) {
+        		canvas.requestFocus();
+        		pause=!(pause);
+        		stage.close();
+        		
+        	}
+        	else if(src.getText().equals("Save game")) {
+        		pane.getChildren().clear();
+        		//startNewgame(stage);
+        	}
+        	
+        }
+    }
+    private AnimationTimer timer =     new AnimationTimer()
+    {
+        public void handle(long currentNanoTime)
+        {// background clears canvas
+            gc.clearRect(0, 0,512,512);
+        	 
+        	
+        	
+        	
+        	 
+            if (pause) {
+            	//return;
+            }
+            
+            if(pause==false) {
+            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
+ 
+            double x = 150; //set to middle of page
+ y=y+leftPaddleDY+1;
+ if (y>450)
+	 y=450;
+ Random rand = new Random(); 
+ if (y>=200 && y<=207) {
+		 ball.change_colour(200, 207);
+	 
+ }
+   
+ gc.drawImage(ball.get_ball(), x, y);
+ }
+ 
+        }
+    };
+    
+    private EventHandler<KeyEvent> keyReleased = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            // set movement to 0, if the released key was responsible for the paddle
+            switch (event.getCode()) {
+                case UP:
+                	leftPaddleDY = 0;
+                	break;
+               
+                	
+                	
+            }
+        }
+    };
+    private EventHandler<KeyEvent> keyPressed = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            // start movement according to key pressed
+            switch (event.getCode()) {
+                case UP:
+                    leftPaddleDY = -5;
+                    l.setText("  up   "); 
+                    break;
+                case P:
+                   pause =!(pause);
+            }
+        }
+    };
+    
+    EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
+        public void handle(ActionEvent e) 
+        { x3++;
+        l.setText(String.valueOf(x3));
+       // if(pause==true)
+        //canvas.requestFocus();
+        //BorderPane borderPane = new BorderPane(); 		  
+       // Scene scene = new Scene(borderPane, 600, 600); 		  
+        //Stage 
+        stage = new Stage(); 
+        showMainmenu(stage);
+        
+           // l.setText("   button   selected    "); 
+            pause=!(pause);
+            //Platform.exit();
+           
+        } 
+    };
+    
 }
 class Ball{
 	private int x;
@@ -151,6 +351,10 @@ class Ball{
          green = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\green.png") );
          
     }
+    public void change_colour(int a, int b) {
+		Random rand = new Random(); 
+		 this.colour = rand.nextInt(4); 
+	}
 	public int getX() {
 		return this.x;
 	}
