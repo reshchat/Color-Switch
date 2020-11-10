@@ -1,6 +1,10 @@
 package application;
 
 import javafx.util.Duration;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
@@ -46,7 +50,7 @@ public class Main extends Application{
 	}
 }	
 
-public class Homepage {
+ class Homepage {
 	
 	static AnchorPane pane = new AnchorPane();
     static Scene scene = new Scene(pane, 500, 500);
@@ -128,14 +132,25 @@ class Game{
 	private String name;
 	private int level;
 	private int distance;
+	public Game() {
+		
+	}
 }
 class Ball{
 	private int x;
 	private int y;
 	private int colour;
-	public void Ball() {
-		
-	}
+	Image red;
+    Image yellow;
+    Image blue;
+    Image green;
+    public Ball() throws FileNotFoundException {
+    	 red = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\red.png") );
+         yellow = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\yellow.png") );
+         blue = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\blue.png") );
+         green = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\green.png") );
+         
+    }
 	public int getX() {
 		return this.x;
 	}
@@ -154,9 +169,22 @@ class Ball{
 	public void setColour(int a) {
 		this.colour=a;
 	}
+	public Image get_ball() {
+		if(this.colour==0)
+            return this.red;
+ if(this.colour==1)
+     return this.blue;
+ if(this.colour==2)
+     return this.yellow;
+ if(this.colour==3)
+     return this.green;
+ 
+ return this.red;
+		
+	}
 	
 }
-public class Player {
+ class Player {
 	private int collectedstars;
 	private int score;
 	public Player() {
@@ -180,7 +208,7 @@ public class Player {
 		
 	}
 }
-public class Star {
+ class Star {
 	private int y;
 	private Player player;
 	public Star() {
@@ -196,7 +224,7 @@ public class Star {
 		
 	}
 }
-public class Colourchanger {
+ class Colourchanger {
 	private int[] colours;
 	private int y;
 	private Ball ball;
@@ -219,7 +247,7 @@ public class Colourchanger {
 		
 	}
 }
-public abstract class Obstacle {
+ abstract class Obstacle {
 	protected int noofcolours;
 	protected int passposition;
 	protected int y;
