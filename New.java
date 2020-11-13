@@ -457,31 +457,35 @@ class Ball{
 	protected int y;
 	
 	public Obstacle() {
-		
+		this.noofcolours = 4;
 	}
 	public int getNoofcolours() {
 		return noofcolours;
 	}
 	public void setNoofcolours(int colours) {
-		
+		this.noofcolours = colours;
 	}
 	public int getPassposition() {
-		return noofcolours;
-	}
-	public Star getY() {
-		return null;
-	}
-	public void setY(int y) {
-		
+		return passposition;
 	}
 	public void setPassposition(int pass) {
 		
 	}
-	protected void obstacleHit() {
-		
+	public int getY() {
+		return this.y;
 	}
-	protected void movement(float duration) {
-		
+	public void setY(int y) {
+		this.y = y;
 	}
+	
+	protected boolean obstacleHit(int x) {
+		if(x >= passposition-100 && x <= passposition+100) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	protected abstract void movement(float duration);
 }
 
