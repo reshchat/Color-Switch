@@ -1,15 +1,16 @@
 package application;
 
 import javafx.util.Duration;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Random;
 
+import colorswitch.Obstacle;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -31,6 +32,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.*;
 
 public class Main extends Application {
@@ -38,7 +40,6 @@ public class Main extends Application {
     static AnchorPane pane = new AnchorPane();
     static Scene scene = new Scene(pane, 500, 500);
     static Stage stage;
-	Image image = new Image("file:Color-Switch-icon.png");
 	StackPane pane2 = new StackPane();
 	
 	
@@ -145,18 +146,17 @@ class Game extends Application{
 	private String name;
 	private int level;
 	private int distance;
-	public Game Game()  {
-		 // launch();
+	public Game()  {
+		// launch();
 		//stage = new Stage(); 
         //start(stage);
-        return this;
     }
     boolean pause=false;
     final long startNanoTime = System.nanoTime();
-     GraphicsContext gc;
+    GraphicsContext gc;
     private double leftPaddleDY;
     Ball ball;
-    
+    Obstacle1 obstacle1;
     private double y=400;
     private int colour=0;
     Button button2;
@@ -168,53 +168,55 @@ class Game extends Application{
     Stage stage;
     Scene scene;// = new Scene(pane, 500, 500);
     AnchorPane pane;
+    Timeline timeline;
+    StackPane stack = new StackPane();
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
     	
     	//stage =theStage;
-        theStage.setTitle( "Timeline Example" );
-     
+        theStage.setTitle( "Colour Switch" );
         //Group 
         root = new Group();
         Scene theScene = new Scene( root );
-        
         theStage.setScene( theScene );
-     
-       canvas = new Canvas( 512, 512 );
+        canvas = new Canvas( 512, 512 );
         root.getChildren().add( canvas );
         button2 = new Button("Pause");
         root.getChildren().add( button2 ); 
-        
-       
-        
-        
+ 
         gc = canvas.getGraphicsContext2D();
         ball=new Ball();
+        obstacle1 = new Obstacle1();
         l = new Label("button not selected");
-        root.getChildren().add( l);
+        root.getChildren().add(l);
         //root.getChildren().remove(l);
-        
-     
         //final long startNanoTime = System.nanoTime();
-       
         //canvas.setOnMouseClicked(event);
         
-        
         canvas.setFocusTraversable(true);
-       // canvas.requestFocus();
+        // canvas.requestFocus();
         canvas.setOnKeyPressed(keyPressed);
         canvas.setOnKeyReleased(keyReleased);
         button2.setOnAction(event);
-     
-   timer.start();
-  // root.getChildren().add( button3 );
-        theStage.show();
+        
+//        stack.getChildren().addAll(obstacle1.ob1);
+//        stack.setLayoutX(30);
+//        stack.setLayoutY(30);
+//        root.getChildren().add(stack);
+ 
+        timer.start();
+        // root.getChildren().add( button3 );
+	    theStage.show();
+	    
+//	    timeline = new Timeline();
+//        timeline.setCycleCount(Timeline.INDEFINITE);
+//        timeline.setAutoReverse(true);
     }
 	
     
     private void showMainmenu(Stage theStage) {
-    	 pane = new AnchorPane();
+    	pane = new AnchorPane();
     	Scene scene = new Scene(pane, 500, 500);
 		VBox vbox = new VBox(5);
         stage = theStage;
@@ -245,48 +247,61 @@ class Game extends Application{
         		canvas.requestFocus();
         		pause=!(pause);
         		stage.close();
-        		
         	}
         	else if(src.getText().equals("Save game")) {
         		pane.getChildren().clear();
         		//startNewgame(stage);
         	}
-        	
         }
     }
-    private AnimationTimer timer =     new AnimationTimer()
+    private AnimationTimer timer = new AnimationTimer()
     {
         public void handle(long currentNanoTime)
-        {// background clears canvas
-            gc.clearRect(0, 0,512,512);
-        	 
-        	
-        	
-        	
-        	 
+        {
+        	// background clears canvas
+            gc.clearRect(0, 0,512,512); 
             if (pause) {
             	//return;
             }
             
             if(pause==false) {
-            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
- 
-            double x = 150; //set to middle of page
- y=y+leftPaddleDY+1;
- if (y>450)
-	 y=450;
- Random rand = new Random(); 
- if (y>=200 && y<=207) {
-		 ball.change_colour(200, 207);
+	            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 	 
- }
-   
- gc.drawImage(ball.get_ball(), x, y);
- }
- 
+	            double x = 150; //set to middle of page
+				y=y+leftPaddleDY+1;
+				if (y>450)
+					y=450;
+				Random rand = new Random(); 
+				if (y>=200 && y<=207) {
+					ball.change_colour(200, 207);
+				}   
+				gc.drawImage(ball.get_ball(), x, y);
+				
+				
+				ImageView iv = new ImageView(Obstacle1.singlecircle);
+				iv.setRotate(Math.sin(t)*360);
+				SnapshotParameters params = new SnapshotParameters();
+				//params.setFill(Color.TRANSPARENT);
+				Image rotatedImage = iv.snapshot(params, null);
+				gc.save();
+				gc.drawImage(rotatedImage, 10, 10);
+				gc.restore();
+//				Rotate r = new Rotate(Math.sin(t)*360, 120, 120); //Rotate r = new Rotate(angle, px, py); px:x coord of pivot wrt canvas 
+//                gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+//        		gc.save(); // saves the current state on stack, including the current transform
+//        		gc.clearRect(0, 0, 512, 512);
+//        		gc.drawImage(Obstacle1.singlecircle, 0, 0);
+//                gc.restore(); 
+                //gc.clearRect(0, 0, 512, 512); 
+				//obstacle1.movement(20, canvas);
+			}
         }
     };
-    
+    EventHandler rotate = new EventHandler<ActionEvent>() {
+        public void handle(ActionEvent t) {
+             stack.setTranslateX(java.lang.Math.random()*200-100);
+        }
+    };
     private EventHandler<KeyEvent> keyReleased = new EventHandler<KeyEvent>() {
         @Override
         public void handle(KeyEvent event) {
@@ -295,9 +310,6 @@ class Game extends Application{
                 case UP:
                 	leftPaddleDY = 0;
                 	break;
-               
-                	
-                	
             }
         }
     };
@@ -318,20 +330,20 @@ class Game extends Application{
     
     EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) 
-        { x3++;
-        l.setText(String.valueOf(x3));
-       // if(pause==true)
-        //canvas.requestFocus();
-        //BorderPane borderPane = new BorderPane(); 		  
-       // Scene scene = new Scene(borderPane, 600, 600); 		  
-        //Stage 
-        stage = new Stage(); 
-        showMainmenu(stage);
-        
-           // l.setText("   button   selected    "); 
-            pause=!(pause);
-            //Platform.exit();
-           
+        { 
+	        x3++;
+	        l.setText(String.valueOf(x3));
+	        // if(pause==true)
+	        //canvas.requestFocus();
+	        //BorderPane borderPane = new BorderPane(); 		  
+	        // Scene scene = new Scene(borderPane, 600, 600); 		  
+	        //Stage 
+	        stage = new Stage(); 
+	        showMainmenu(stage);
+	        
+	        // l.setText("   button   selected    "); 
+	        pause=!(pause);
+	        //Platform.exit();
         } 
     };
     
@@ -345,10 +357,10 @@ class Ball{
     Image blue;
     Image green;
     public Ball() throws FileNotFoundException {
-    	 red = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\red.png") );
-         yellow = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\yellow.png") );
-         blue = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\blue.png") );
-         green = new Image( new FileInputStream("C:\\Users\\RESHMI\\eclipse-workspace\\Test\\src\\application\\green.png") );
+    	 red = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\Color-Switch-icon.png" ) );
+         yellow = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\Color-Switch-icon.png"));
+         blue = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\Color-Switch-icon.png") );
+         green = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\Color-Switch-icon.png") );
          
     }
     public void change_colour(int a, int b) {
@@ -375,16 +387,15 @@ class Ball{
 	}
 	public Image get_ball() {
 		if(this.colour==0)
-            return this.red;
- if(this.colour==1)
-     return this.blue;
- if(this.colour==2)
-     return this.yellow;
- if(this.colour==3)
-     return this.green;
- 
- return this.red;
-		
+	        return this.red;
+		if(this.colour==1)
+			return this.blue;
+		if(this.colour==2)
+			return this.yellow;
+		if(this.colour==3)
+			return this.green;
+	 
+		return this.red;
 	}
 	
 }
@@ -393,17 +404,17 @@ class Ball{
 	private int score;
 	public Player() {
 	}
-	public Star getCollectedStars() {
-		return null;
+	public int getCollectedStars() {
+		return this.collectedstars;
 	}
 	public void setCollectedStars(int no) {
-		
+		this.collectedstars = no;
 	}
 	public int getScore() {
-		return 0;
+		return this.score;
 	}
 	public void setScore(int s) {
-		
+		this.score = s;
 	}
 	public void resurrect() {
 		
@@ -435,11 +446,11 @@ class Ball{
 	public Colourchanger() {
 		
 	}
-	public Star getColours() {
-		return null;
+	public int[] getColours() {
+		return this.colours;
 	}
 	public void setColours(int colour) {
-	
+		
 	}
 	public Star getY() {
 		return null;
@@ -451,12 +462,12 @@ class Ball{
 		
 	}
 }
- abstract class Obstacle {
+abstract class Obstacle {
 	protected int noofcolours;
 	protected int passposition;
 	protected int y;
-	
-	public Obstacle() {
+	Image singlecircle;
+	public Obstacle() throws FileNotFoundException {
 		this.noofcolours = 4;
 	}
 	public int getNoofcolours() {
@@ -478,14 +489,40 @@ class Ball{
 		this.y = y;
 	}
 	
-	protected boolean obstacleHit(int x) {
-		if(x >= passposition-100 && x <= passposition+100) {
+	protected boolean obstacleHit(double y2) {
+		if(y2 >= passposition-100 && y2 <= passposition+100) {
 			return false;
 		}
 		else {
 			return true;
 		}
 	}
-	protected abstract void movement(float duration);
+	protected abstract void movement(float duration, Canvas canvas);
 }
-
+class Obstacle1 extends Obstacle {
+	
+	static Image singlecircle;
+	static ImageView ob1;
+	
+	public Obstacle1 () throws FileNotFoundException{
+		this.singlecircle = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\Color-Switch-icon.png" ));
+		this.ob1 = new ImageView(this.singlecircle);
+	}
+	
+	@Override
+	protected void movement(float duration, Canvas canvas) {
+		
+//		RotateTransition rotateTransition = new RotateTransition(Duration.seconds(duration), canvas);
+//	    rotateTransition.setFromAngle(0);
+//	    rotateTransition.setToAngle(360);
+//	    rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
+//	    rotateTransition.setInterpolator(Interpolator.LINEAR);
+//	    rotateTransition.play();
+	    
+	    Timeline timeline;
+	    timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(true);
+		
+	}
+}
