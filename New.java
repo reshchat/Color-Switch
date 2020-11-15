@@ -200,19 +200,18 @@ class Game extends Application{
         canvas.setOnKeyReleased(keyReleased);
         button2.setOnAction(event);
         
-        stack.getChildren().addAll(obstacle1.ob1);
-        stack.setLayoutX(30);
-        stack.setLayoutY(30);
-        root.getChildren().add(stack);
+//        stack.getChildren().addAll(obstacle1.ob1);
+//        stack.setLayoutX(30);
+//        stack.setLayoutY(30);
+//        root.getChildren().add(stack);
  
         timer.start();
-        //timer2.start();
         // root.getChildren().add( button3 );
 	    theStage.show();
 	    
-	    timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(true);
+//	    timeline = new Timeline();
+//        timeline.setCycleCount(Timeline.INDEFINITE);
+//        timeline.setAutoReverse(true);
     }
 	
     
@@ -275,21 +274,30 @@ class Game extends Application{
 				Random rand = new Random(); 
 				if (y>=200 && y<=207) {
 					ball.change_colour(200, 207);
-				}
-				   
+				}   
 				gc.drawImage(ball.get_ball(), x, y);
-				for(int i = 0; i<1000 ; i++) {
-            		Rotate r = new Rotate(i, 75, 100); //Rotate r = new Rotate(angle, px, py); px:x coord of pivot wrt canvas 
-                    gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-            		gc.save(); // saves the current state on stack, including the current transform
-                    gc.drawImage(obstacle1.singlecircle, 50, 50);
-                    gc.restore(); 
-            	}
+				
+				
+				ImageView iv = new ImageView(Obstacle1.singlecircle);
+				iv.setRotate(Math.sin(t)*360);
+				SnapshotParameters params = new SnapshotParameters();
+				//params.setFill(Color.TRANSPARENT);
+				Image rotatedImage = iv.snapshot(params, null);
+				gc.save();
+				gc.drawImage(rotatedImage, 10, 10);
+				gc.restore();
+//				Rotate r = new Rotate(Math.sin(t)*360, 120, 120); //Rotate r = new Rotate(angle, px, py); px:x coord of pivot wrt canvas 
+//                gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+//        		gc.save(); // saves the current state on stack, including the current transform
+//        		gc.clearRect(0, 0, 512, 512);
+//        		gc.drawImage(Obstacle1.singlecircle, 0, 0);
+//                gc.restore(); 
+                //gc.clearRect(0, 0, 512, 512); 
 				//obstacle1.movement(20, canvas);
 			}
         }
     };
-    EventHandler onFinished = new EventHandler<ActionEvent>() {
+    EventHandler rotate = new EventHandler<ActionEvent>() {
         public void handle(ActionEvent t) {
              stack.setTranslateX(java.lang.Math.random()*200-100);
         }
@@ -518,4 +526,3 @@ class Obstacle1 extends Obstacle {
 		
 	}
 }
-
