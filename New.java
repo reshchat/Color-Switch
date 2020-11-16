@@ -1,9 +1,6 @@
 package application;
 
 import javafx.util.Duration;
-package application;
-
-import javafx.util.Duration;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Random;
@@ -375,11 +372,13 @@ class Ball{
     Image blue;
     Image green;
     ImageView ballimg;
+    
     public Ball() throws FileNotFoundException {
-    	 red = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\red.png" ) );
-         yellow = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\yellow.png"));
-         blue = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\blue.png") );
-         green = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\green.png") );
+    	red = new Image("file:images/red.png");
+    	yellow = new Image("file:images/yellow.png");
+    	blue = new Image("file:images/blue.png");
+    	green = new Image("file:images/green.png");
+    	
          ballimg = new ImageView(this.get_ball());
          ballimg.setX(600-Main.screenWidth);
          ballimg.setY(300-Main.screenHeight);
@@ -528,7 +527,7 @@ class Obstacle1 extends Obstacle {
 	static ImageView ob1;
 	
 	public Obstacle1 () throws FileNotFoundException{
-		this.singlecircle = new Image( new FileInputStream("C:\\Users\\Kirthana\\Documents\\AP\\Project\\Color-Switch-icon.png" ));
+		this.singlecircle = new Image("file:images/Colour Changer.png");
 		this.ob1 = new ImageView(this.singlecircle);
 		ob1.setFitWidth(150);
 		ob1.setFitHeight(150);
