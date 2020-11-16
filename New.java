@@ -217,10 +217,10 @@ class Game extends Application{
         Duration rotateDuration = Duration.seconds(3);
         Duration ballshiftDuration = Duration.seconds(0.5);
 	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	    obstacle1.ob1.getTransforms().add(rotate);
+	   // obstacle1.ob1.getTransforms().add(rotate);
 	    
 	    long t = System.nanoTime() - startNanoTime;
-		timeline = new Timeline( 
+	    timeline = new Timeline( 
 	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.rotateProperty(), 0)), // initial rotate
 	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.rotateProperty(), 360)),
 	            new KeyFrame(Duration.ZERO, new KeyValue(ball.ballimg.translateYProperty(), 300)),
@@ -235,47 +235,35 @@ class Game extends Application{
 	
 	private AnimationTimer timer = new AnimationTimer()
     {
-        public void handle(long currentNanoTime)
-        {
-        	// background clears canvas
-            gc.clearRect(0, 0, Main.screenWidth, Main.screenHeight); 
-            if (pause) {
-            	//return;
-            }
-            
-            if(pause==false) {
+		   public void handle(long currentNanoTime)
+	        {// background clears canvas
+	            gc.clearRect(0, 0,512,512);
+	        	 
+	        	
+	        	
+	        	
+	        	 
+	            if (pause) {
+	            	//return;
+	            }
+	            
+	            if(pause==false) {
 	            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 	 
-	            double x = 500; //set to middle of page
-				y = y + leftPaddleDY + 1;
-				if (y>450)
-					y=450;
-				Random rand = new Random(); 
-				if (y>=200 && y<=207) {
-					ball.change_colour(200, 207);
-				}   
-				gc.drawImage(ball.get_ball(), x, y);
-				gc.clearRect(0, 0, Main.screenWidth, Main.screenHeight);
-				
-				
-//				ImageView iv = new ImageView(Obstacle1.singlecircle);
-//				iv.setRotate(Math.sin(t)*360);
-//				SnapshotParameters params = new SnapshotParameters();
-//				//params.setFill(Color.TRANSPARENT);
-//				Image rotatedImage = iv.snapshot(params, null);
-//				gc.save();
-//				gc.drawImage(rotatedImage, 10, 10);
-//				gc.restore();
-//				Rotate r = new Rotate(Math.sin(t)*360, 120, 120); //Rotate r = new Rotate(angle, px, py); px:x coord of pivot wrt canvas 
-//                gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-//        		gc.save(); // saves the current state on stack, including the current transform
-
-//        		gc.drawImage(Obstacle1.singlecircle, 0, 0);
-//                gc.restore(); 
-                //gc.clearRect(0, 0, 512, 512); 
-				//obstacle1.movement(20, canvas);
-			}
-        }
+	            double x = 150; //set to middle of page
+	 y=y+leftPaddleDY+1;
+	 if (y>450)
+		 y=450;
+	 Random rand = new Random(); 
+	 if (y>=200 && y<=207) {
+			 ball.change_colour(200, 207);
+		 
+	 }
+	   
+	 gc.drawImage(ball.get_ball(), x, y);
+	 }
+	 
+	        }
     };
 
     private class buttonHandler implements EventHandler<ActionEvent> {
