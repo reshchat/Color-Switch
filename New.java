@@ -164,10 +164,11 @@ class Game extends Application{
     private double y=400;
     private int colour=0;
     Button button2;
-    Button button3;
+    Button btn;
     Label l;
     Group root;
     int x3=0;
+    int angle=0;
     Canvas canvas;
     Stage stage;
     Scene scene;// = new Scene(pane, 500, 500);
@@ -188,7 +189,11 @@ class Game extends Application{
         root.getChildren().add( canvas );
         button2 = new Button("Pause");
         root.getChildren().add( button2 ); 
- 
+         btn = new Button();
+        btn.setText("Save");
+        btn.setLayoutX(250);
+        btn.setLayoutY(0);
+        root.getChildren().add(btn);
         gc = canvas.getGraphicsContext2D();
         ball=new Ball();
         obstacle1 = new Obstacle1();
@@ -203,9 +208,10 @@ class Game extends Application{
         canvas.setOnKeyPressed(keyPressed);
         canvas.setOnKeyReleased(keyReleased);
         button2.setOnAction(event);
+        btn.setOnAction(event2);
         
         
-        stack.getChildren().addAll(obstacle1.ob1, ball.ballimg);
+        stack.getChildren().addAll(obstacle1.ob1);
         stack.setLayoutX(30);
         stack.setLayoutY(30);
         root.getChildren().add(stack);
@@ -214,21 +220,7 @@ class Game extends Application{
 	    
         //timer.start(); 
 	    
-        Duration rotateDuration = Duration.seconds(3);
-        Duration ballshiftDuration = Duration.seconds(0.5);
-	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	   // obstacle1.ob1.getTransforms().add(rotate);
-	    
-	    long t = System.nanoTime() - startNanoTime;
-	    timeline = new Timeline( 
-	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.rotateProperty(), 0)), // initial rotate
-	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.rotateProperty(), 360)),
-	            new KeyFrame(Duration.ZERO, new KeyValue(ball.ballimg.translateYProperty(), 300)),
-	            new KeyFrame(ballshiftDuration, new KeyValue(ball.ballimg.translateYProperty(), 360)) 
-	            );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(false);
-        timeline.play();
+        
         
         timer.start(); 
     }
@@ -248,6 +240,24 @@ class Game extends Application{
 	            }
 	            
 	            if(pause==false) {
+	            	Duration rotateDuration = Duration.millis(3);
+	            	
+	        	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	        	   // obstacle1.ob1.getTransforms().add(rotate);
+	        	    
+	        	    
+	        	    long t2 = System.nanoTime() - startNanoTime;
+	        	    timeline = new Timeline( 
+	        	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.rotateProperty(), angle)), // initial rotate
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.rotateProperty(), angle+2))
+	        	          //  new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.translateYProperty(), angle)),
+	        	          //  new KeyFrame(ballshiftDuration, new KeyValue(obstacle1.ob1.translateYProperty(), angle+2)), 
+	        	          
+	        	            );
+	        	    angle=angle+2;
+	                timeline.setCycleCount(Timeline.INDEFINITE);
+	                timeline.setAutoReverse(false);
+	                timeline.play();
 	            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 	 
 	            double x = 150; //set to middle of page
@@ -313,11 +323,17 @@ class Game extends Application{
         { 
 	        x3++;
 	        l.setText(String.valueOf(x3));
-	        // if(pause==true)
-	        //canvas.requestFocus();
-	        //BorderPane borderPane = new BorderPane(); 		  
-	        // Scene scene = new Scene(borderPane, 600, 600); 		  
-	        //Stage 
+	       
+	        pause=!(pause);
+	        
+        } 
+    };
+    EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
+        public void handle(ActionEvent e) 
+        { 
+	        x3++;
+	        l.setText(String.valueOf(x3));
+	       
 	        stage = new Stage(); 
 	        showMainmenu(stage);
 	        
