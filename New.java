@@ -249,9 +249,9 @@ class Game extends Application{
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.rotateProperty(), angle)), // initial rotate
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.rotateProperty(), angle+2))
-	        	          //  new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.translateYProperty(), angle)),
-	        	          //  new KeyFrame(ballshiftDuration, new KeyValue(obstacle1.ob1.translateYProperty(), angle+2)), 
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.rotateProperty(), angle+2)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.translateYProperty(), angle)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.translateYProperty(), angle+2)) 
 	        	          
 	        	            );
 	        	    angle=angle+2;
