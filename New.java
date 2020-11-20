@@ -161,7 +161,8 @@ class Game extends Application{
     private double leftPaddleDY;
     Ball ball;
     Obstacle1 obstacle1;
-    private double y=400;
+    Obstacle2 obstacle2;
+    private double y=299;
     private int colour=0;
     Button button2;
     Button btn;
@@ -169,12 +170,15 @@ class Game extends Application{
     Group root;
     int x3=0;
     int angle=0;
+    int angle2=0;
     Canvas canvas;
     Stage stage;
     Scene scene;// = new Scene(pane, 500, 500);
     AnchorPane pane;
     static Timeline timeline;
     StackPane stack = new StackPane();
+    StackPane stack2 = new StackPane();
+   
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
@@ -197,6 +201,7 @@ class Game extends Application{
         gc = canvas.getGraphicsContext2D();
         ball=new Ball();
         obstacle1 = new Obstacle1();
+        obstacle2 = new Obstacle2();
         l = new Label("button not selected");
         root.getChildren().add(l);
         //root.getChildren().remove(l);
@@ -211,10 +216,15 @@ class Game extends Application{
         btn.setOnAction(event2);
         
         
-        stack.getChildren().addAll(obstacle1.ob1);
+        stack.getChildren().addAll(obstacle1.ob1 );
         stack.setLayoutX(30);
         stack.setLayoutY(30);
         root.getChildren().add(stack);
+        
+        stack2.getChildren().addAll( obstacle2.ob1);
+        stack2.setLayoutX(40);
+        stack2.setLayoutY(40);
+        root.getChildren().add(stack2);
         theStage.show();
         // root.getChildren().add( button3 );
 	    
@@ -230,40 +240,56 @@ class Game extends Application{
 		   public void handle(long currentNanoTime)
 	        {// background clears canvas
 	            gc.clearRect(0, 0,512,512);
-	        	 
-	        	
-	        	
-	        	
-	        	 
+
 	            if (pause) {
 	            	//return;
 	            }
 	            
 	            if(pause==false) {
+	            	if(angle2>1000)
+	            		angle2=0;
 	            	Duration rotateDuration = Duration.millis(3);
 	            	
 	        	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	        	   // obstacle1.ob1.getTransforms().add(rotate);
 	        	    
-	        	    
+	        	    int ddd= 300;
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.rotateProperty(), angle)), // initial rotate
 	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.rotateProperty(), angle+2)),
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.translateYProperty(), angle)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.translateYProperty(), angle+2)) 
-	        	          
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.ob1.translateYProperty(), angle2)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.ob1.translateYProperty(), angle2+2)) ,
+	        	            
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.ob1.rotateProperty(), angle )), // initial rotate
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.ob1.rotateProperty(), angle+2 )),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.ob1.translateYProperty(), angle2 - ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.ob1.translateYProperty(), angle2+2 - ddd))
 	        	            );
 	        	    angle=angle+2;
+	        	    
 	                timeline.setCycleCount(Timeline.INDEFINITE);
 	                timeline.setAutoReverse(false);
 	                timeline.play();
 	            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 	 
 	            double x = 150; //set to middle of page
-	 y=y+leftPaddleDY+1;
-	 if (y>450)
-		 y=450;
+	
+	 	 if (y<350 && y>150  )
+	 		 y=y+2*leftPaddleDY+1;
+	 	 else if (y>=250)
+	 	 {
+	 		angle2=(int) (angle2-leftPaddleDY -1);
+	 		y=y+leftPaddleDY;
+	 		
+	 	 }
+	 	else if (y<250)
+	 		{
+	 		angle2=(int) (angle2-2*leftPaddleDY );
+	 		y=y+1;
+	 		
+	 		}
+		
 	 Random rand = new Random(); 
 	 if (y>=200 && y<=207) {
 			 ball.change_colour(200, 207);
@@ -309,7 +335,7 @@ class Game extends Application{
             // start movement according to key pressed
             switch (event.getCode()) {
                 case UP:
-                    leftPaddleDY = -5;
+                    leftPaddleDY = -2;
                     l.setText("  up   "); 
                     break;
                 case P:
@@ -539,14 +565,33 @@ class Obstacle1 extends Obstacle {
 	
 	@Override
 	protected void movement(float duration, Canvas canvas) {
+	
+	    Timeline timeline;
+	    timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(true);
 		
-//		RotateTransition rotateTransition = new RotateTransition(Duration.seconds(duration), canvas);
-//	    rotateTransition.setFromAngle(0);
-//	    rotateTransition.setToAngle(360);
-//	    rotateTransition.setCycleCount(RotateTransition.INDEFINITE);
-//	    rotateTransition.setInterpolator(Interpolator.LINEAR);
-//	    rotateTransition.play();
-	    
+	}
+}
+class Obstacle2 extends Obstacle {
+	
+	static Image singlecircle;
+	static ImageView ob1;
+	
+	public Obstacle2() throws FileNotFoundException{
+		this.singlecircle = new Image("file:images/Colour Changer.png");
+		this.ob1 = new ImageView(this.singlecircle);
+		 ob1.setX(600-Main.screenWidth);
+         ob1.setY(300-Main.screenHeight);
+         ob1.setFitWidth(100);
+         ob1.setPreserveRatio(true);
+		//ob1.setFitWidth(150);
+		//ob1.setFitHeight(150);
+	}
+	
+	@Override
+	protected void movement(float duration, Canvas canvas) {
+	
 	    Timeline timeline;
 	    timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
