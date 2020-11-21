@@ -281,12 +281,12 @@ class Game extends Application{
         
         stack.getChildren().addAll(obstacle1.getImg() );
         stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2);
-        stack.setLayoutY(300);
+        stack.setLayoutY(0);
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( obstacle2.getImg());
         stack2.setLayoutX(Main.screenWidth/2 - obstacle2.getWidth());
-        stack2.setLayoutY(400);
+        stack2.setLayoutY(0);
         root.getChildren().add(stack2);
         
         ccr[1]=new Colourchanger();
@@ -317,7 +317,7 @@ class Game extends Application{
 	            }
 	            
 	            if(pause==false) {
-	            	if(angle2>1600)
+	            	if(angle2>2200)
 	            		angle2=0;
 	            	Duration rotateDuration = Duration.millis(3);
 	            	
@@ -350,8 +350,19 @@ class Game extends Application{
 	                timeline.play();
 	                
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
-		            int x = ball.getX();
-		            
+		            double x = 400;
+		            //double x = Main.screenWidth/2 - ball.ballimg.getFitWidth(); //set to middle of page
+		            Random rand = new Random(); 
+					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
+						 ball.change_colour();
+					 }
+					 /*
+					 System.out.println("y");
+					 	System.out.println(y);
+					 	System.out.println(angle2 -5 + obstacle1.getWidth()/2);
+					 	System.out.println(angle2 - ddd-5 + ccr[1].getWidth()/2);
+					 	System.out.println(angle2 - 2*ddd-5 + star1[1].getWidth()/2);
+					 	System.out.println(angle2 - 3*ddd-5 +obstacle2.getWidth()/2);*/
 				 	 if (y<350 && y>150  )
 				 		 y=y+2*leftPaddleDY+1;
 				 	 else if (y>=250) {
@@ -362,18 +373,7 @@ class Game extends Application{
 				 		angle2=(int) (angle2-2*leftPaddleDY );
 				 		y=y+1;
 				 	 }
-			
-					 Random rand = new Random(); 
-//					 if (y>=200 && y<=207) {
-//						 ball.change_colour(200, 207);
-//					 }
-//					 if (ccr[1].changeColour(ball)) {
-//						 ball.change_colour();
-//					 }
-					 //System.out.println(angle2 - ddd+ " "+y);
-					 if (y >= angle2- ddd-5 && y <= angle2 - ddd+ 5) {
-						 ball.change_colour();
-					 }
+				 	
 					 
 					 gc.drawImage(ball.get_ball(), x, y);
 					 
@@ -613,7 +613,7 @@ class Ball{
 		width = 100;
 		img.setFitWidth(width);
 		img.setPreserveRatio(true);
-		this.y = 500;
+		this.y = 0;
 	}
 	
 	public static ImageView getImg() {
@@ -646,7 +646,7 @@ class Ball{
 		width = 100;
 		img.setFitWidth(width);
 		img.setPreserveRatio(true);
-		this.y = 500;
+		this.y = 0;
 	}
 	
 	public static ImageView getImg() {
