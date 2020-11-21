@@ -208,6 +208,7 @@ class Game extends Application{
     Obstacle2 obstacle2;
     Star[] star1= new Star[5];
     Colourchanger[] ccr=new Colourchanger[5];
+    Player player;
     private double y=299;
     private int colour=0;
     Button button2;
@@ -218,7 +219,7 @@ class Game extends Application{
     int angle2=0;
     Canvas canvas;
     Stage stage;
-    Scene scene;// = new Scene(pane, 500, 500);
+    Scene scene;
     GridPane pane;
     static Timeline timeline;
     StackPane stack = new StackPane();
@@ -228,30 +229,40 @@ class Game extends Application{
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
-    	
-    	//stage =theStage;
-        theStage.setTitle( "Colour Switch" );
+    	theStage.setTitle( "Colour Switch" );
         //Group 
         root = new Group();
         Scene theScene = new Scene( root );
         theStage.setScene( theScene );
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
         root.getChildren().add( canvas );
+        player = new Player();
+        
+        Text t = new Text();
+		t = new Text (50, 100, "Score:\n\n" + player.getScore());
+		t.setFont(Font.font ("Montserrat", 15));
+		t.setFill(Color.BLACK);
+		Text t2 = new Text();
+		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
+		t2.setFont(Font.font ("Montserrat", 15));
+		t2.setFill(Color.BLACK);
+		root.getChildren().addAll(t, t2);
+        
         button2 = new Button("Pause");
         button2.setLayoutX(1000);
         button2.setLayoutY(250);
         root.getChildren().add( button2 ); 
         btn = new Button();
         btn.setText("Save");
-        btn.setLayoutX(1005);
+        btn.setLayoutX(1003);
         btn.setLayoutY(300);
         root.getChildren().add(btn);
         gc = canvas.getGraphicsContext2D();
         ball=new Ball();
         obstacle1 = new Obstacle1();
-//      obstacle1.ob1.setLayoutX(1000);
+//      obstacle1.img.setLayoutX(1000);
         obstacle2 = new Obstacle2();
-//      obstacle2.ob2.setLayoutX(1000);
+//      obstacle2.img.setLayoutX(1000);
         //root.getChildren().remove(l);
         final long startNanoTime = System.nanoTime();
         //canvas.setOnMouseClicked(event);
@@ -263,27 +274,26 @@ class Game extends Application{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        
-        stack.getChildren().addAll(obstacle1.getOb1() );
-        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getOb1width()/2);
+        stack.getChildren().addAll(obstacle1.getImg() );
+        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2);
         stack.setLayoutY(300);
         root.getChildren().add(stack);
         
-        stack2.getChildren().addAll( obstacle2.getOb2());
-        stack2.setLayoutX(Main.screenWidth/2 - obstacle2.getOb2width());
+        stack2.getChildren().addAll( obstacle2.getImg());
+        stack2.setLayoutX(Main.screenWidth/2 - obstacle2.getWidth());
         stack2.setLayoutY(400);
         root.getChildren().add(stack2);
         
         ccr[1]=new Colourchanger();
-        stack3.getChildren().addAll( ccr[1].getOb1());
-        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getOb1width());
-        stack3.setLayoutY(500);
+        stack3.getChildren().addAll( ccr[1].getImg());
+        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getWidth()/2);
+        stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
         
         star1[1]=new Star();
-        stack4.getChildren().addAll( star1[1].getOb1());
-        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getOb1width());
-        stack4.setLayoutY(500);
+        stack4.getChildren().addAll( star1[1].getImg());
+        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getWidth()/2);
+        stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
         
         theStage.show();
@@ -295,7 +305,7 @@ class Game extends Application{
 		   public void handle(long currentNanoTime)
 	        {
 			   // background clears canvas
-	            gc.clearRect(0, 0,512,512);
+	            gc.clearRect(0, 0, Main.screenWidth, Main.screenHeight);
 
 	            if (pause) {
 	            	//return;
@@ -307,26 +317,26 @@ class Game extends Application{
 	            	Duration rotateDuration = Duration.millis(3);
 	            	
 	        	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	        	    // obstacle1.ob1.getTransforms().add(rotate);
+	        	    // obstacle1.img.getTransforms().add(rotate);
 	        	    
 	        	    int ddd= 500;
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
-	        	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.getOb1().rotateProperty(), angle)), // initial rotate
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.getOb1().rotateProperty(), angle+2)),
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.getOb1().translateYProperty(), angle2)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.getOb1().translateYProperty(), angle2+2)) ,
+	        	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.getImg().rotateProperty(), angle)), // initial rotate
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.getImg().rotateProperty(), angle+2)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.getImg().translateYProperty(), angle2)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.getImg().translateYProperty(), angle2+2)) ,
 	        	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getOb2().rotateProperty(), angle )), // initial rotate
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getOb2().rotateProperty(), angle+2 )),
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getOb2().translateYProperty(), angle2 - 3*ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getOb2().translateYProperty(), angle2+2 - 3*ddd)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getImg().rotateProperty(), angle )), // initial rotate
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getImg().rotateProperty(), angle+2 )),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getImg().translateYProperty(), angle2 - 3*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getImg().translateYProperty(), angle2+2 - 3*ddd)),
 	        	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getOb1().translateYProperty(), angle2 - ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getOb1().translateYProperty(), angle2+2 - ddd)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), angle2 - ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), angle2+2 - ddd)),
 	        	         
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getOb1().translateYProperty(), angle2 - 2*ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getOb1().translateYProperty(), angle2+2 - 2*ddd))
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), angle2 - 2*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), angle2+2 - 2*ddd))
 	        	            );
 	        	    angle=angle+2;
 	        	    
@@ -335,9 +345,8 @@ class Game extends Application{
 	                timeline.play();
 	                
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
-		            double x = 400;
-		            //double x = Main.screenWidth/2 - ball.ballimg.getFitWidth(); //set to middle of page
-		
+		            int x = ball.getX();
+		            
 				 	 if (y<350 && y>150  )
 				 		 y=y+2*leftPaddleDY+1;
 				 	 else if (y>=250) {
@@ -350,9 +359,13 @@ class Game extends Application{
 				 	 }
 			
 					 Random rand = new Random(); 
-					 if (y>=200 && y<=207) {
-						 ball.change_colour(200, 207);
+//					 if (y>=200 && y<=207) {
+//						 ball.change_colour(200, 207);
+//					 }
+					 if (ccr[1].changeColour(ball)) {
+						 ball.change_colour();
 					 }
+					 
 					 gc.drawImage(ball.get_ball(), x, y);
 					 
 				 }
@@ -507,14 +520,16 @@ class Ball{
     	green = new Image("file:images/green.png");
     	
         ballimg = new ImageView(this.get_ball());
-        ballwidth = 10;
+        ballwidth = 5;
         ballimg.setFitWidth(this.ballwidth);
         ballimg.setPreserveRatio(true);
+        this.x = Main.screenWidth/2 - 5*this.ballwidth - this.ballwidth/2;
         
     }
-    public void change_colour(int a, int b) {
+//    public void change_colour(int a, int b) {
+    public void change_colour() {
 		Random rand = new Random(); 
-		 this.colour = rand.nextInt(4); 
+		this.colour = rand.nextInt(4); 
 	}
 	public int getX() {
 		return this.x;
@@ -552,6 +567,8 @@ class Ball{
 	private int collectedstars;
 	private int score;
 	public Player() {
+		this.collectedstars = 0;
+		this.score = 0;
 	}
 	public int getCollectedStars() {
 		return this.collectedstars;
@@ -576,25 +593,26 @@ class Ball{
 	private int y;
 	private Player player;
 	static private Image singlecircle;
-	static private ImageView ob1;
-	static private int ob1width;
+	static private ImageView img;
+	static private int width;
 	
 	public Star() throws FileNotFoundException{
 		this.singlecircle = new Image("file:images/star.png");
-		this.ob1 = new ImageView(this.singlecircle);
-		ob1width = 100;
-		ob1.setFitWidth(ob1width);
-		ob1.setPreserveRatio(true);
+		this.img = new ImageView(this.singlecircle);
+		width = 100;
+		img.setFitWidth(width);
+		img.setPreserveRatio(true);
+		this.y = 500;
 	}
 	
-	public static ImageView getOb1() {
-		return ob1;
+	public static ImageView getImg() {
+		return img;
 	}
-	public static int getOb1width() {
-		return ob1width;
+	public static int getWidth() {
+		return width;
 	}
-	public Star getY() {
-		return null;
+	public int getY() {
+		return this.y;
 	}
 	public void setY(int y) {
 		
@@ -608,22 +626,23 @@ class Ball{
 	private int y;
 	private Ball ball;
 	static private Image singlecircle;
-	static private ImageView ob1;
-	static private int ob1width;
+	static private ImageView img;
+	static private int width;
 
 	public Colourchanger() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/Colour Changer.png");
-		this.ob1 = new ImageView(this.singlecircle);
-		ob1width = 100;
-		ob1.setFitWidth(ob1width);
-		ob1.setPreserveRatio(true);
+		this.singlecircle = new Image("file:images/colourchanger.png");
+		this.img = new ImageView(this.singlecircle);
+		width = 100;
+		img.setFitWidth(width);
+		img.setPreserveRatio(true);
+		this.y = 500;
 	}
 	
-	public static ImageView getOb1() {
-		return ob1;
+	public static ImageView getImg() {
+		return img;
 	}
-	public static int getOb1width() {
-		return ob1width;
+	public static int getWidth() {
+		return width;
 	}
 	public int[] getColours() {
 		return this.colours;
@@ -631,14 +650,17 @@ class Ball{
 	public void setColours(int colour) {
 		
 	}
-	public Star getY() {
-		return null;
+	public int getY() {
+		return this.y;
 	}
 	public void setY(int y) {
 		
 	}
-	private void changeColour(Ball ball) {
-		
+	public boolean changeColour(Ball ball) {
+		if(ball.getY() >= this.y-50 && ball.getY() <= this.y+50) {
+			return true;
+		}
+		return false;
 	}
 }
 abstract class Obstacle {
@@ -681,23 +703,23 @@ abstract class Obstacle {
 class Obstacle1 extends Obstacle {
 	
 	static private Image singlecircle;
-	static private ImageView ob1;
-	static private int ob1width;
+	static private ImageView img;
+	static private int width;
 	
 	public Obstacle1 () throws FileNotFoundException{
 		this.singlecircle = new Image("file:images/obstacle1.png");
-		this.ob1 = new ImageView(this.singlecircle);
-		ob1width = 200;
-		ob1.setFitWidth(ob1width);
-		ob1.setPreserveRatio(true);
+		this.img = new ImageView(this.singlecircle);
+		width = 250;
+		img.setFitWidth(width);
+		img.setPreserveRatio(true);
 	}
 	
-	public static ImageView getOb1() {
-		return ob1;
+	public static ImageView getImg() {
+		return img;
 	}
 
-	public static int getOb1width() {
-		return ob1width;
+	public static int getWidth() {
+		return width;
 	}
 
 	public void setLayoutX(int i) {
@@ -718,29 +740,26 @@ class Obstacle1 extends Obstacle {
 class Obstacle2 extends Obstacle {
 	
 	static private Image singlecircle;
-	static private ImageView ob2;
-	static private int ob2width;
+	static private ImageView img;
+	static private int width;
 	
 	public Obstacle2() throws FileNotFoundException{
 		this.singlecircle = new Image("file:images/obstacle2.png");
-		this.ob2 = new ImageView(this.singlecircle);
-		 ob2.setX(600-Main.screenWidth);
-         ob2.setY(300-Main.screenHeight);
-         ob2width = 200;
-         ob2.setFitWidth(getOb2width());
-         ob2.setPreserveRatio(true);
+		this.img = new ImageView(this.singlecircle);
+		 img.setX(600-Main.screenWidth);
+         img.setY(300-Main.screenHeight);
+         width = 250;
+         img.setFitWidth(getWidth());
+         img.setPreserveRatio(true);
 	}
 
-
-	public static ImageView getOb2() {
-		return ob2;
+	public static ImageView getImg() {
+		return img;
 	}
 
-
-	public static int getOb2width() {
-		return ob2width;
+	public static int getWidth() {
+		return width;
 	}
-
 
 	@Override
 	protected void movement(float duration, Canvas canvas) {
