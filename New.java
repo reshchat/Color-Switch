@@ -580,7 +580,7 @@ class Ball{
 	static private int ob1width;
 	
 	public Star() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/red.png");
+		this.singlecircle = new Image("file:images/star.png");
 		this.ob1 = new ImageView(this.singlecircle);
 		ob1width = 100;
 		ob1.setFitWidth(ob1width);
