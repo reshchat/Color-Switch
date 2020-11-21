@@ -80,11 +80,12 @@ public class Main extends Application {
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    pane.setStyle("-fx-background-color: black");
 		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
 		t.setFont(Font.font ("Montserrat", 20));
-		t.setFill(Color.BLACK);
+		t.setFill(Color.WHITE);
 
 		Button btn1 = new Button("Start new game");
 		Button btn2 = new Button("Resume a saved game");
@@ -119,6 +120,7 @@ public class Main extends Application {
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    pane.setStyle("-fx-background-color: black");
 		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Saved Games\n");
@@ -127,7 +129,7 @@ public class Main extends Application {
 		Text t2 = new Text();
 		t2 = new Text (10, 20, "Choose a game to start playing:\n");
 		t2.setFont(Font.font ("Montserrat", 15));
-		t2.setFill(Color.BLACK);
+		t2.setFill(Color.WHITE);
 
 		Button btn1 = new Button("Game 1");
 		Button btn2 = new Button("Game 2");
@@ -223,6 +225,7 @@ class Game extends Application{
     GridPane pane;
     static Timeline timeline;
     StackPane stack = new StackPane();
+    StackPane stack1 = new StackPane();
     StackPane stack2 = new StackPane();
     StackPane stack3 = new StackPane();
     StackPane stack4 = new StackPane();
@@ -232,20 +235,22 @@ class Game extends Application{
     	theStage.setTitle( "Colour Switch" );
         //Group 
         root = new Group();
-        Scene theScene = new Scene( root );
+        Scene theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
         theStage.setScene( theScene );
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
-        root.getChildren().add( canvas );
+        //root.getChildren().add( canvas );
+        stack1.setStyle("-fx-background-color: black");
+        stack1.getChildren().add(canvas);
+        root.getChildren().add( stack1 );
         player = new Player();
-        
         Text t = new Text();
 		t = new Text (50, 100, "Score:\n\n" + player.getScore());
 		t.setFont(Font.font ("Montserrat", 15));
-		t.setFill(Color.BLACK);
+		t.setFill(Color.WHITE);
 		Text t2 = new Text();
 		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
 		t2.setFont(Font.font ("Montserrat", 15));
-		t2.setFill(Color.BLACK);
+		t2.setFill(Color.WHITE);
 		root.getChildren().addAll(t, t2);
         
         button2 = new Button("Pause");
@@ -362,7 +367,11 @@ class Game extends Application{
 //					 if (y>=200 && y<=207) {
 //						 ball.change_colour(200, 207);
 //					 }
-					 if (ccr[1].changeColour(ball)) {
+//					 if (ccr[1].changeColour(ball)) {
+//						 ball.change_colour();
+//					 }
+					 //System.out.println(angle2 - ddd+ " "+y);
+					 if (y >= angle2- ddd-5 && y <= angle2 - ddd+ 5) {
 						 ball.change_colour();
 					 }
 					 
@@ -449,17 +458,18 @@ class Game extends Application{
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    pane.setStyle("-fx-background-color: black");
     	Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 		VBox vbox = new VBox();
 		Text t = new Text();
 		t = new Text (10, 20, "Save Game\n");
 		t.setFont(Font.font ("Montserrat", 20));
-		t.setFill(Color.BLACK);
+		t.setFill(Color.WHITE);
 		
 		Text t2 = new Text();
 		t2 = new Text (10, 20, "Enter a name for the saved game:\n");
 		t2.setFont(Font.font ("Montserrat", 15));
-		t2.setFill(Color.BLACK);
+		t2.setFill(Color.WHITE);
 		
 		TextField tf = new TextField();
 		Button btn1 = new Button("Save and exit");
@@ -480,13 +490,14 @@ class Game extends Application{
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    pane.setStyle("-fx-background-color: black");
     	Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 		VBox vbox = new VBox(5);
         stage = theStage;
         Text t = new Text();
     	t = new Text (10, 20, "Color Switch\n");
     	t.setFont(Font.font ("Montserrat", 20));
-    	t.setFill(Color.BLACK);
+    	t.setFill(Color.WHITE);
     	Button btn1 = new Button("Save game");
     	
     	Button btn3 = new Button("Resume");
