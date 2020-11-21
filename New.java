@@ -206,6 +206,8 @@ class Game extends Application{
     Ball ball;
     Obstacle1 obstacle1;
     Obstacle2 obstacle2;
+    Star[] star1= new Star[5];
+    Colourchanger[] ccr=new Colourchanger[5];
     private double y=299;
     private int colour=0;
     Button button2;
@@ -221,7 +223,8 @@ class Game extends Application{
     static Timeline timeline;
     StackPane stack = new StackPane();
     StackPane stack2 = new StackPane();
-   
+    StackPane stack3 = new StackPane();
+    StackPane stack4 = new StackPane();
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
@@ -270,6 +273,19 @@ class Game extends Application{
         stack2.setLayoutX(Main.screenWidth/2 - obstacle2.getOb2width());
         stack2.setLayoutY(400);
         root.getChildren().add(stack2);
+        
+        ccr[1]=new Colourchanger();
+        stack3.getChildren().addAll( ccr[1].getOb1());
+        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getOb1width());
+        stack3.setLayoutY(500);
+        root.getChildren().add(stack3);
+        
+        star1[1]=new Star();
+        stack4.getChildren().addAll( star1[1].getOb1());
+        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getOb1width());
+        stack4.setLayoutY(500);
+        root.getChildren().add(stack4);
+        
         theStage.show();
         timer.start(); 
     }
@@ -286,14 +302,14 @@ class Game extends Application{
 	            }
 	            
 	            if(pause==false) {
-	            	if(angle2>1000)
+	            	if(angle2>1600)
 	            		angle2=0;
 	            	Duration rotateDuration = Duration.millis(3);
 	            	
 	        	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	        	    // obstacle1.ob1.getTransforms().add(rotate);
 	        	    
-	        	    int ddd= 300;
+	        	    int ddd= 500;
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.getOb1().rotateProperty(), angle)), // initial rotate
@@ -303,8 +319,14 @@ class Game extends Application{
 	        	            
 	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getOb2().rotateProperty(), angle )), // initial rotate
 	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getOb2().rotateProperty(), angle+2 )),
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getOb2().translateYProperty(), angle2 - ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getOb2().translateYProperty(), angle2+2 - ddd))
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getOb2().translateYProperty(), angle2 - 3*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getOb2().translateYProperty(), angle2+2 - 3*ddd)),
+	        	            
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getOb1().translateYProperty(), angle2 - ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getOb1().translateYProperty(), angle2+2 - ddd)),
+	        	         
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getOb1().translateYProperty(), angle2 - 2*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getOb1().translateYProperty(), angle2+2 - 2*ddd))
 	        	            );
 	        	    angle=angle+2;
 	        	    
@@ -553,8 +575,23 @@ class Ball{
  class Star {
 	private int y;
 	private Player player;
-	public Star() {
-		
+	static private Image singlecircle;
+	static private ImageView ob1;
+	static private int ob1width;
+	
+	public Star() throws FileNotFoundException{
+		this.singlecircle = new Image("file:images/red.png");
+		this.ob1 = new ImageView(this.singlecircle);
+		ob1width = 100;
+		ob1.setFitWidth(ob1width);
+		ob1.setPreserveRatio(true);
+	}
+	
+	public static ImageView getOb1() {
+		return ob1;
+	}
+	public static int getOb1width() {
+		return ob1width;
 	}
 	public Star getY() {
 		return null;
@@ -570,8 +607,23 @@ class Ball{
 	private int[] colours;
 	private int y;
 	private Ball ball;
-	public Colourchanger() {
-		
+	static private Image singlecircle;
+	static private ImageView ob1;
+	static private int ob1width;
+
+	public Colourchanger() throws FileNotFoundException{
+		this.singlecircle = new Image("file:images/Colour Changer.png");
+		this.ob1 = new ImageView(this.singlecircle);
+		ob1width = 100;
+		ob1.setFitWidth(ob1width);
+		ob1.setPreserveRatio(true);
+	}
+	
+	public static ImageView getOb1() {
+		return ob1;
+	}
+	public static int getOb1width() {
+		return ob1width;
 	}
 	public int[] getColours() {
 		return this.colours;
@@ -633,7 +685,7 @@ class Obstacle1 extends Obstacle {
 	static private int ob1width;
 	
 	public Obstacle1 () throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/obstacle1.png");
+		this.singlecircle = new Image("file:images/Colour Changer.png");
 		this.ob1 = new ImageView(this.singlecircle);
 		ob1width = 200;
 		ob1.setFitWidth(ob1width);
@@ -670,7 +722,7 @@ class Obstacle2 extends Obstacle {
 	static private int ob2width;
 	
 	public Obstacle2() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/obstacle2.png");
+		this.singlecircle = new Image("file:images/Colour Changer.png");
 		this.ob2 = new ImageView(this.singlecircle);
 		 ob2.setX(600-Main.screenWidth);
          ob2.setY(300-Main.screenHeight);
