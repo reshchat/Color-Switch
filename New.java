@@ -685,7 +685,7 @@ class Obstacle1 extends Obstacle {
 	static private int ob1width;
 	
 	public Obstacle1 () throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/Colour Changer.png");
+		this.singlecircle = new Image("file:images/obstacle1.png");
 		this.ob1 = new ImageView(this.singlecircle);
 		ob1width = 200;
 		ob1.setFitWidth(ob1width);
@@ -722,7 +722,7 @@ class Obstacle2 extends Obstacle {
 	static private int ob2width;
 	
 	public Obstacle2() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/Colour Changer.png");
+		this.singlecircle = new Image("file:images/obstacle2.png");
 		this.ob2 = new ImageView(this.singlecircle);
 		 ob2.setX(600-Main.screenWidth);
          ob2.setY(300-Main.screenHeight);
