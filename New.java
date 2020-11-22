@@ -1,4 +1,5 @@
 package application;
+//package colorswitch;
 
 import javafx.util.Duration;
 import java.io.FileInputStream;
@@ -80,7 +81,7 @@ public class Main extends Application {
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    pane.setStyle("-fx-background-color: black");
+	    pane.setStyle("-fx-background-color: #202020");
 		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
@@ -120,12 +121,12 @@ public class Main extends Application {
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    pane.setStyle("-fx-background-color: black");
+	    pane.setStyle("-fx-background-color: #202020");
 		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Saved Games\n");
 		t.setFont(Font.font ("Montserrat", 20));
-		t.setFill(Color.BLACK);
+		t.setFill(Color.WHITE);
 		Text t2 = new Text();
 		t2 = new Text (10, 20, "Choose a game to start playing:\n");
 		t2.setFont(Font.font ("Montserrat", 15));
@@ -239,7 +240,7 @@ class Game extends Application{
         theStage.setScene( theScene );
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
         //root.getChildren().add( canvas );
-        stack1.setStyle("-fx-background-color: black");
+        stack1.setStyle("-fx-background-color: #202020");
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
         player = new Player();
@@ -285,7 +286,7 @@ class Game extends Application{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - obstacle2.getWidth());
+        stack2.setLayoutX(Main.screenWidth/2 - 3*obstacle2.getWidth()/4);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
         
@@ -350,7 +351,7 @@ class Game extends Application{
 	                timeline.play();
 	                
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
-		            double x = 400;
+		            double x = ball.getX();
 		            //double x = Main.screenWidth/2 - ball.ballimg.getFitWidth(); //set to middle of page
 		            Random rand = new Random(); 
 					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
@@ -397,11 +398,29 @@ class Game extends Application{
         	}
         	else if(src.getText().equals("Save and exit")) {
         		stage.close();
-        		Platform.exit();
+        		Platform.exit(); // or displayMainmenu
+        		
         	}
         	else if(src.getText().equals("Back")) {
         		stage.close();
         		showSaveresmenu(stage);
+        	}
+        	else if(src.getText().equals("Save life and resume game")) {
+        		player.resurrect();
+        		stage.close();
+        	}
+        	else if(src.getText().equals("Restart game")) {
+        		stage.close();
+        		try {
+					start(stage);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+        	}
+        	else if(src.getText().equals("Exit game")) {
+        		stage.close();
+        		Platform.exit(); // or displayMainmenu
+        		
         	}
         }
     }
@@ -458,7 +477,7 @@ class Game extends Application{
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    pane.setStyle("-fx-background-color: black");
+	    pane.setStyle("-fx-background-color: #202020");
     	Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 		VBox vbox = new VBox();
 		Text t = new Text();
@@ -490,7 +509,7 @@ class Game extends Application{
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    pane.setStyle("-fx-background-color: black");
+	    pane.setStyle("-fx-background-color: #202020");
     	Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 		VBox vbox = new VBox(5);
         stage = theStage;
@@ -510,6 +529,38 @@ class Game extends Application{
         theStage.setTitle("Colour Switch");
         theStage.setScene(scene);
         theStage.show();
+	}
+    public void showResurrectmenu(Stage theStage){
+		stage = theStage;
+		pane = new GridPane();
+		pane.setAlignment(Pos.CENTER);
+	    pane.setHgap(10);
+	    pane.setVgap(10);
+	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    pane.setStyle("-fx-background-color: #202020");
+	    Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+		VBox vbox = new VBox(5);
+		Text t = new Text();
+		t = new Text (10, 20, "Do you want to use a star and continue playing?\n");
+		t.setFont(Font.font ("Montserrat", 20));
+		t.setFill(Color.WHITE);
+
+		Button btn1 = new Button("Save life and resume game");
+		Button btn2 = new Button("Restart game");
+		Button btn3 = new Button("Exit game");
+
+		buttonHandler bh = new buttonHandler();
+
+		btn1.setOnAction(bh);
+		btn2.setOnAction(bh);
+		btn3.setOnAction(bh);
+
+		vbox.getChildren().addAll(t, btn1, btn2, btn3);
+
+		pane.getChildren().addAll(vbox);
+		theStage.setTitle("Colour Switch");
+		theStage.setScene(scene);
+		theStage.show();
 	}
 
 }
@@ -531,10 +582,10 @@ class Ball{
     	green = new Image("file:images/green.png");
     	
         ballimg = new ImageView(this.get_ball());
-        ballwidth = 5;
-        ballimg.setFitWidth(this.ballwidth);
+        ballwidth = 60;
+        ballimg.setFitWidth(ballwidth);
         ballimg.setPreserveRatio(true);
-        this.x = Main.screenWidth/2 - 5*this.ballwidth - this.ballwidth/2;
+        this.x = Main.screenWidth/2 - this.ballwidth/2;
         
     }
 //    public void change_colour(int a, int b) {
@@ -782,4 +833,3 @@ class Obstacle2 extends Obstacle {
 		
 	}
 }
-
