@@ -24,6 +24,7 @@ import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -230,6 +231,7 @@ class Game extends Application{
     StackPane stack2 = new StackPane();
     StackPane stack3 = new StackPane();
     StackPane stack4 = new StackPane();
+    Label l;
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
@@ -250,6 +252,10 @@ class Game extends Application{
 		t.setFill(Color.WHITE);
 		Text t2 = new Text();
 		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
+		l = new Label(Integer.toString(player.getCollectedStars()));
+		l.setTextFill(Color.WHITE);
+		root.getChildren().add( l );
+		//Label l2= new Label();
 		t2.setFont(Font.font ("Montserrat", 15));
 		t2.setFill(Color.WHITE);
 		root.getChildren().addAll(t, t2);
@@ -357,6 +363,11 @@ class Game extends Application{
 					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
 						 ball.change_colour();
 					 }
+					 if (y>=angle2 - 2*ddd-20 && y<=angle2 - 2*ddd-10) {
+						 player.setCollectedStars(player.getCollectedStars()+1);
+						 l.setText(Integer.toString(player.getCollectedStars())); 
+					 }
+					 
 					 /*
 					 System.out.println("y");
 					 	System.out.println(y);
