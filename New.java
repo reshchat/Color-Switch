@@ -334,16 +334,7 @@ class Game extends Application{
 	        	    int ddd= 500;
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
-	        	    		new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.getImg().rotateProperty(), angle)), // initial rotate
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.getImg().rotateProperty(), angle+2)),
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle1.getImg().translateYProperty(), angle2)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle1.getImg().translateYProperty(), angle2+2)) ,
-	        	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getImg().rotateProperty(), angle )), // initial rotate
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getImg().rotateProperty(), angle+2 )),
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(obstacle2.getImg().translateYProperty(), angle2 - 3*ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(obstacle2.getImg().translateYProperty(), angle2+2 - 3*ddd)),
-	        	            
+	        	    	       	            
 	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), angle2 - ddd)),
 	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), angle2+2 - ddd)),
 	        	         
@@ -355,6 +346,8 @@ class Game extends Application{
 	                timeline.setCycleCount(Timeline.INDEFINITE);
 	                timeline.setAutoReverse(false);
 	                timeline.play();
+	                obstacle1.movement(angle, angle2, canvas);
+	                obstacle2.movement(angle, angle2 - 3*ddd, canvas);
 	                
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
@@ -771,7 +764,7 @@ abstract class Obstacle {
 			return true;
 		}
 	}
-	protected abstract void movement(float duration, Canvas canvas);
+	protected abstract void movement(float duration, int a, Canvas canvas);
 }
 class Obstacle1 extends Obstacle {
 	
@@ -801,12 +794,29 @@ class Obstacle1 extends Obstacle {
 	}
 
 	@Override
-	protected void movement(float duration, Canvas canvas) {
+	protected void movement(float duration, int angle2, Canvas canvas) {
 	
 	    Timeline timeline;
 	    timeline = new Timeline();
+	    Duration rotateDuration = Duration.millis(3);
+    	
+	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	    // obstacle1.img.getTransforms().add(rotate);
+	    
+	    int ddd= 500;
+	    float angle =duration;
+	   
+	    timeline = new Timeline( 
+	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
+
+	            );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(true);
+        timeline.play();
+	   // return timeline;
 		
 	}
 }
@@ -835,12 +845,27 @@ class Obstacle2 extends Obstacle {
 	}
 
 	@Override
-	protected void movement(float duration, Canvas canvas) {
+	protected void movement(float duration,int angle2, Canvas canvas) {
 	
-	    Timeline timeline;
-	    timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(true);
-		
+		  Timeline timeline;
+		    timeline = new Timeline();
+		    Duration rotateDuration = Duration.millis(3);
+	    	
+		    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+		    // obstacle1.img.getTransforms().add(rotate);
+		    
+		    int ddd= 500;
+		    float angle =duration;
+		   
+		    timeline = new Timeline( 
+		    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
+		            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+		            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
+		            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
+
+		            );
+	        timeline.setCycleCount(Timeline.INDEFINITE);
+	        timeline.setAutoReverse(true);
+	        timeline.play();
 	}
 }
