@@ -2,10 +2,15 @@ package application;
 //package colorswitch;
 
 import javafx.util.Duration;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Random;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -43,6 +48,7 @@ import javafx.stage.*;
 
 public class Main extends Application {
 	
+	public static final String filename = "savegamedata.txt";
 	static int screenWidth = 1200;
 	static int screenHeight = 600;
     static GridPane pane = new GridPane();
@@ -53,6 +59,20 @@ public class Main extends Application {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		
+//		Ball a = null;
+//		try {
+//			a = new Ball();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println(a.toString());
+//		System.out.println("Saving");
+//		save(a);
+//		System.out.println("Loading");
+//		load();
+		
 		launch(args);
 	}
 	@Override
@@ -61,6 +81,39 @@ public class Main extends Application {
 		stage = theStage;
 		Homepage homepage = new Homepage();
 		homepage.displayMainmenu(theStage, pane, scene);
+	}
+	public static void save(Serializable obj) {
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(filename);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(obj);
+			oos.flush();
+			oos.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	public static void load() {
+		
+		if(checkFileExists()) {
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(filename);
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				Ball obj = (Ball)ois.readObject();
+				ois.close();
+				
+				System.out.println(obj.toString());
+			}
+			catch(ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public static boolean checkFileExists() {
+		return new File(filename).isFile();
 	}
 }	
 
@@ -193,7 +246,7 @@ public class Main extends Application {
 	}
 }
 
-class Game extends Application{
+class Game extends Application implements Serializable{
 	
 	private String name;
 	private int level;
@@ -215,30 +268,43 @@ class Game extends Application{
     Player player;
     private double y=299;
     private int colour=0;
-    Button button2;
-    Button btn;
-    Group root;
+    transient Button button2;
+    transient Button btn;
+	transient Button btn1;
+	transient Button btn2;
+	transient Button btn3;
+	transient buttonHandler bh;
+    transient Group root;
     int x3=0;
     int angle=0;
     int angle2=0;
-    Canvas canvas;
-    Stage stage;
-    Scene scene;
-    GridPane pane;
-    static Timeline timeline;
-    StackPane stack = new StackPane();
-    StackPane stack1 = new StackPane();
-    StackPane stack2 = new StackPane();
-    StackPane stack3 = new StackPane();
-    StackPane stack4 = new StackPane();
-    Label l;
+    transient Canvas canvas;
+    transient Stage stage;
+    transient Scene scene;
+    transient Scene theScene;
+    transient GridPane pane;
+    transient VBox vbox;
+    transient static Timeline timeline;
+    transient StackPane stack = new StackPane();
+    transient StackPane stack1 = new StackPane();
+    transient StackPane stack2 = new StackPane();
+    transient StackPane stack3 = new StackPane();
+    transient StackPane stack4 = new StackPane();
+    transient Label l;
+    transient Text t;
+    transient Text t2;
+    transient TextField tf;
+    transient Duration rotateDuration;
+    transient Rotate rotate;
+    transient Random rand;
+    
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
     	theStage.setTitle( "Colour Switch" );
         //Group 
         root = new Group();
-        Scene theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
+        theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
         theStage.setScene( theScene );
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
         //root.getChildren().add( canvas );
@@ -246,11 +312,11 @@ class Game extends Application{
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
         player = new Player();
-        Text t = new Text();
+        t = new Text();
 		t = new Text (50, 100, "Score:\n\n" + player.getScore());
 		t.setFont(Font.font ("Montserrat", 15));
 		t.setFill(Color.WHITE);
-		Text t2 = new Text();
+		t2 = new Text();
 		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
 		l = new Label(Integer.toString(player.getCollectedStars()));
 		l.setTextFill(Color.WHITE);
@@ -326,9 +392,9 @@ class Game extends Application{
 	            if(pause==false) {
 	            	if(angle2>2200)
 	            		angle2=0;
-	            	Duration rotateDuration = Duration.millis(3);
+	            	rotateDuration = Duration.millis(3);
 	            	
-	        	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	        	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	        	    // obstacle1.img.getTransforms().add(rotate);
 	        	    
 	        	    int ddd= 500;
@@ -352,7 +418,7 @@ class Game extends Application{
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
 		            //double x = Main.screenWidth/2 - ball.ballimg.getFitWidth(); //set to middle of page
-		            Random rand = new Random(); 
+		            rand = new Random(); 
 					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
 						 ball.change_colour();
 					 }
@@ -429,7 +495,7 @@ class Game extends Application{
         }
     }
 
-    private EventHandler<KeyEvent> keyReleased = new EventHandler<KeyEvent>() {
+    private transient EventHandler<KeyEvent> keyReleased = new EventHandler<KeyEvent>() {
         @Override
         public void handle(KeyEvent event) {
             // set movement to 0, if the released key was responsible for the paddle
@@ -440,7 +506,7 @@ class Game extends Application{
             }
         }
     };
-    private EventHandler<KeyEvent> keyPressed = new EventHandler<KeyEvent>() {
+    private transient EventHandler<KeyEvent> keyPressed = new EventHandler<KeyEvent>() {
         @Override
         public void handle(KeyEvent event) {
             // start movement according to key pressed
@@ -454,7 +520,7 @@ class Game extends Application{
         }
     };
     
-    EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
+    private transient EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) 
         { 
 	        x3++;
@@ -463,7 +529,7 @@ class Game extends Application{
 	        
         } 
     };
-    EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
+    private transient EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) 
         { 
 	        x3++;
@@ -482,22 +548,22 @@ class Game extends Application{
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
-    	Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
-		VBox vbox = new VBox();
-		Text t = new Text();
+    	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+		vbox = new VBox(5);
+		t = new Text();
 		t = new Text (10, 20, "Save Game\n");
 		t.setFont(Font.font ("Montserrat", 20));
 		t.setFill(Color.WHITE);
 		
-		Text t2 = new Text();
+		t2 = new Text();
 		t2 = new Text (10, 20, "Enter a name for the saved game:\n");
 		t2.setFont(Font.font ("Montserrat", 15));
 		t2.setFill(Color.WHITE);
 		
-		TextField tf = new TextField();
-		Button btn1 = new Button("Save and exit");
-		Button btn2 = new Button("Back");
-		buttonHandler bh = new buttonHandler();
+		tf = new TextField();
+		btn1 = new Button("Save and exit");
+		btn2 = new Button("Back");
+		bh = new buttonHandler();
 
 		btn1.setOnAction(bh);
 		btn2.setOnAction(bh);
@@ -514,19 +580,18 @@ class Game extends Application{
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
-    	Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
-		VBox vbox = new VBox(5);
+    	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+		vbox = new VBox(5);
         stage = theStage;
-        Text t = new Text();
+        t = new Text();
     	t = new Text (10, 20, "Color Switch\n");
     	t.setFont(Font.font ("Montserrat", 20));
     	t.setFill(Color.WHITE);
-    	Button btn1 = new Button("Save game");
+    	btn1 = new Button("Save game");
     	
-    	Button btn3 = new Button("Resume");
-    	buttonHandler bh = new buttonHandler();
+    	btn3 = new Button("Resume");
+    	bh = new buttonHandler();
         btn1.setOnAction(bh);
-       
         btn3.setOnAction(bh);
         vbox.getChildren().addAll(t, btn1, btn3);
         pane.getChildren().addAll(vbox);
@@ -542,18 +607,18 @@ class Game extends Application{
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
-	    Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
-		VBox vbox = new VBox(5);
-		Text t = new Text();
+	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+		vbox = new VBox(5);
+		t = new Text();
 		t = new Text (10, 20, "Do you want to use a star and continue playing?\n");
 		t.setFont(Font.font ("Montserrat", 20));
 		t.setFill(Color.WHITE);
 
-		Button btn1 = new Button("Save life and resume game");
-		Button btn2 = new Button("Restart game");
-		Button btn3 = new Button("Exit game");
+		btn1 = new Button("Save life and resume game");
+		btn2 = new Button("Restart game");
+		btn3 = new Button("Exit game");
 
-		buttonHandler bh = new buttonHandler();
+		bh = new buttonHandler();
 
 		btn1.setOnAction(bh);
 		btn2.setOnAction(bh);
@@ -568,16 +633,17 @@ class Game extends Application{
 	}
 
 }
-class Ball{
+class Ball implements Serializable{
 	private int x;
 	private int y;
 	private int colour;
-	Image red;
-    Image yellow;
-    Image blue;
-    Image green;
-    ImageView ballimg;
+	private transient Image red;
+	private transient Image yellow;
+	private transient Image blue;
+	private transient Image green;
+	private transient ImageView ballimg;
     static private int ballwidth;
+    Random rand;
     
     public Ball() throws FileNotFoundException {
     	red = new Image("file:images/red.png");
@@ -594,7 +660,7 @@ class Ball{
     }
 //    public void change_colour(int a, int b) {
     public void change_colour() {
-		Random rand = new Random(); 
+		rand = new Random(); 
 		this.colour = rand.nextInt(4); 
 	}
 	public int getX() {
@@ -629,7 +695,7 @@ class Ball{
 	}
 	
 }
- class Player {
+ class Player implements Serializable{
 	private int collectedstars;
 	private int score;
 	public Player() {
@@ -655,11 +721,11 @@ class Ball{
 		
 	}
 }
- class Star {
+ class Star implements Serializable{
 	private int y;
 	private Player player;
-	static private Image singlecircle;
-	static private ImageView img;
+	static private transient Image singlecircle;
+	static private transient ImageView img;
 	static private int width;
 	
 	public Star() throws FileNotFoundException{
@@ -687,12 +753,12 @@ class Ball{
 		
 	}
 }
- class Colourchanger {
+ class Colourchanger implements Serializable{
 	private int[] colours;
 	private int y;
 	private Ball ball;
-	static private Image singlecircle;
-	static private ImageView img;
+	static private transient Image singlecircle;
+	static private transient ImageView img;
 	static private int width;
 
 	public Colourchanger() throws FileNotFoundException{
@@ -729,11 +795,11 @@ class Ball{
 		return false;
 	}
 }
-abstract class Obstacle {
+abstract class Obstacle implements Serializable{
 	protected int noofcolours;
 	protected int passposition;
 	protected int y;
-	Image singlecircle;
+	transient Image singlecircle;
 	public Obstacle() throws FileNotFoundException {
 		this.noofcolours = 4;
 	}
@@ -766,10 +832,10 @@ abstract class Obstacle {
 	}
 	protected abstract void movement(float duration, int a, Canvas canvas);
 }
-class Obstacle1 extends Obstacle {
+class Obstacle1 extends Obstacle{
 	
-	static private Image singlecircle;
-	static private ImageView img;
+	static private transient Image singlecircle;
+	static private transient ImageView img;
 	static private int width;
 	
 	public Obstacle1 () throws FileNotFoundException{
@@ -822,9 +888,12 @@ class Obstacle1 extends Obstacle {
 }
 class Obstacle2 extends Obstacle {
 	
-	static private Image singlecircle;
-	static private ImageView img;
+	static private transient Image singlecircle;
+	static private transient ImageView img;
 	static private int width;
+	transient Timeline timeline;
+	transient Duration rotateDuration;
+	transient Rotate rotate;
 	
 	public Obstacle2() throws FileNotFoundException{
 		this.singlecircle = new Image("file:images/obstacle2.png");
@@ -846,26 +915,25 @@ class Obstacle2 extends Obstacle {
 
 	@Override
 	protected void movement(float duration,int angle2, Canvas canvas) {
-	
-		  Timeline timeline;
-		    timeline = new Timeline();
-		    Duration rotateDuration = Duration.millis(3);
-	    	
-		    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-		    // obstacle1.img.getTransforms().add(rotate);
-		    
-		    int ddd= 500;
-		    float angle =duration;
-		   
-		    timeline = new Timeline( 
-		    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
-		            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
-		            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
-		            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
+		  
+	    timeline = new Timeline();
+	    rotateDuration = Duration.millis(3);
+    	
+	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	    // obstacle1.img.getTransforms().add(rotate);
+	    
+	    int ddd= 500;
+	    float angle =duration;
+	   
+	    timeline = new Timeline( 
+	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
 
-		            );
-	        timeline.setCycleCount(Timeline.INDEFINITE);
-	        timeline.setAutoReverse(true);
-	        timeline.play();
+	            );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(true);
+        timeline.play();
 	}
 }
