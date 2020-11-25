@@ -292,8 +292,6 @@ class Game extends Application implements Serializable{
     transient StackPane stack2 = new StackPane();
     transient StackPane stack3 = new StackPane();
     transient StackPane stack4 = new StackPane();
-    transient StackPane stack5 = new StackPane();
-    transient StackPane stack6 = new StackPane();
     transient Label l;
     transient Text t;
     transient Text t2;
