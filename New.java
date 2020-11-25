@@ -292,6 +292,7 @@ class Game extends Application implements Serializable{
     transient StackPane stack2 = new StackPane();
     transient StackPane stack3 = new StackPane();
     transient StackPane stack4 = new StackPane();
+
     transient Label l;
     transient Text t;
     transient Text t2;
@@ -394,8 +395,10 @@ class Game extends Application implements Serializable{
 	            }
 	            
 	            if(pause==false) {
-	            	if(angle2>4000)
+	            	if(angle2>3200)
 	            		angle2=0;
+	            	if(angle2<-100)
+	            		angle2=3200;
 	            	rotateDuration = Duration.millis(3);
 	            	
 	        	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
