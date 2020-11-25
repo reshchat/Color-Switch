@@ -263,6 +263,8 @@ class Game extends Application implements Serializable{
     Ball ball;
     Obstacle1 obstacle1;
     Obstacle2 obstacle2;
+    Obstacle3 obstacle3;
+    Obstacle4 obstacle4;
     Star[] star1= new Star[5];
     Colourchanger[] ccr=new Colourchanger[5];
     Player player;
@@ -290,6 +292,8 @@ class Game extends Application implements Serializable{
     transient StackPane stack2 = new StackPane();
     transient StackPane stack3 = new StackPane();
     transient StackPane stack4 = new StackPane();
+    transient StackPane stack5 = new StackPane();
+    transient StackPane stack6 = new StackPane();
     transient Label l;
     transient Text t;
     transient Text t2;
@@ -340,6 +344,8 @@ class Game extends Application implements Serializable{
         obstacle1 = new Obstacle1();
 //      obstacle1.img.setLayoutX(1000);
         obstacle2 = new Obstacle2();
+        obstacle3 = new Obstacle3();
+        obstacle4 = new Obstacle4();
 //      obstacle2.img.setLayoutX(1000);
         //root.getChildren().remove(l);
         final long startNanoTime = System.nanoTime();
@@ -352,7 +358,7 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(obstacle1.getImg() );
+        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg() );
         stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2);
         stack.setLayoutY(0);
         root.getChildren().add(stack);
@@ -390,7 +396,7 @@ class Game extends Application implements Serializable{
 	            }
 	            
 	            if(pause==false) {
-	            	if(angle2>2200)
+	            	if(angle2>4000)
 	            		angle2=0;
 	            	rotateDuration = Duration.millis(3);
 	            	
@@ -414,7 +420,8 @@ class Game extends Application implements Serializable{
 	                timeline.play();
 	                obstacle1.movement(angle, angle2, canvas);
 	                obstacle2.movement(angle, angle2 - 3*ddd, canvas);
-	                
+	                obstacle3.movement(angle, angle2 - 4*ddd, canvas);
+	                obstacle4.movement(angle, angle2 - 5*ddd, canvas);
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
 		            //double x = Main.screenWidth/2 - ball.ballimg.getFitWidth(); //set to middle of page
@@ -896,6 +903,159 @@ class Obstacle2 extends Obstacle {
 	transient Rotate rotate;
 	
 	public Obstacle2() throws FileNotFoundException{
+		this.singlecircle = new Image("file:images/obstacle2.png");
+		this.img = new ImageView(this.singlecircle);
+		 img.setX(600-Main.screenWidth);
+         img.setY(300-Main.screenHeight);
+         width = 250;
+         img.setFitWidth(getWidth());
+         img.setPreserveRatio(true);
+	}
+
+	public static ImageView getImg() {
+		return img;
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	@Override
+	protected void movement(float duration,int angle2, Canvas canvas) {
+		  
+	    timeline = new Timeline();
+	    rotateDuration = Duration.millis(3);
+    	
+	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	    // obstacle1.img.getTransforms().add(rotate);
+	    
+	    int ddd= 500;
+	    float angle =duration;
+	   
+	    timeline = new Timeline( 
+	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
+
+	            );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(true);
+        timeline.play();
+	}
+}
+class Obstacle3 extends Obstacle {
+	
+	static private transient Image singlecircle;
+	static private transient ImageView img;
+	static private int width;
+	transient Timeline timeline;
+	transient Duration rotateDuration;
+	transient Rotate rotate;
+	
+	public Obstacle3() throws FileNotFoundException{
+		this.singlecircle = new Image("file:images/obstacle3.png");
+		this.img = new ImageView(this.singlecircle);
+		 img.setX(600-Main.screenWidth);
+         img.setY(300-Main.screenHeight);
+         width = 250;
+         img.setFitWidth(getWidth());
+         img.setPreserveRatio(true);
+	}
+
+	public static ImageView getImg() {
+		return img;
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	@Override
+	protected void movement(float duration,int angle2, Canvas canvas) {
+		  
+	    timeline = new Timeline();
+	    rotateDuration = Duration.millis(3);
+    	
+	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	    // obstacle1.img.getTransforms().add(rotate);
+	    
+	    int ddd= 500;
+	    float angle =duration;
+	   
+	    timeline = new Timeline( 
+	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
+
+	            );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(true);
+        timeline.play();
+	}
+}
+class Obstacle4 extends Obstacle {
+	
+	static private transient Image singlecircle;
+	static private transient ImageView img;
+	static private int width;
+	transient Timeline timeline;
+	transient Duration rotateDuration;
+	transient Rotate rotate;
+	
+	public Obstacle4() throws FileNotFoundException{
+		this.singlecircle = new Image("file:images/obstacle4.png");
+		this.img = new ImageView(this.singlecircle);
+		 img.setX(600-Main.screenWidth);
+         img.setY(300-Main.screenHeight);
+         width = 250;
+         img.setFitWidth(getWidth());
+         img.setPreserveRatio(true);
+	}
+
+	public static ImageView getImg() {
+		return img;
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	@Override
+	protected void movement(float duration,int angle2, Canvas canvas) {
+		  
+	    timeline = new Timeline();
+	    rotateDuration = Duration.millis(3);
+    	
+	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	    // obstacle1.img.getTransforms().add(rotate);
+	    
+	    int ddd= 500;
+	    float angle =duration;
+	   
+	    timeline = new Timeline( 
+	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
+	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
+
+	            );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(true);
+        timeline.play();
+	}
+}
+class Obstacle5 extends Obstacle {
+	
+	static private transient Image singlecircle;
+	static private transient ImageView img;
+	static private int width;
+	transient Timeline timeline;
+	transient Duration rotateDuration;
+	transient Rotate rotate;
+	
+	public Obstacle5() throws FileNotFoundException{
 		this.singlecircle = new Image("file:images/obstacle2.png");
 		this.img = new ImageView(this.singlecircle);
 		 img.setX(600-Main.screenWidth);
