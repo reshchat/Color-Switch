@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
@@ -48,7 +49,6 @@ import javafx.stage.*;
 
 public class Main extends Application {
 	
-	public static final String filename = "savegamedata.txt";
 	static int screenWidth = 1200;
 	static int screenHeight = 600;
     static GridPane pane = new GridPane();
@@ -60,19 +60,6 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-//		Ball a = null;
-//		try {
-//			a = new Ball();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.out.println(a.toString());
-//		System.out.println("Saving");
-//		save(a);
-//		System.out.println("Loading");
-//		load();
-		
 		launch(args);
 	}
 	@Override
@@ -82,6 +69,13 @@ public class Main extends Application {
 		Homepage homepage = new Homepage();
 		homepage.displayMainmenu(theStage, pane, scene);
 	}
+}	
+
+class SaveGame{
+	
+	public static String filename;
+	public static String savedfiles[];
+	
 	public static void save(Serializable obj) {
 		FileOutputStream fos = null;
 		try {
@@ -95,29 +89,56 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	public static void load() {
+	public static SaveObject load(String filename) {
 		
-		if(checkFileExists()) {
+		if(checkFileExists(filename)) {
 			FileInputStream fis = null;
+			SaveObject loadedObject = null;
 			try {
 				fis = new FileInputStream(filename);
 				ObjectInputStream ois = new ObjectInputStream(fis);
-				Ball obj = (Ball)ois.readObject();
+				loadedObject = (SaveObject)ois.readObject();
 				ois.close();
 				
-				System.out.println(obj.toString());
+				System.out.println(loadedObject.toString());
 			}
 			catch(ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}
+			return loadedObject;
 		}
+		return null;
 	}
-	public static boolean checkFileExists() {
+	public static boolean checkFileExists(String filename) {
 		return new File(filename).isFile();
 	}
-}	
+	private static boolean deleteSavedFile(String filename) {
+		if(!checkFileExists(filename)) {
+			System.out.println("File doesn't exist");
+			return true;
+		}
+		File toDelete = new File(filename);
+		if(toDelete.canWrite()) {
+			return toDelete.delete();
+		}
+		System.out.println("Cannot delete file");
+		return false;
+	}
+	
+}
 
- class Homepage {
+class SaveObject implements Serializable{
+	
+	private static final long serialVersionUID = 100L;
+	private int currGameID = 6;
+	
+	public SaveObject(int currGameID) {
+		this.currGameID = currGameID;
+	}
+	
+}
+
+class Homepage {
 	
 	static GridPane pane = new GridPane();
     static Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
@@ -167,7 +188,7 @@ public class Main extends Application {
 		
 	}
 	private void exit(){
-		
+		Platform.exit();
 	}
 	public void showSavedgames(Stage theStage){
 		stage = theStage;
@@ -226,12 +247,14 @@ public class Main extends Application {
         		 pane.getChildren().clear();
         		 stage.close();
         		 stage = new Stage();
+        		 
         		try {
 					startNewgame(stage);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+        		
         	}
         	else if(src.getText().equals("Resume a saved game")) {
         		pane.getChildren().clear();
@@ -242,6 +265,19 @@ public class Main extends Application {
         		pane.getChildren().clear();
         		displayMainmenu(stage, pane, scene);
         	}
+
+        	else if(src.getText().equals("Game 1")) {
+        		SaveObject loadedgame = SaveGame.load("hello.txt");
+        		pane.getChildren().clear();
+	       		stage.close();
+	       		stage = new Stage();
+	       		 
+	       		try {
+						startNewgame(stage);
+				} catch (FileNotFoundException e) {
+						e.printStackTrace();
+				}
+        	}
         }
 	}
 }
@@ -250,6 +286,7 @@ class Game extends Application implements Serializable{
 	
 	private String name;
 	private int level;
+	private int currGameID;
 	private int distance;
 	public Game()  {
 		// launch();
@@ -383,7 +420,7 @@ class Game extends Application implements Serializable{
         timer.start(); 
     }
 	
-	private AnimationTimer timer = new AnimationTimer()
+	private transient AnimationTimer timer = new AnimationTimer()
     {
 		   public void handle(long currentNanoTime)
 	        {
@@ -472,9 +509,12 @@ class Game extends Application implements Serializable{
         	else if(src.getText().equals("Save game")) {
         		pane.getChildren().clear();
         		stage.close();
-        		saveGame(stage);
+        		saveGameMenu(stage);
         	}
         	else if(src.getText().equals("Save and exit")) {
+        		
+        		SaveGame.filename = tf.getText()+".txt"; 
+        		saveGame();
         		stage.close();
         		Platform.exit(); // or displayMainmenu
         		
@@ -498,7 +538,6 @@ class Game extends Application implements Serializable{
         	else if(src.getText().equals("Exit game")) {
         		stage.close();
         		Platform.exit(); // or displayMainmenu
-        		
         	}
         }
     }
@@ -549,7 +588,12 @@ class Game extends Application implements Serializable{
 	        //Platform.exit();
         } 
     };
-    public void saveGame(Stage theStage){
+    
+    public void saveGame() {
+    	SaveObject gametosave = new SaveObject(currGameID);
+    	SaveGame.save(gametosave);
+    }
+    public void saveGameMenu(Stage theStage){
     	pane = new GridPane();
     	pane.setAlignment(Pos.CENTER);
 	    pane.setHgap(10);
@@ -575,6 +619,7 @@ class Game extends Application implements Serializable{
 
 		btn1.setOnAction(bh);
 		btn2.setOnAction(bh);
+		tf.setOnAction(bh);
 		vbox.getChildren().addAll(t, t2, tf, btn1, btn2);
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch: Save game");
