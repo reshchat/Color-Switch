@@ -337,7 +337,7 @@ class Game extends Application implements Serializable{
     transient Duration rotateDuration;
     transient Rotate rotate;
     transient Random rand;
-    
+   
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
@@ -395,7 +395,7 @@ class Game extends Application implements Serializable{
         btn.setOnAction(event2);
         
         stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg() );
-        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2);
+        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
@@ -468,8 +468,57 @@ class Game extends Application implements Serializable{
 						 ball.change_colour();
 					 }
 					 if (y>=angle2 - 2*ddd-20 && y<=angle2 - 2*ddd-10) {
+						
 						 player.setCollectedStars(player.getCollectedStars()+1);
 						 l.setText(Integer.toString(player.getCollectedStars())); 
+						
+					 }
+					 
+					 if (y>=angle2 -20 && y<=angle2 -10) {
+						
+						 System.out.println("collup");
+						 System.out.println(angle%360);
+						
+						 int col=-1;
+						 if(angle%360 > 0 && angle%360 <90)
+							 {System.out.println("red");
+							 col =0; }
+						 if(angle%360 > 90 && angle%360 <180)
+						 { System.out.println("blue");
+						 col =1;}
+						 if(angle%360 > 180 && angle%360 <270)
+						 { System.out.println("yellow");
+						 col =2;}
+						 if(angle%360 > 270 && angle%360 <360)
+						 { System.out.println("green");
+						 col =3; }
+						 if (col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+						 }
+					 }
+					 if (y>=angle2 +obstacle1.getWidth() -50 && y<=angle2 +obstacle1.getWidth()-40) {
+						 
+						 System.out.println("colld");
+						 System.out.println(angle%360);
+						 int col=-1;
+						 if(angle%360 > 0 && angle%360 <90)
+							 {System.out.println("yellow");
+							 col =2; }
+						 if(angle%360 > 90 && angle%360 <180)
+						 { System.out.println("green");
+						 col =3;}
+						 if(angle%360 > 180 && angle%360 <270)
+						 { System.out.println("red");
+						 col =0;}
+						 if(angle%360 > 270 && angle%360 <360)
+						 { System.out.println("blue");
+						 col =1; }
+						 if (col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+						 }
+							
 					 }
 					 
 					 /*
@@ -897,6 +946,8 @@ class Obstacle1 extends Obstacle{
 		width = 250;
 		img.setFitWidth(width);
 		img.setPreserveRatio(true);
+		img.setX(600-Main.screenWidth);
+        img.setY(300-Main.screenHeight);
 	}
 	
 	public static ImageView getImg() {
