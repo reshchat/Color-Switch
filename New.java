@@ -100,7 +100,12 @@ class SaveGame{
 				loadedObject = (SaveObject)ois.readObject();
 				ois.close();
 				
-				System.out.println(loadedObject.getBall().getX()+" "+loadedObject.getBall().getY()+" "+loadedObject.getBall().getColour()+" "+loadedObject.getBall().getBallwidth());
+//				System.out.println(loadedObject.getGame().getGravity()+" "+loadedObject.getGame().getAngle2());
+//				File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
+//			    String contents[] = directoryPath.list();
+//			    for(int i=0; i<contents.length; i++) {
+//			         System.out.println(contents[i]);
+//			    }
 			}
 			catch(ClassNotFoundException | IOException e) {
 				e.printStackTrace();
@@ -176,6 +181,9 @@ class SaveObject implements Serializable{
 	}
 	public Star[] getStar() {
 		return star;
+	}
+	public Game getGame() {
+		return game;
 	}
 	
 }
@@ -329,49 +337,56 @@ class Game extends Application implements Serializable{
 	private static final long serialVersionUID = 120L;
 	private String name;
 	private int level;
-	private int currGameID;
 	private int distance;
 	public Game()  {
 		// launch();
 		//stage = new Stage(); 
         //start(stage);
     }
-    boolean pause=false;
-    final long startNanoTime = System.nanoTime();
-    transient GraphicsContext gc;
-    private int leftPaddleDY;
+    public int getGravity() {
+		return gravity;
+	}
+    public int getAngle() {
+		return angle;
+	}
+	public int getAngle2() {
+		return angle2;
+	}
+	private boolean pause=false;
+    private transient final long startNanoTime = System.nanoTime();
+    private transient GraphicsContext gc;
+    private int gravity;
     private Ball ball;
     private Obstacle1 obstacle1;
     private Obstacle2 obstacle2;
     private Obstacle3 obstacle3;
     private Obstacle4 obstacle4;
-    private Star[] star1= new Star[5];
-    private Colourchanger[] ccr=new Colourchanger[5];
+    private Star[] star1;
+    private Colourchanger[] ccr;
     private Player player;
     private int y=299;
     private int colour=0;
-    transient Button button2;
-    transient Button btn;
-	transient Button btn1;
-	transient Button btn2;
-	transient Button btn3;
-	transient buttonHandler bh;
-    transient Group root;
-    int x3=0;
-    int angle=0;
-    int angle2=0;
-    transient Canvas canvas;
-    transient Stage stage;
-    transient Scene scene;
-    transient Scene theScene;
-    transient GridPane pane;
-    transient VBox vbox;
-    transient static Timeline timeline;
-    transient StackPane stack = new StackPane();
-    transient StackPane stack1 = new StackPane();
-    transient StackPane stack2 = new StackPane();
-    transient StackPane stack3 = new StackPane();
-    transient StackPane stack4 = new StackPane();
+    private transient Button button2;
+    private transient Button btn;
+    private transient Button btn1;
+    private transient Button btn2;
+    private transient Button btn3;
+    private transient buttonHandler bh;
+    private transient Group root;
+    private int angle;
+    private int angle2;
+    private transient Canvas canvas;
+    private transient Stage stage;
+    private transient Scene scene;
+    private transient Scene theScene;
+    private transient GridPane pane;
+    private transient VBox vbox;
+    private transient Timeline timeline;
+    private transient StackPane stack = new StackPane();
+    private transient StackPane stack1 = new StackPane();
+    private transient StackPane stack2 = new StackPane();
+    private transient StackPane stack3 = new StackPane();
+    private transient StackPane stack4 = new StackPane();
 
     transient Label l;
     transient Text t;
@@ -385,6 +400,8 @@ class Game extends Application implements Serializable{
     public void start(Stage theStage) throws FileNotFoundException
     {
     	theStage.setTitle( "Colour Switch" );
+        angle=0;
+        angle2=0;
         //Group 
         root = new Group();
         theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
@@ -425,6 +442,12 @@ class Game extends Application implements Serializable{
         obstacle2 = new Obstacle2();
         obstacle3 = new Obstacle3();
         obstacle4 = new Obstacle4();
+    	star1= new Star[5];
+    	ccr=new Colourchanger[5];
+    	for(int i = 0; i<5; i++) {
+        	ccr[i] = new Colourchanger();
+        	star1[i] = new Star();
+        }
 //      obstacle2.img.setLayoutX(1000);
         //root.getChildren().remove(l);
         final long startNanoTime = System.nanoTime();
@@ -471,8 +494,41 @@ class Game extends Application implements Serializable{
         obstacle2 = data.getOb2();
         obstacle3 = data.getOb3();
         obstacle4 = data.getOb4();
-        ccr = data.getCc();
-        star1 = data.getStar();
+        angle = data.getGame().getAngle();
+        angle2 = data.getGame().getAngle2();
+        
+        obstacle1.getImg().setFitWidth(obstacle1.getWidth());
+        obstacle1.getImg().setPreserveRatio(true);
+        obstacle1.getImg().setX(600-Main.screenWidth);
+        obstacle1.getImg().setY(300-Main.screenHeight);
+        
+        obstacle2.getImg().setFitWidth(obstacle2.getWidth());
+        obstacle2.getImg().setPreserveRatio(true);
+        obstacle2.getImg().setX(600-Main.screenWidth);
+        obstacle2.getImg().setY(300-Main.screenHeight);
+        
+        obstacle3.getImg().setFitWidth(obstacle3.getWidth());
+        obstacle3.getImg().setPreserveRatio(true);
+        obstacle3.getImg().setX(600-Main.screenWidth);
+        obstacle3.getImg().setY(300-Main.screenHeight);
+        
+        obstacle4.getImg().setFitWidth(obstacle4.getWidth());
+        obstacle4.getImg().setPreserveRatio(true);
+        obstacle4.getImg().setX(600-Main.screenWidth);
+        obstacle4.getImg().setY(300-Main.screenHeight);
+        
+//        ccr = data.getCc();
+//        star1 = data.getStar();
+        ccr = new Colourchanger[5];
+        star1 = new Star[5];
+//        for(int i = 0; i<5; i++) {
+//        	ccr[i] = data.getCc()[i];
+//        	star1[i] = data.getStar()[i];
+//        }
+        for(int i = 0; i<5; i++) {
+        	ccr[i] = new Colourchanger();
+        	star1[i] = new Star();
+        }
         //Group 
         root = new Group();
         theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
@@ -554,9 +610,9 @@ class Game extends Application implements Serializable{
 	            y = ball.getY();
 	            
 	            if(pause==false) {
-	            	if(angle2>3200)
+	            	if(getAngle2()>3200)
 	            		angle2=0;
-	            	if(angle2<-100)
+	            	if(getAngle2()<-100)
 	            		angle2=3200;
 	            	rotateDuration = Duration.millis(3);
 	            	
@@ -567,36 +623,36 @@ class Game extends Application implements Serializable{
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    	       	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), angle2 - ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), angle2+2 - ddd)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd)),
 	        	         
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), angle2 - 2*ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), angle2+2 - 2*ddd))
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - 2*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - 2*ddd))
 	        	            );
 	        	    angle=angle+2;
 	        	    
 	                timeline.setCycleCount(Timeline.INDEFINITE);
 	                timeline.setAutoReverse(false);
 	                timeline.play();
-	                obstacle1.movement(angle, angle2, canvas);
-	                obstacle2.movement(angle, angle2 - 3*ddd, canvas);
-	                obstacle3.movement(angle, angle2 - 4*ddd, canvas);
-	                obstacle4.movement(angle, angle2 - 5*ddd, canvas);
+	                obstacle1.movement(angle, getAngle2(), canvas);
+	                obstacle2.movement(angle, getAngle2() - 3*ddd, canvas);
+	                obstacle3.movement(angle, getAngle2() - 4*ddd, canvas);
+	                obstacle4.movement(angle, getAngle2() - 5*ddd, canvas);
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
 		            //double x = Main.screenWidth/2 - ball.ballimg.getFitWidth(); //set to middle of page
 		            rand = new Random(); 
-					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
+					 if (y>=getAngle2() - ddd-20 && y<=getAngle2() - ddd-10) {
 						 ball.change_colour();
 					 }
-					 if (y>=angle2 - 2*ddd-20 && y<=angle2 - 2*ddd-10) {
+					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10) {
 						
 						 player.setCollectedStars(player.getCollectedStars()+1);
 						 l.setText(Integer.toString(player.getCollectedStars())); 
 						
 					 }
 					 
-					 if (y>=angle2 -20 && y<=angle2 -10) {
+					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
 						
 						 System.out.println("collup");
 						 System.out.println(angle%360);
@@ -619,7 +675,7 @@ class Game extends Application implements Serializable{
 							 pause=!pause;
 						 }
 					 }
-					 if (y>=angle2 +obstacle1.getWidth() -50 && y<=angle2 +obstacle1.getWidth()-40) {
+					 if (y>=getAngle2() +obstacle1.getWidth() -50 && y<=getAngle2() +obstacle1.getWidth()-40) {
 						 
 						 System.out.println("colld");
 						 System.out.println(angle%360);
@@ -639,6 +695,7 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
+							 showResurrectmenu();
 						 }
 							
 					 }
@@ -651,21 +708,21 @@ class Game extends Application implements Serializable{
 					 	System.out.println(angle2 - 2*ddd-5 + star1[1].getWidth()/2);
 					 	System.out.println(angle2 - 3*ddd-5 +obstacle2.getWidth()/2);*/
 				 	 if (y<350 && y>150  ) {
-				 		 y=y+2*leftPaddleDY+1;
+				 		 y=y+2*getGravity()+1;
 				 		 ball.setY(y);
 				 	 }
 				 	 else if (y>=250) {
-				 		angle2=(int) (angle2-leftPaddleDY -1);
-				 		y=y+leftPaddleDY;
+				 		angle2=(int) (getAngle2()-getGravity() -1);
+				 		y=y+getGravity();
 				 		ball.setY(y);
 				 	 }
 				 	 else if (y<250)	{
-				 		angle2=(int) (angle2-2*leftPaddleDY );
+				 		angle2=(int) (getAngle2()-2*getGravity() );
 				 		y=y+1;
 				 		ball.setY(y);
 				 	 }
 				 	 
-					 gc.drawImage(ball.get_ball(), x, y);
+					 gc.drawImage(ball.get_ball(), x, y, 30, 30);
 					 
 				 }
 	        }
@@ -700,6 +757,7 @@ class Game extends Application implements Serializable{
         	else if(src.getText().equals("Save life and resume game")) {
         		player.resurrect();
         		stage.close();
+        		pause = !pause;
         	}
         	else if(src.getText().equals("Restart game")) {
         		stage.close();
@@ -722,7 +780,7 @@ class Game extends Application implements Serializable{
             // set movement to 0, if the released key was responsible for the paddle
             switch (event.getCode()) {
                 case UP:
-                	leftPaddleDY = 0;
+                	gravity = 0;
                 	break;
             }
         }
@@ -733,7 +791,7 @@ class Game extends Application implements Serializable{
             // start movement according to key pressed
             switch (event.getCode()) {
                 case UP:
-                    leftPaddleDY = -2;
+                    gravity = -2;
                     break;
                 case P:
                    pause =!(pause);
@@ -742,24 +800,15 @@ class Game extends Application implements Serializable{
     };
     
     private transient EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
-        public void handle(ActionEvent e) 
-        { 
-	        x3++;
-	        //l.setText(String.valueOf(x3));
-	        pause=!(pause);
-	        
+        public void handle(ActionEvent e) { 
+	        pause=!(pause);	        
         } 
     };
     private transient EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
-        public void handle(ActionEvent e) 
-        { 
-	        x3++;
-	        //l.setText(String.valueOf(x3));
+        public void handle(ActionEvent e) { 
 	        stage = new Stage(); 
 	        showSaveresmenu(stage);
-	        // l.setText("   button   selected    "); 
 	        pause=!(pause);
-	        //Platform.exit();
         } 
     };
     
@@ -826,8 +875,8 @@ class Game extends Application implements Serializable{
         theStage.setScene(scene);
         theStage.show();
 	}
-    public void showResurrectmenu(Stage theStage){
-		stage = theStage;
+    public void showResurrectmenu(){
+		stage = new Stage();
 		pane = new GridPane();
 		pane.setAlignment(Pos.CENTER);
 	    pane.setHgap(10);
@@ -854,31 +903,28 @@ class Game extends Application implements Serializable{
 		vbox.getChildren().addAll(t, btn1, btn2, btn3);
 
 		pane.getChildren().addAll(vbox);
-		theStage.setTitle("Colour Switch");
-		theStage.setScene(scene);
-		theStage.show();
+		stage.setTitle("Colour Switch");
+		stage.setScene(scene);
+		stage.show();
 	}
 
 }
 class Ball implements Serializable{
 	
 	private static final long serialVersionUID = 140L;
-	private int x;
+	private static int x = Main.screenWidth/2 - 15;
 	private int y;
 	private int colour;
 	private static Image red = new Image("file:images/red.png");
 	private static Image yellow = new Image("file:images/yellow.png");
 	private static Image blue = new Image("file:images/blue.png");
 	private static Image green = new Image("file:images/green.png");
-	private transient ImageView ballimg = new ImageView(this.get_ball());
-    private static int ballwidth = 60;
+    private static int ballwidth = 30;
     private transient Random rand;
     
     public Ball() throws FileNotFoundException {
     	
-        ballimg.setFitWidth(getBallwidth());
-        ballimg.setPreserveRatio(true);
-        this.x = Main.screenWidth/2 - this.getBallwidth()/2;
+        //this.x = Main.screenWidth/2 - 10;
         this.y = 299;
     }
     public void change_colour() {
@@ -907,15 +953,18 @@ class Ball implements Serializable{
 		this.colour=a;
 	}
 	public Image get_ball() {
-		if(this.colour==0)
+		if(this.colour==0) {
 	        return this.red;
-		if(this.colour==1)
+		}
+		if(this.colour==1) {
 			return this.blue;
-		if(this.colour==2)
+		}
+		if(this.colour==2) {
 			return this.yellow;
-		if(this.colour==3)
+		}
+		if(this.colour==3) {
 			return this.green;
-	 
+		}
 		return this.red;
 	}
 	
@@ -943,7 +992,7 @@ class Ball implements Serializable{
 		this.score = s;
 	}
 	public void resurrect() {
-		
+		this.collectedstars -= 4;
 	}
 	public void moveBall() {
 		
@@ -954,9 +1003,9 @@ class Ball implements Serializable{
 	private static final long serialVersionUID = 180L;
 	private int y;
 	private Player player;
-	static private transient Image pic = new Image("file:images/star.png");
-	static private transient ImageView img = new ImageView(pic);
-	static private int width = 100;
+	private static transient Image pic = new Image("file:images/star.png");
+	private static transient ImageView img = new ImageView(pic);
+	private static int width = 80;
 	
 	public Star() throws FileNotFoundException{
 		
@@ -984,11 +1033,11 @@ class Ball implements Serializable{
  class Colourchanger implements Serializable{
 	
 	private static final long serialVersionUID = 200L;
-	private int[] colours;
+	private transient int[] colours;
 	private int y;
 	private Ball ball;
-	private static transient Image pic = new Image("file:images/colourchanger.png");
-	private transient static ImageView img = new ImageView(pic);
+	private static Image pic = new Image("file:images/colourchanger.png");
+	private static ImageView img = new ImageView(pic);
 	private static int width = 100;
 
 	public Colourchanger() throws FileNotFoundException{
@@ -1057,7 +1106,7 @@ class Obstacle1 extends Obstacle{
 	
 	private static final long serialVersionUID = 220L;
 	private static transient Image pic = new Image("file:images/obstacle1.png");
-	private static transient ImageView img = new ImageView(pic);
+	private static ImageView img = new ImageView(pic);
 	private static int width = 250;
 	
 	public Obstacle1 () throws FileNotFoundException{
