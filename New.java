@@ -100,7 +100,7 @@ class SaveGame{
 				loadedObject = (SaveObject)ois.readObject();
 				ois.close();
 				
-				System.out.println(loadedObject.toString());
+				System.out.println(loadedObject.getBall().getX()+" "+loadedObject.getBall().getY()+" "+loadedObject.getBall().getColour()+" "+loadedObject.getBall().getBallwidth());
 			}
 			catch(ClassNotFoundException | IOException e) {
 				e.printStackTrace();
@@ -130,10 +130,52 @@ class SaveGame{
 class SaveObject implements Serializable{
 	
 	private static final long serialVersionUID = 100L;
-	private int currGameID = 6;
+	private Game game;
+	private Player player;
+	private Ball ball;
+	private Star star[];
+	private Colourchanger cc[];
+	private Obstacle1 ob1;
+	private Obstacle2 ob2;
+	private Obstacle3 ob3;
+	private Obstacle4 ob4;
+	private Obstacle5 ob5;
 	
-	public SaveObject(int currGameID) {
-		this.currGameID = currGameID;
+	public SaveObject(Ball ball, Game game, Player player, Obstacle1 obstacle1, Obstacle2 obstacle2, Obstacle3 obstacle3, Obstacle4 obstacle4, Colourchanger[] ccr, Star[] star1) {
+		this.ball = ball;
+		this.game = game;
+		this.player = player;
+		this.ob1 = obstacle1;
+		this.ob2 = obstacle2;
+		this.ob3 = obstacle3;
+		this.ob4 = obstacle4;
+		//this.ob5 = obstacle5;
+		this.cc = ccr;
+		this.star = star;
+	}
+	public Ball getBall() {
+		return this.ball;
+	}
+	public Player getPlayer() {
+		return player;
+	}
+	public Obstacle1 getOb1() {
+		return ob1;
+	}
+	public Obstacle2 getOb2() {
+		return ob2;
+	}
+	public Obstacle3 getOb3() {
+		return ob3;
+	}
+	public Obstacle4 getOb4() {
+		return ob4;
+	}
+	public Colourchanger getCc() {
+		return cc;
+	}
+	public Star getStar() {
+		return star;
 	}
 	
 }
@@ -184,8 +226,8 @@ class Homepage {
 	private void startNewgame(Stage stage) throws FileNotFoundException{	
 		game.start(stage);
 	}
-	private void resumeGame(Game game){
-		
+	private void resumeGame(Stage theStage, SaveObject data) throws FileNotFoundException{
+		game.resume(theStage, data);
 	}
 	private void exit(){
 		Platform.exit();
@@ -273,7 +315,7 @@ class Homepage {
 	       		stage = new Stage();
 	       		 
 	       		try {
-						startNewgame(stage);
+						resumeGame(stage, loadedgame);
 				} catch (FileNotFoundException e) {
 						e.printStackTrace();
 				}
@@ -284,6 +326,7 @@ class Homepage {
 
 class Game extends Application implements Serializable{
 	
+	private static final long serialVersionUID = 120L;
 	private String name;
 	private int level;
 	private int currGameID;
@@ -295,17 +338,17 @@ class Game extends Application implements Serializable{
     }
     boolean pause=false;
     final long startNanoTime = System.nanoTime();
-    GraphicsContext gc;
-    private double leftPaddleDY;
-    Ball ball;
-    Obstacle1 obstacle1;
-    Obstacle2 obstacle2;
-    Obstacle3 obstacle3;
-    Obstacle4 obstacle4;
-    Star[] star1= new Star[5];
-    Colourchanger[] ccr=new Colourchanger[5];
-    Player player;
-    private double y=299;
+    transient GraphicsContext gc;
+    private int leftPaddleDY;
+    private Ball ball;
+    private Obstacle1 obstacle1;
+    private Obstacle2 obstacle2;
+    private Obstacle3 obstacle3;
+    private Obstacle4 obstacle4;
+    private Star[] star1= new Star[5];
+    private Colourchanger[] ccr=new Colourchanger[5];
+    private Player player;
+    private int y=299;
     private int colour=0;
     transient Button button2;
     transient Button btn;
@@ -376,7 +419,7 @@ class Game extends Application implements Serializable{
         btn.setLayoutY(300);
         root.getChildren().add(btn);
         gc = canvas.getGraphicsContext2D();
-        ball=new Ball();
+        ball = new Ball();
         obstacle1 = new Obstacle1();
 //      obstacle1.img.setLayoutX(1000);
         obstacle2 = new Obstacle2();
@@ -419,17 +462,96 @@ class Game extends Application implements Serializable{
         theStage.show();
         timer.start(); 
     }
-	
+	public void resume(Stage theStage, SaveObject data) throws FileNotFoundException
+    {
+    	theStage.setTitle( "Colour Switch" );
+    	player = data.getPlayer();
+        ball = data.getBall();
+        obstacle1 = data.getOb1();
+        obstacle2 = data.getOb2();
+        obstacle3 = data.getOb3();
+        obstacle4 = data.getOb4();
+        ccr[1] = data.getCc();
+        star1[1] = data.getStar();
+        //Group 
+        root = new Group();
+        theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
+        theStage.setScene( theScene );
+        canvas = new Canvas( Main.screenWidth, Main.screenHeight );
+        //root.getChildren().add( canvas );
+        stack1.setStyle("-fx-background-color: #202020");
+        stack1.getChildren().add(canvas);
+        root.getChildren().add( stack1 );
+        t = new Text();
+		t = new Text (50, 100, "Score:\n\n" + player.getScore());
+		t.setFont(Font.font ("Montserrat", 15));
+		t.setFill(Color.WHITE);
+		t2 = new Text();
+		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
+		l = new Label(Integer.toString(player.getCollectedStars()));
+		l.setTextFill(Color.WHITE);
+		root.getChildren().add( l );
+		//Label l2= new Label();
+		t2.setFont(Font.font ("Montserrat", 15));
+		t2.setFill(Color.WHITE);
+		root.getChildren().addAll(t, t2);
+        
+        button2 = new Button("Pause");
+        button2.setLayoutX(1000);
+        button2.setLayoutY(250);
+        root.getChildren().add( button2 ); 
+        btn = new Button();
+        btn.setText("Save");
+        btn.setLayoutX(1003);
+        btn.setLayoutY(300);
+        root.getChildren().add(btn);
+        gc = canvas.getGraphicsContext2D();
+        
+//      obstacle2.img.setLayoutX(1000);
+        //root.getChildren().remove(l);
+        final long startNanoTime = System.nanoTime();
+        //canvas.setOnMouseClicked(event);
+        
+        canvas.setFocusTraversable(true);
+        // canvas.requestFocus();
+        canvas.setOnKeyPressed(keyPressed);
+        canvas.setOnKeyReleased(keyReleased);
+        button2.setOnAction(event);
+        btn.setOnAction(event2);
+        
+        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg() );
+        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2 );
+        stack.setLayoutY(0);
+        root.getChildren().add(stack);
+        
+        stack2.getChildren().addAll( obstacle2.getImg());
+        stack2.setLayoutX(Main.screenWidth/2 - 3*obstacle2.getWidth()/4);
+        stack2.setLayoutY(0);
+        root.getChildren().add(stack2);
+        
+        stack3.getChildren().addAll( ccr[1].getImg());
+        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getWidth()/2);
+        stack3.setLayoutY(ccr[1].getY());
+        root.getChildren().add(stack3);
+        
+        stack4.getChildren().addAll( star1[1].getImg());
+        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getWidth()/2);
+        stack4.setLayoutY(star1[1].getY());
+        root.getChildren().add(stack4);
+        
+        theStage.show();
+        timer.start(); 
+    }
 	private transient AnimationTimer timer = new AnimationTimer()
     {
 		   public void handle(long currentNanoTime)
 	        {
 			   // background clears canvas
 	            gc.clearRect(0, 0, Main.screenWidth, Main.screenHeight);
-
 	            if (pause) {
 	            	//return;
 	            }
+	            y = ball.getY();
 	            
 	            if(pause==false) {
 	            	if(angle2>3200)
@@ -528,18 +650,21 @@ class Game extends Application implements Serializable{
 					 	System.out.println(angle2 - ddd-5 + ccr[1].getWidth()/2);
 					 	System.out.println(angle2 - 2*ddd-5 + star1[1].getWidth()/2);
 					 	System.out.println(angle2 - 3*ddd-5 +obstacle2.getWidth()/2);*/
-				 	 if (y<350 && y>150  )
+				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*leftPaddleDY+1;
+				 		 ball.setY(y);
+				 	 }
 				 	 else if (y>=250) {
 				 		angle2=(int) (angle2-leftPaddleDY -1);
 				 		y=y+leftPaddleDY;
+				 		ball.setY(y);
 				 	 }
 				 	 else if (y<250)	{
 				 		angle2=(int) (angle2-2*leftPaddleDY );
 				 		y=y+1;
+				 		ball.setY(y);
 				 	 }
-				 	
-					 
+				 	 
 					 gc.drawImage(ball.get_ball(), x, y);
 					 
 				 }
@@ -639,7 +764,7 @@ class Game extends Application implements Serializable{
     };
     
     public void saveGame() {
-    	SaveObject gametosave = new SaveObject(currGameID);
+    	SaveObject gametosave = new SaveObject(this.ball, this, this.player, this.obstacle1, this.obstacle2, this.obstacle3, this.obstacle4, this.ccr, this.star1);
     	SaveGame.save(gametosave);
     }
     public void saveGameMenu(Stage theStage){
@@ -736,31 +861,26 @@ class Game extends Application implements Serializable{
 
 }
 class Ball implements Serializable{
+	
+	private static final long serialVersionUID = 140L;
 	private int x;
 	private int y;
 	private int colour;
-	private transient Image red;
-	private transient Image yellow;
-	private transient Image blue;
-	private transient Image green;
-	private transient ImageView ballimg;
-    static private int ballwidth;
-    Random rand;
+	private static Image red = new Image("file:images/red.png");
+	private static Image yellow = new Image("file:images/yellow.png");
+	private static Image blue = new Image("file:images/blue.png");
+	private static Image green = new Image("file:images/green.png");
+	private transient ImageView ballimg = new ImageView(this.get_ball());
+    private static int ballwidth = 60;
+    private transient Random rand;
     
     public Ball() throws FileNotFoundException {
-    	red = new Image("file:images/red.png");
-    	yellow = new Image("file:images/yellow.png");
-    	blue = new Image("file:images/blue.png");
-    	green = new Image("file:images/green.png");
     	
-        ballimg = new ImageView(this.get_ball());
-        ballwidth = 60;
-        ballimg.setFitWidth(ballwidth);
+        ballimg.setFitWidth(getBallwidth());
         ballimg.setPreserveRatio(true);
-        this.x = Main.screenWidth/2 - this.ballwidth/2;
-        
+        this.x = Main.screenWidth/2 - this.getBallwidth()/2;
+        this.y = 299;
     }
-//    public void change_colour(int a, int b) {
     public void change_colour() {
 		rand = new Random(); 
 		this.colour = rand.nextInt(4); 
@@ -773,6 +893,9 @@ class Ball implements Serializable{
 	}
 	public int getColour() {
 		return this.colour;
+	}
+	public static int getBallwidth() {
+		return ballwidth;
 	}
 	public void setX(int a) {
 		this.x=a;
@@ -798,8 +921,11 @@ class Ball implements Serializable{
 	
 }
  class Player implements Serializable{
+	 
+	private static final long serialVersionUID = 160L;
 	private int collectedstars;
 	private int score;
+	
 	public Player() {
 		this.collectedstars = 0;
 		this.score = 0;
@@ -824,16 +950,16 @@ class Ball implements Serializable{
 	}
 }
  class Star implements Serializable{
+	 
+	private static final long serialVersionUID = 180L;
 	private int y;
 	private Player player;
-	static private transient Image singlecircle;
-	static private transient ImageView img;
-	static private int width;
+	static private transient Image pic = new Image("file:images/star.png");
+	static private transient ImageView img = new ImageView(pic);
+	static private int width = 100;
 	
 	public Star() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/star.png");
-		this.img = new ImageView(this.singlecircle);
-		width = 100;
+		
 		img.setFitWidth(width);
 		img.setPreserveRatio(true);
 		this.y = 0;
@@ -856,17 +982,17 @@ class Ball implements Serializable{
 	}
 }
  class Colourchanger implements Serializable{
+	
+	private static final long serialVersionUID = 200L;
 	private int[] colours;
 	private int y;
 	private Ball ball;
-	static private transient Image singlecircle;
-	static private transient ImageView img;
-	static private int width;
+	private static transient Image pic = new Image("file:images/colourchanger.png");
+	private transient static ImageView img = new ImageView(pic);
+	private static int width = 100;
 
 	public Colourchanger() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/colourchanger.png");
-		this.img = new ImageView(this.singlecircle);
-		width = 100;
+		
 		img.setFitWidth(width);
 		img.setPreserveRatio(true);
 		this.y = 0;
@@ -898,10 +1024,10 @@ class Ball implements Serializable{
 	}
 }
 abstract class Obstacle implements Serializable{
+	
 	protected int noofcolours;
 	protected int passposition;
-	protected int y;
-	transient Image singlecircle;
+	
 	public Obstacle() throws FileNotFoundException {
 		this.noofcolours = 4;
 	}
@@ -916,14 +1042,7 @@ abstract class Obstacle implements Serializable{
 	}
 	public void setPassposition(int pass) {
 		
-	}
-	public int getY() {
-		return this.y;
-	}
-	public void setY(int y) {
-		this.y = y;
-	}
-	
+	}	
 	protected boolean obstacleHit(double y2) {
 		if(y2 >= passposition-100 && y2 <= passposition+100) {
 			return false;
@@ -936,14 +1055,13 @@ abstract class Obstacle implements Serializable{
 }
 class Obstacle1 extends Obstacle{
 	
-	static private transient Image singlecircle;
-	static private transient ImageView img;
-	static private int width;
+	private static final long serialVersionUID = 220L;
+	private static transient Image pic = new Image("file:images/obstacle1.png");
+	private static transient ImageView img = new ImageView(pic);
+	private static int width = 250;
 	
 	public Obstacle1 () throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/obstacle1.png");
-		this.img = new ImageView(this.singlecircle);
-		width = 250;
+		
 		img.setFitWidth(width);
 		img.setPreserveRatio(true);
 		img.setX(600-Main.screenWidth);
@@ -956,11 +1074,6 @@ class Obstacle1 extends Obstacle{
 
 	public static int getWidth() {
 		return width;
-	}
-
-	public void setLayoutX(int i) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -992,19 +1105,18 @@ class Obstacle1 extends Obstacle{
 }
 class Obstacle2 extends Obstacle {
 	
-	static private transient Image singlecircle;
-	static private transient ImageView img;
-	static private int width;
+	private static final long serialVersionUID = 240L;
+	private static transient Image pic = new Image("file:images/obstacle2.png");
+	private static transient ImageView img = new ImageView(pic);
+	private static int width = 250;
 	transient Timeline timeline;
 	transient Duration rotateDuration;
 	transient Rotate rotate;
 	
 	public Obstacle2() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/obstacle2.png");
-		this.img = new ImageView(this.singlecircle);
+		
 		 img.setX(600-Main.screenWidth);
          img.setY(300-Main.screenHeight);
-         width = 250;
          img.setFitWidth(getWidth());
          img.setPreserveRatio(true);
 	}
@@ -1043,19 +1155,18 @@ class Obstacle2 extends Obstacle {
 }
 class Obstacle3 extends Obstacle {
 	
-	static private transient Image singlecircle;
-	static private transient ImageView img;
-	static private int width;
+	private static final long serialVersionUID = 260L;
+	private static transient Image pic = new Image("file:images/obstacle3.png");
+	private static transient ImageView img = new ImageView(pic);
+	private static int width = 250;
 	transient Timeline timeline;
 	transient Duration rotateDuration;
 	transient Rotate rotate;
 	
 	public Obstacle3() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/obstacle3.png");
-		this.img = new ImageView(this.singlecircle);
+		
 		 img.setX(600-Main.screenWidth);
          img.setY(300-Main.screenHeight);
-         width = 250;
          img.setFitWidth(getWidth());
          img.setPreserveRatio(true);
 	}
@@ -1094,19 +1205,18 @@ class Obstacle3 extends Obstacle {
 }
 class Obstacle4 extends Obstacle {
 	
-	static private transient Image singlecircle;
-	static private transient ImageView img;
-	static private int width;
+	private static final long serialVersionUID = 280L;
+	private static transient Image pic = new Image("file:images/obstacle4.png");
+	private static transient ImageView img = new ImageView(pic);
+	private static int width = 250;
 	transient Timeline timeline;
 	transient Duration rotateDuration;
 	transient Rotate rotate;
 	
 	public Obstacle4() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/obstacle4.png");
-		this.img = new ImageView(this.singlecircle);
+		
 		 img.setX(600-Main.screenWidth);
          img.setY(300-Main.screenHeight);
-         width = 250;
          img.setFitWidth(getWidth());
          img.setPreserveRatio(true);
 	}
@@ -1145,21 +1255,20 @@ class Obstacle4 extends Obstacle {
 }
 class Obstacle5 extends Obstacle {
 	
-	static private transient Image singlecircle;
-	static private transient ImageView img;
-	static private int width;
-	transient Timeline timeline;
-	transient Duration rotateDuration;
-	transient Rotate rotate;
+	private static final long serialVersionUID = 300L;
+	private static transient Image pic = new Image("file:images/obstacle2.png");
+	private static transient ImageView img = new ImageView(pic);
+	private static int width = 250;
+	private transient Timeline timeline;
+	private transient Duration rotateDuration;
+	private transient Rotate rotate;
 	
 	public Obstacle5() throws FileNotFoundException{
-		this.singlecircle = new Image("file:images/obstacle2.png");
-		this.img = new ImageView(this.singlecircle);
-		 img.setX(600-Main.screenWidth);
-         img.setY(300-Main.screenHeight);
-         width = 250;
-         img.setFitWidth(getWidth());
-         img.setPreserveRatio(true);
+		
+		img.setX(600-Main.screenWidth);
+        img.setY(300-Main.screenHeight);
+        img.setFitWidth(getWidth());
+        img.setPreserveRatio(true);
 	}
 
 	public static ImageView getImg() {
