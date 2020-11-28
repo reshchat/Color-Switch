@@ -171,10 +171,10 @@ class SaveObject implements Serializable{
 	public Obstacle4 getOb4() {
 		return ob4;
 	}
-	public Colourchanger getCc() {
+	public Colourchanger[] getCc() {
 		return cc;
 	}
-	public Star getStar() {
+	public Star[] getStar() {
 		return star;
 	}
 	
@@ -471,8 +471,8 @@ class Game extends Application implements Serializable{
         obstacle2 = data.getOb2();
         obstacle3 = data.getOb3();
         obstacle4 = data.getOb4();
-        ccr[1] = data.getCc();
-        star1[1] = data.getStar();
+        ccr = data.getCc();
+        star1 = data.getStar();
         //Group 
         root = new Group();
         theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
