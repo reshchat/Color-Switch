@@ -651,7 +651,7 @@ class Game extends Application implements Serializable{
 						 l.setText(Integer.toString(player.getCollectedStars())); 
 						
 					 }
-					 
+					 //obstacle 1
 					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
 						
 						 System.out.println("collup");
@@ -673,6 +673,7 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
+							 showResurrectmenu();
 						 }
 					 }
 					 if (y>=getAngle2() +obstacle1.getWidth() -50 && y<=getAngle2() +obstacle1.getWidth()-40) {
@@ -699,14 +700,61 @@ class Game extends Application implements Serializable{
 						 }
 							
 					 }
+					 //obstacle 3
+					 if (y>=angle2- 4*ddd -20 && y<=angle2 - 4*ddd-10) {
+							
+						 System.out.println("collup");
+						 System.out.println(angle%360);
+						int abc =(angle-45)%360;
+						 int col=-1;
+						 if(abc > 0 && abc <90)
+							 {System.out.println("red");
+							 col =0; }
+						 if(abc > 90 && abc <180)
+						 { System.out.println("blue");
+						 col =1;}
+						 if(abc > 180 && abc <270)
+						 { System.out.println("yellow");
+						 col =2;}
+						 if(abc > 270 && abc <360)
+						 { System.out.println("green");
+						 col =3; }
+						 if (col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+							 showResurrectmenu();
+						 }
+					 }
+					 if (y>=angle2 +obstacle3.getWidth() - 4*ddd-50 && y<=angle2 +obstacle3.getWidth()-40- 4*ddd) {
+						 
+						 System.out.println("colld");
+						 System.out.println(angle%360);
+						 int col=-1;
+						 int abc =(angle-45)%360;
+						 if(abc > 0 &&abc <90)
+							 {System.out.println("yellow");
+							 col =2; }
+						 if(abc > 90 && abc <180)
+						 { System.out.println("green");
+						 col =3;}
+						 if(abc > 180 && abc <270)
+						 { System.out.println("red");
+						 col =0;}
+						 if(abc > 270 && abc <360)
+						 { System.out.println("blue");
+						 col =1; }
+						 if (col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+							 showResurrectmenu();
+						 }
+							
+					 }
 					 
 					 /*
 					 System.out.println("y");
 					 	System.out.println(y);
-					 	System.out.println(angle2 -5 + obstacle1.getWidth()/2);
-					 	System.out.println(angle2 - ddd-5 + ccr[1].getWidth()/2);
-					 	System.out.println(angle2 - 2*ddd-5 + star1[1].getWidth()/2);
-					 	System.out.println(angle2 - 3*ddd-5 +obstacle2.getWidth()/2);*/
+					 	*/
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
 				 		 ball.setY(y);
@@ -715,11 +763,13 @@ class Game extends Application implements Serializable{
 				 		angle2=(int) (getAngle2()-getGravity() -1);
 				 		y=y+getGravity();
 				 		ball.setY(y);
+				 		System.out.println("up");
 				 	 }
 				 	 else if (y<250)	{
 				 		angle2=(int) (getAngle2()-2*getGravity() );
 				 		y=y+1;
 				 		ball.setY(y);
+				 		System.out.println("down");
 				 	 }
 				 	 
 					 gc.drawImage(ball.get_ball(), x, y, 30, 30);
