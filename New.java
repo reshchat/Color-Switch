@@ -12,6 +12,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -411,11 +413,11 @@ class Game extends Application implements Serializable{
     private transient GridPane pane;
     private transient VBox vbox;
     private transient Timeline timeline;
-    private transient StackPane stack = new StackPane();
-    private transient StackPane stack1 = new StackPane();
-    private transient StackPane stack2 = new StackPane();
-    private transient StackPane stack3 = new StackPane();
-    private transient StackPane stack4 = new StackPane();
+    private transient StackPane stack;
+    private transient StackPane stack1;
+    private transient StackPane stack2;
+    private transient StackPane stack3;
+    private transient StackPane stack4;
 
     transient Label l;
     transient Text t;
@@ -429,6 +431,11 @@ class Game extends Application implements Serializable{
     public void start(Stage theStage) throws FileNotFoundException
     {
     	theStage.setTitle( "Colour Switch" );
+    	stack = new StackPane();
+        stack1 = new StackPane();
+        stack2 = new StackPane();
+        stack3 = new StackPane();
+        stack4 = new StackPane();
         angle=0;
         angle2=0;
         //Group 
@@ -517,6 +524,11 @@ class Game extends Application implements Serializable{
 	public void resume(Stage theStage, SaveObject data) throws FileNotFoundException
     {
     	theStage.setTitle( "Colour Switch" );
+    	stack = new StackPane();
+        stack1 = new StackPane();
+        stack2 = new StackPane();
+        stack3 = new StackPane();
+        stack4 = new StackPane();
     	player = data.getPlayer();
         ball = data.getBall();
         obstacle1 = data.getOb1();
@@ -840,8 +852,9 @@ class Game extends Application implements Serializable{
         	}
         	else if(src.getText().equals("Restart game")) {
         		stage.close();
+        		Stage newstage = new Stage();
         		try {
-					start(stage);
+					start(newstage);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
