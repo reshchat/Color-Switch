@@ -99,13 +99,8 @@ class SaveGame{
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				loadedObject = (SaveObject)ois.readObject();
 				ois.close();
-				
-//				System.out.println(loadedObject.getGame().getGravity()+" "+loadedObject.getGame().getAngle2());
-//				File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
-//			    String contents[] = directoryPath.list();
-//			    for(int i=0; i<contents.length; i++) {
-//			         System.out.println(contents[i]);
-//			    }
+				System.out.println(loadedObject.getGame().getGravity()+" "+loadedObject.getGame().getAngle2());
+								
 			}
 			catch(ClassNotFoundException | IOException e) {
 				e.printStackTrace();
@@ -195,9 +190,11 @@ class Homepage {
     static Stage stage;
 	private Game game;
 	private int bestscore;
+	private ArrayList<Button> buttons;
 	
 	public Homepage() {
 		game = new Game();
+		buttons = new ArrayList<Button>();
 		bestscore = 0;
 	}
 	public void displayMainmenu(Stage theStage, GridPane pane, Scene scene){
@@ -256,21 +253,34 @@ class Homepage {
 		t2 = new Text (10, 20, "Choose a game to start playing:\n");
 		t2.setFont(Font.font ("Montserrat", 15));
 		t2.setFill(Color.WHITE);
+		vbox.getChildren().addAll(t, t2);
 
-		Button btn1 = new Button("Game 1");
-		Button btn2 = new Button("Game 2");
-		Button btn3 = new Button("Game 3");
-		
-		Button btn4 = new Button("Back");
+//		Button btn1 = new Button("Game 1");
+//		Button btn2 = new Button("Game 2");
+//		Button btn3 = new Button("Game 3");
+//		btn1.setOnAction(bh);
+//		btn2.setOnAction(bh);
+//		btn3.setOnAction(bh);
 
 		buttonHandler bh = new buttonHandler();
-
-		btn1.setOnAction(bh);
-		btn2.setOnAction(bh);
-		btn3.setOnAction(bh);
+		gamebuttonsHandler gh = new gamebuttonsHandler();
+		
+		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
+	    String contents[] = directoryPath.list();
+	    for(int i=0; i<contents.length; i++) {
+	    	if(contents[i].substring(contents[i].length() - 4).equals(".txt")) {
+	    		buttons.add(new Button(contents[i].substring(0, contents[i].length() - 4)));
+	    	}
+	    }
+	    for (Button b : buttons) {
+	    	b.setOnAction(gh);
+			vbox.getChildren().add(b);
+	    }
+		
+		Button btn4 = new Button("Back");
 		btn4.setOnAction(bh);
 
-		vbox.getChildren().addAll(t, t2, btn1, btn2, btn3, btn4);
+//		vbox.getChildren().addAll(btn1, btn2, btn3, btn4);
 
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch");
@@ -282,6 +292,25 @@ class Homepage {
 	}
 	public void setBestscore(int best){
 		this.bestscore = best;
+	}
+
+	private class gamebuttonsHandler implements javafx.event.EventHandler<ActionEvent>{
+
+		@Override
+        public void handle(ActionEvent event) {
+
+			var src = (Button) event.getSource();
+        	SaveObject loadedgame = SaveGame.load(src.getText()+".txt");
+    		pane.getChildren().clear();
+       		stage.close();
+       		stage = new Stage();
+       		 
+       		try {
+					resumeGame(stage, loadedgame);
+			} catch (FileNotFoundException e) {
+					e.printStackTrace();
+			}
+		}
 	}
 	private class buttonHandler implements javafx.event.EventHandler<ActionEvent> {
 		Homepage homepage = new Homepage();
@@ -316,18 +345,18 @@ class Homepage {
         		displayMainmenu(stage, pane, scene);
         	}
 
-        	else if(src.getText().equals("Game 1")) {
-        		SaveObject loadedgame = SaveGame.load("hello.txt");
-        		pane.getChildren().clear();
-	       		stage.close();
-	       		stage = new Stage();
-	       		 
-	       		try {
-						resumeGame(stage, loadedgame);
-				} catch (FileNotFoundException e) {
-						e.printStackTrace();
-				}
-        	}
+//        	else if(src.getText().equals("Game 1")) {
+//        		SaveObject loadedgame = SaveGame.load("hello.txt");
+//        		pane.getChildren().clear();
+//	       		stage.close();
+//	       		stage = new Stage();
+//	       		 
+//	       		try {
+//						resumeGame(stage, loadedgame);
+//				} catch (FileNotFoundException e) {
+//						e.printStackTrace();
+//				}
+//        	}
         }
 	}
 }
