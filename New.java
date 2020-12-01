@@ -652,7 +652,9 @@ class Game extends Application implements Serializable{
 	            
 	            if(pause==false) {
 	            	if(getAngle2()>3200)
-	            		angle2=0;
+	            		{angle2=0;
+	            		stack4.getChildren().get(0).setVisible(true);
+	            		}
 	            	if(getAngle2()<-100)
 	            		angle2=3200;
 	            	rotateDuration = Duration.millis(3);
@@ -686,8 +688,8 @@ class Game extends Application implements Serializable{
 					 if (y>=getAngle2() - ddd-20 && y<=getAngle2() - ddd-10) {
 						 ball.change_colour();
 					 }
-					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10) {
-						
+					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10 && stack4.getChildren().get(0).isVisible()) {
+						 stack4.getChildren().get(0).setVisible(false);
 						 player.setCollectedStars(player.getCollectedStars()+1);
 						 l.setText(Integer.toString(player.getCollectedStars())); 
 						
