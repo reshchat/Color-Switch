@@ -420,6 +420,7 @@ class Game extends Application implements Serializable{
     private transient StackPane stack4;
 
     transient Label l;
+    transient Label l2;
     transient Text t;
     transient Text t2;
     transient TextField tf;
@@ -449,13 +450,20 @@ class Game extends Application implements Serializable{
         root.getChildren().add( stack1 );
         player = new Player();
         t = new Text();
-		t = new Text (50, 100, "Score:\n\n" + player.getScore());
+		t = new Text (50, 100, "Score:\n\n" );
 		t.setFont(Font.font ("Montserrat", 15));
+		l2 = new Label(Integer.toString(player.getScore()));
+		l2.setTextFill(Color.WHITE);
+		l2.setLayoutX(60);
+		l2.setLayoutY(120);
+		root.getChildren().add( l2 );
 		t.setFill(Color.WHITE);
 		t2 = new Text();
-		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
+		t2 = new Text (50, 200, "Lives left:\n\n" );
 		l = new Label(Integer.toString(player.getCollectedStars()));
 		l.setTextFill(Color.WHITE);
+		l.setLayoutX(60);
+		l.setLayoutY(220);
 		root.getChildren().add( l );
 		//Label l2= new Label();
 		t2.setFont(Font.font ("Montserrat", 15));
@@ -581,12 +589,19 @@ class Game extends Application implements Serializable{
         root.getChildren().add( stack1 );
         t = new Text();
 		t = new Text (50, 100, "Score:\n\n" + player.getScore());
+		l2 = new Label(Integer.toString(player.getScore()));
+		l2.setTextFill(Color.WHITE);
+		l2.setLayoutX(60);
+		l2.setLayoutY(120);
+		root.getChildren().add( l2 );
 		t.setFont(Font.font ("Montserrat", 15));
 		t.setFill(Color.WHITE);
 		t2 = new Text();
-		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
+		t2 = new Text (50, 200, "Lives left:\n\n" );
 		l = new Label(Integer.toString(player.getCollectedStars()));
 		l.setTextFill(Color.WHITE);
+		l.setLayoutX(60);
+		l.setLayoutY(220);
 		root.getChildren().add( l );
 		//Label l2= new Label();
 		t2.setFont(Font.font ("Montserrat", 15));
@@ -692,6 +707,8 @@ class Game extends Application implements Serializable{
 						 stack4.getChildren().get(0).setVisible(false);
 						 player.setCollectedStars(player.getCollectedStars()+1);
 						 l.setText(Integer.toString(player.getCollectedStars())); 
+						 player.setScore(player.getScore()+1);
+						 l2.setText(Integer.toString(player.getScore()));
 						
 					 }
 					 //obstacle 1
@@ -848,9 +865,16 @@ class Game extends Application implements Serializable{
         		showSaveresmenu(stage);
         	}
         	else if(src.getText().equals("Save life and resume game")) {
+        		if(player.getCollectedStars()<=0) {
+        			System.out.println("Not enough stars");
+        		}
+        		else {
+        			//y=y+300;
         		player.resurrect();
+        		l.setText(Integer.toString(player.getCollectedStars()));
         		stage.close();
         		pause = !pause;
+        		}
         	}
         	else if(src.getText().equals("Restart game")) {
         		stage.close();
@@ -1086,7 +1110,7 @@ class Ball implements Serializable{
 		this.score = s;
 	}
 	public void resurrect() {
-		this.collectedstars -= 4;
+		this.collectedstars -= 1;
 	}
 	public void moveBall() {
 		
