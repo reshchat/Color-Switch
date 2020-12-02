@@ -204,6 +204,9 @@ class Homepage {
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
 		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
@@ -244,6 +247,9 @@ class Homepage {
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
 		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Saved Games\n");
@@ -940,8 +946,11 @@ class Game extends Application implements Serializable{
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    pane.setStyle("-fx-background-color: #202020");
     	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+    	pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
 		vbox = new VBox(5);
 		t = new Text();
 		t = new Text (10, 20, "Save Game\n");
@@ -973,8 +982,13 @@ class Game extends Application implements Serializable{
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    pane.setStyle("-fx-background-color: #202020");
+	    
     	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+    	
+    	pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
 		vbox = new VBox(5);
         stage = theStage;
         t = new Text();
@@ -1000,8 +1014,12 @@ class Game extends Application implements Serializable{
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    pane.setStyle("-fx-background-color: #202020");
+	    
 	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
 		vbox = new VBox(5);
 		t = new Text();
 		t = new Text (10, 20, "Do you want to use a star and continue playing?\n");
