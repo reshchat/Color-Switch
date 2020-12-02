@@ -100,9 +100,7 @@ class SaveGame{
 				fis = new FileInputStream(filename);
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				loadedObject = (SaveObject)ois.readObject();
-				ois.close();
-				System.out.println(loadedObject.getGame().getGravity()+" "+loadedObject.getGame().getAngle2());
-								
+				ois.close();				
 			}
 			catch(ClassNotFoundException | IOException e) {
 				e.printStackTrace();
@@ -257,13 +255,6 @@ class Homepage {
 		t2.setFill(Color.WHITE);
 		vbox.getChildren().addAll(t, t2);
 
-//		Button btn1 = new Button("Game 1");
-//		Button btn2 = new Button("Game 2");
-//		Button btn3 = new Button("Game 3");
-//		btn1.setOnAction(bh);
-//		btn2.setOnAction(bh);
-//		btn3.setOnAction(bh);
-
 		buttonHandler bh = new buttonHandler();
 		gamebuttonsHandler gh = new gamebuttonsHandler();
 		
@@ -281,8 +272,6 @@ class Homepage {
 		
 		Button btn4 = new Button("Back");
 		btn4.setOnAction(bh);
-
-//		vbox.getChildren().addAll(btn1, btn2, btn3, btn4);
 
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch");
@@ -383,7 +372,8 @@ class Game extends Application implements Serializable{
 	public int getAngle2() {
 		return angle2;
 	}
-	private boolean pause=false;
+	private boolean pause = false;
+	private boolean obhit;
     private transient final long startNanoTime = System.nanoTime();
     private transient GraphicsContext gc;
     private int gravity;
@@ -733,7 +723,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 showResurrectmenu();
+							 obhit = true;
+							 //showResurrectmenu();
 						 }
 					 }
 					 if (y>=getAngle2() +obstacle1.getWidth() -50 && y<=getAngle2() +obstacle1.getWidth()-40) {
@@ -756,7 +747,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 showResurrectmenu();
+							 obhit = true;
+							 //showResurrectmenu();
 						 }
 							
 					 }
@@ -782,7 +774,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 showResurrectmenu();
+							 obhit = true;
+							 //showResurrectmenu();
 						 }
 					 }
 					 if (y>=angle2 +obstacle3.getWidth() - 4*ddd-50 && y<=angle2 +obstacle3.getWidth()-40- 4*ddd) {
@@ -806,7 +799,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 showResurrectmenu();
+							 obhit = true;
+							 //showResurrectmenu();
 						 }
 							
 					 }
@@ -833,6 +827,11 @@ class Game extends Application implements Serializable{
 				 	 }
 				 	 
 					 gc.drawImage(ball.get_ball(), x, y, 30, 30);
+					 
+					 if(obhit == true) {
+						 obhit = false;
+						 showResurrectmenu();
+					 }
 					 
 				 }
 	        }
@@ -877,10 +876,11 @@ class Game extends Application implements Serializable{
         		}
         	}
         	else if(src.getText().equals("Restart game")) {
-        		stage.close();
-        		Stage newstage = new Stage();
+        		pane.getChildren().clear();
+       		 	stage.close();
+       		 	stage = new Stage();
         		try {
-					start(newstage);
+					start(stage);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -1194,9 +1194,11 @@ abstract class Obstacle implements Serializable{
 	
 	protected int noofcolours;
 	protected int passposition;
+	protected boolean hit;
 	
 	public Obstacle() throws FileNotFoundException {
 		this.noofcolours = 4;
+		this.hit = false;
 	}
 	public int getNoofcolours() {
 		return noofcolours;
