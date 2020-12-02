@@ -188,7 +188,7 @@ class Homepage {
 	static GridPane pane = new GridPane();
     static Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
     static Stage stage;
-	private Game game;
+	private static Game game;
 	private int bestscore;
 	private ArrayList<Button> buttons;
 	
@@ -231,7 +231,7 @@ class Homepage {
 		theStage.show();
 	}
 	
-	private void startNewgame(Stage stage) throws FileNotFoundException{	
+	public static void startNewgame(Stage stage) throws FileNotFoundException{	
 		game.start(stage);
 	}
 	private void resumeGame(Stage theStage, SaveObject data) throws FileNotFoundException{
@@ -379,7 +379,7 @@ class Game extends Application implements Serializable{
 		return angle2;
 	}
 	private boolean pause = false;
-	private boolean obhit;
+	private boolean obhit = false;
     private transient final long startNanoTime = System.nanoTime();
     private transient GraphicsContext gc;
     private int gravity;
@@ -729,8 +729,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 obhit = true;
-							 //showResurrectmenu();
+							 y = getAngle2() -25;
+							 showResurrectmenu();
 						 }
 					 }
 					 if (y>=getAngle2() +obstacle1.getWidth() -50 && y<=getAngle2() +obstacle1.getWidth()-40) {
@@ -753,8 +753,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 obhit = true;
-							 //showResurrectmenu();
+							 y = getAngle2() +obstacle1.getWidth() -55;
+							 showResurrectmenu();
 						 }
 							
 					 }
@@ -763,7 +763,7 @@ class Game extends Application implements Serializable{
 							
 						 System.out.println("collup");
 						 System.out.println(angle%360);
-						int abc =(angle-45)%360;
+						 int abc =(angle-45)%360;
 						 int col=-1;
 						 if(abc > 0 && abc <90)
 							 {System.out.println("red");
@@ -780,8 +780,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 obhit = true;
-							 //showResurrectmenu();
+							 y = angle2- 4*ddd -25;
+							 showResurrectmenu();
 						 }
 					 }
 					 if (y>=angle2 +obstacle3.getWidth() - 4*ddd-50 && y<=angle2 +obstacle3.getWidth()-40- 4*ddd) {
@@ -805,8 +805,8 @@ class Game extends Application implements Serializable{
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
-							 obhit = true;
-							 //showResurrectmenu();
+							 y = angle2 +obstacle3.getWidth() - 4*ddd-55;
+							 showResurrectmenu();
 						 }
 							
 					 }
@@ -815,29 +815,26 @@ class Game extends Application implements Serializable{
 					 System.out.println("y");
 					 	System.out.println(y);
 					 	*/
+					 //System.out.println("gravity "+ gravity);
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
 				 		 ball.setY(y);
+				 		System.out.println("y "+ y);
 				 	 }
 				 	 else if (y>=250) {
 				 		angle2=(int) (getAngle2()-getGravity() -1);
 				 		y=y+getGravity();
 				 		ball.setY(y);
-				 		System.out.println("up");
+				 		System.out.println("up "+ y);
 				 	 }
 				 	 else if (y<250)	{
 				 		angle2=(int) (getAngle2()-2*getGravity() );
 				 		y=y+1;
 				 		ball.setY(y);
-				 		System.out.println("down");
+				 		System.out.println("down "+ y);
 				 	 }
 				 	 
 					 gc.drawImage(ball.get_ball(), x, y, 30, 30);
-					 
-					 if(obhit == true) {
-						 obhit = false;
-						 showResurrectmenu();
-					 }
 					 
 				 }
 	        }
@@ -878,7 +875,7 @@ class Game extends Application implements Serializable{
         		player.resurrect();
         		l.setText(Integer.toString(player.getCollectedStars()));
         		stage.close();
-        		pause = !pause;
+        		//pause = !pause;
         		}
         	}
         	else if(src.getText().equals("Restart game")) {
@@ -886,7 +883,7 @@ class Game extends Application implements Serializable{
        		 	stage.close();
        		 	stage = new Stage();
         		try {
-					start(stage);
+					Homepage.startNewgame(stage);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
