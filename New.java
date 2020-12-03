@@ -2,6 +2,9 @@ package application;
 //package colorswitch;
 
 import javafx.util.Duration;
+
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -205,7 +208,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	   // scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -248,7 +251,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -871,16 +874,30 @@ class Game extends Application implements Serializable{
         			System.out.println("Not enough stars");
         		}
         		else {
-        			//y=y+300;
+        			//y=y+0;
+        		ball.setY(ball.getY()+20);
         		player.resurrect();
         		l.setText(Integer.toString(player.getCollectedStars()));
+        		canvas.requestFocus();
+        		//pause=!(pause);
         		stage.close();
-        		//pause = !pause;
+        		canvas.requestFocus();
+        		try {
+        		    Robot r = new Robot();
+        		    //there are other methods such as positioning mouse and mouseclicks etc.
+        		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
+        		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
+        		 } catch (AWTException e) {
+        		    //Teleport penguins  
+        		 }
+        		pause = !pause;
         		}
         	}
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
        		 	stage.close();
+       		 canvas.requestFocus();
+     		pause=!(pause);
        		 	stage = new Stage();
         		try {
 					Homepage.startNewgame(stage);
@@ -946,7 +963,7 @@ class Game extends Application implements Serializable{
     	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
     	pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
@@ -984,7 +1001,7 @@ class Game extends Application implements Serializable{
     	
     	pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	   // scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
         stage = theStage;
@@ -1015,7 +1032,7 @@ class Game extends Application implements Serializable{
 	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
