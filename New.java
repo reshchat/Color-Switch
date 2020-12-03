@@ -875,7 +875,7 @@ class Game extends Application implements Serializable{
         		}
         		else {
         			//y=y+0;
-        		ball.setY(ball.getY()+20);
+        		ball.setY(ball.getY()+70);
         		player.resurrect();
         		l.setText(Integer.toString(player.getCollectedStars()));
         		canvas.requestFocus();
@@ -896,8 +896,8 @@ class Game extends Application implements Serializable{
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
        		 	stage.close();
-       		 canvas.requestFocus();
-     		pause=!(pause);
+       		// canvas.requestFocus();
+     		//pause=!(pause);
        		 	stage = new Stage();
         		try {
 					Homepage.startNewgame(stage);
