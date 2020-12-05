@@ -461,6 +461,8 @@ class Game extends Application implements Serializable{
     private transient Group root;
     private int angle;
     private int angle2;
+    private int xpos;
+    private int xshift;
     private transient Canvas canvas;
     private transient Stage stage;
     private transient Scene scene;
@@ -503,6 +505,8 @@ class Game extends Application implements Serializable{
         stack5 = new StackPane();
         angle=0;
         angle2=0;
+        xpos = -40;
+        xshift = 3;
         //Group 
         root = new Group();
         theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
@@ -740,15 +744,16 @@ class Game extends Application implements Serializable{
 	            y = ball.getY();
 	            
 	            if(pause==false) {
-	            	if(getAngle2()>3200)
+	            	if(angle2>3200)
 	            	{
 	            		angle2=0;
 	            		stack4.getChildren().get(0).setVisible(true);
 	            	}
-	            	if(getAngle2()<-100)
+	            	if(angle2<-100)
 	            	{
 	            		angle2=3200;
 	            	}
+	            	
 	            	rotateDuration = Duration.millis(3);
 	        	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	        	    
@@ -767,14 +772,15 @@ class Game extends Application implements Serializable{
 	                timeline.setCycleCount(Timeline.INDEFINITE);
 	                timeline.setAutoReverse(false);
 	                timeline.play();
-	                obstacle1.movement(angle, getAngle2(), canvas);
-	                obstacle2.movement(angle, getAngle2() - 3*ddd, canvas);
-	                obstacle3.movement(angle, getAngle2() - 4*ddd, canvas);
-	                obstacle4.movement(angle, getAngle2() - 5*ddd, canvas);
+	                obstacle1.movement(angle, angle2, 0, pane);
+	                obstacle2.movement(angle, angle2 - 3*ddd, 0, pane);
+	                obstacle3.movement(angle, angle2 - 4*ddd, 0, pane);
+	                obstacle4.movement(angle, angle2 - 5*ddd, 0, pane);
+	                obstacle6.movement(angle, angle2 - 6*ddd, xpos, pane);
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
 		            rand = new Random(); 
-					 if (y>=getAngle2() - ddd-20 && y<=getAngle2() - ddd-10) {
+					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
 						 ball.change_colour();
 					 }
 					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10 && stack4.getChildren().get(0).isVisible()) {
@@ -897,11 +903,6 @@ class Game extends Application implements Serializable{
 							
 					 }
 					 
-					 /*
-					 System.out.println("y");
-					 	System.out.println(y);
-					 	*/
-					 //System.out.println("gravity "+ gravity);
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
 				 		 ball.setY(y);
@@ -920,6 +921,15 @@ class Game extends Application implements Serializable{
 				 		System.out.println("down "+ y);
 				 	 }
 				 	 
+				 	 if(xpos > 450) {
+				 		xshift *= -1;
+	            	 }
+	            	 if(xpos < -450)
+	            	 {
+	            		 xshift *= -1;
+	            	 }
+	            	 xpos += xshift;
+	            	
 					 gc.drawImage(ball.get_ball(), x, y, 30, 30);
 					 
 				 }
@@ -1335,7 +1345,7 @@ abstract class Obstacle implements Serializable{
 			return true;
 		}
 	}
-	protected abstract void movement(float duration, int a, Canvas canvas);
+	protected abstract void movement(float duration, int a, int b, GridPane pane);
 }
 class Obstacle1 extends Obstacle{
 	
@@ -1361,7 +1371,7 @@ class Obstacle1 extends Obstacle{
 	}
 
 	@Override
-	protected void movement(float duration, int angle2, Canvas canvas) {
+	protected void movement(float duration, int angle2, int xpos, GridPane pane) {
 	
 	    Timeline timeline;
 	    timeline = new Timeline();
@@ -1414,7 +1424,7 @@ class Obstacle2 extends Obstacle {
 	}
 
 	@Override
-	protected void movement(float duration,int angle2, Canvas canvas) {
+	protected void movement(float duration,int angle2, int xpos, GridPane pane) {
 		  
 	    timeline = new Timeline();
 	    rotateDuration = Duration.millis(3);
@@ -1464,7 +1474,7 @@ class Obstacle3 extends Obstacle {
 	}
 
 	@Override
-	protected void movement(float duration,int angle2, Canvas canvas) {
+	protected void movement(float duration,int angle2, int xpos, GridPane pane) {
 		  
 	    timeline = new Timeline();
 	    rotateDuration = Duration.millis(3);
@@ -1514,7 +1524,7 @@ class Obstacle4 extends Obstacle {
 	}
 
 	@Override
-	protected void movement(float duration,int angle2, Canvas canvas) {
+	protected void movement(float duration,int angle2, int xpos, GridPane pane) {
 		  
 	    timeline = new Timeline();
 	    rotateDuration = Duration.millis(3);
@@ -1564,7 +1574,7 @@ class Obstacle5 extends Obstacle {
 	}
 
 	@Override
-	protected void movement(float duration,int angle2, Canvas canvas) {
+	protected void movement(float duration,int angle2, int xpos, GridPane pane) {
 		  
 	    timeline = new Timeline();
 	    rotateDuration = Duration.millis(3);
@@ -1595,6 +1605,7 @@ class Obstacle6 extends Obstacle {
 	private static int width = 1000;
 	private transient Timeline timeline;
 	private transient Duration animateDuration;
+	private transient Duration xanimateDuration;
 	private transient Translate translate;
 	
 	public Obstacle6() throws FileNotFoundException{
@@ -1614,10 +1625,11 @@ class Obstacle6 extends Obstacle {
 	}
 
 	@Override
-	protected void movement(float duration,int angle2, Canvas canvas) {
+	protected void movement(float duration,int angle2, int xpos, GridPane pane) {
 		  
 	    timeline = new Timeline();
 	    animateDuration = Duration.millis(3);
+	    xanimateDuration = Duration.millis(1);
     	
 	    //rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	    // obstacle1.img.getTransforms().add(rotate);
@@ -1627,14 +1639,22 @@ class Obstacle6 extends Obstacle {
 	    float angle =duration;
 	   
 	    timeline = new Timeline( 
-	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), 
-	            new KeyFrame(animateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateXProperty(), xpos)),
+	            new KeyFrame(xanimateDuration, new KeyValue(this.getImg().translateXProperty(), xpos+2)),
 	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
 	            new KeyFrame(animateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
-
 	            );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(true);
+        
+        TranslateTransition transition = new TranslateTransition();
+	    transition.setByX(500);
+	    transition.setByY(0);
+	    transition.setAutoReverse(true);
+	    transition.setCycleCount(TranslateTransition.INDEFINITE);
+	    transition.setInterpolator(Interpolator.LINEAR);
+	    transition.play();
+        
         timeline.play();
 	}
 }
