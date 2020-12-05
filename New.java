@@ -485,18 +485,21 @@ class Game extends Application implements Serializable{
     transient Duration rotateDuration;
     transient Rotate rotate;
     transient Random rand;
+    
+    private static MediaPlayer mediaPlayer;
+    private static Media media;
    
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
     	theStage.setTitle( "Colour Switch" );
     	
-//    	if(playmusic == true) {
-//    		String s = "C:\\Users\\Kirthana\\Documents\\AP\\Project\\colourswitchmusic.mp3";
-//    		Media media = new Media(new File(s).toURI().toString());  
-//    		MediaPlayer mediaPlayer = new MediaPlayer(media);  
-//    		mediaPlayer.setAutoPlay(true);  
-//    	}
+    	if(playmusic == true) {
+    		String s = "colourswitchmusic.mp3";
+    		media = new Media(new File(s).toURI().toString()); 
+    		mediaPlayer = new MediaPlayer(media);  
+    		mediaPlayer.setAutoPlay(true);  
+    	}
     	stack = new StackPane();
         stack1 = new StackPane();
         stack2 = new StackPane();
