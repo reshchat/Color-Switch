@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -44,12 +43,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.stage.*;
 
 public class Main extends Application {
@@ -200,6 +202,21 @@ class Homepage {
 		buttons = new ArrayList<Button>();
 		bestscore = 0;
 	}
+	public int getBestscore(){
+		return this.bestscore;
+	}
+	public void setBestscore(int best){
+		this.bestscore = best;
+	}
+	public static void startNewgame(Stage stage) throws FileNotFoundException{	
+		game.start(stage);
+	}
+	private void resumeGame(Stage theStage, SaveObject data) throws FileNotFoundException{
+		game.resume(theStage, data);
+	}
+	private void exit(){
+		Platform.exit();
+	}
 	public void displayMainmenu(Stage theStage, GridPane pane, Scene scene){
 		stage = theStage;
 		pane.setAlignment(Pos.CENTER);
@@ -208,13 +225,19 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	   // scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
 		t.setFont(Font.font ("Montserrat", 20));
 		t.setFill(Color.WHITE);
+		
+//		Image img = new Image("file:images/settings.png");
+//      ImageView view = new ImageView(img);
+//      view.setFitHeight(50);
+//      view.setPreserveRatio(true);
+		Button button = new Button("Settings");
 
 		Button btn1 = new Button("Start new game");
 		Button btn2 = new Button("Resume a saved game");
@@ -225,8 +248,9 @@ class Homepage {
 		btn1.setOnAction(bh);
 		btn2.setOnAction(bh);
 		btn3.setOnAction(bh);
+		button.setOnAction(bh);
 
-		vbox.getChildren().addAll(t, btn1, btn2, btn3);
+		vbox.getChildren().addAll(t, btn1, btn2, button, btn3);
 
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch");
@@ -234,15 +258,6 @@ class Homepage {
 		theStage.show();
 	}
 	
-	public static void startNewgame(Stage stage) throws FileNotFoundException{	
-		game.start(stage);
-	}
-	private void resumeGame(Stage theStage, SaveObject data) throws FileNotFoundException{
-		game.resume(theStage, data);
-	}
-	private void exit(){
-		Platform.exit();
-	}
 	public void showSavedgames(Stage theStage){
 		stage = theStage;
 		pane.setAlignment(Pos.CENTER);
@@ -287,13 +302,40 @@ class Homepage {
 		theStage.setScene(scene);
 		theStage.show();
 	}
-	public int getBestscore(){
-		return this.bestscore;
-	}
-	public void setBestscore(int best){
-		this.bestscore = best;
-	}
+	public void displaySettings(Stage theStage, GridPane pane, Scene scene){
+		stage = theStage;
+		pane.setAlignment(Pos.CENTER);
+	    pane.setHgap(10);
+	    pane.setVgap(10);
+	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
+		VBox vbox = new VBox(5);
+		Text t = new Text();
+		t = new Text (10, 20, "Settings\n");
+		t.setFont(Font.font ("Montserrat", 20));
+		t.setFill(Color.WHITE);
+		
+		Button btn1 = new Button("Play music");
+		Button btn2 = new Button("Play sound effects");
+		Button btn3 = new Button("Back");
 
+		buttonHandler bh = new buttonHandler();
+
+		btn1.setOnAction(bh);
+		btn2.setOnAction(bh);
+		btn3.setOnAction(bh);
+
+		vbox.getChildren().addAll(t, btn1, btn2, btn3);
+
+		pane.getChildren().addAll(vbox);
+		theStage.setTitle("Colour Switch");
+		theStage.setScene(scene);
+		theStage.show();
+	}
+	
 	private class gamebuttonsHandler implements javafx.event.EventHandler<ActionEvent>{
 
 		@Override
@@ -319,7 +361,7 @@ class Homepage {
 
         	var src = (Button) event.getSource();
         	if(src.getText().equals("Exit")) {
-        		Platform.exit();
+        		exit();
         	}
         	else if(src.getText().equals("Start new game")) {
         		
@@ -344,19 +386,17 @@ class Homepage {
         		pane.getChildren().clear();
         		displayMainmenu(stage, pane, scene);
         	}
-
-//        	else if(src.getText().equals("Game 1")) {
-//        		SaveObject loadedgame = SaveGame.load("hello.txt");
-//        		pane.getChildren().clear();
-//	       		stage.close();
-//	       		stage = new Stage();
-//	       		 
-//	       		try {
-//						resumeGame(stage, loadedgame);
-//				} catch (FileNotFoundException e) {
-//						e.printStackTrace();
-//				}
-//        	}
+        	else if(src.getText().equals("Settings")) {
+        		pane.getChildren().clear();
+       		 	stage.close();
+        		displaySettings(stage, pane, scene);
+        	}
+        	else if(src.getText().equals("Play music")) {
+        		Game.setPlaymusic(true);
+        	}
+        	else if(src.getText().equals("Play sound effects")) {
+        		Game.setPlaysounds(true);
+        	}
         }
 	}
 }
@@ -367,12 +407,26 @@ class Game extends Application implements Serializable{
 	private String name;
 	private int level;
 	private int distance;
+	private static boolean playmusic = false;
+	private static boolean playsounds = false;
 	public Game()  {
 		// launch();
 		//stage = new Stage(); 
         //start(stage);
     }
-    public int getGravity() {
+    public boolean getPlaymusic() {
+		return playmusic;
+	}
+	public static void setPlaymusic(boolean pm) {
+		playmusic = pm;
+	}
+	public boolean getPlaysounds() {
+		return playsounds;
+	}
+	public static void setPlaysounds(boolean ps) {
+		playsounds = ps;
+	}
+	public int getGravity() {
 		return gravity;
 	}
     public int getAngle() {
@@ -391,6 +445,8 @@ class Game extends Application implements Serializable{
     private Obstacle2 obstacle2;
     private Obstacle3 obstacle3;
     private Obstacle4 obstacle4;
+    private Obstacle4 obstacle5;
+    private Obstacle6 obstacle6;
     private Star[] star1;
     private Colourchanger[] ccr;
     private Player player;
@@ -417,6 +473,7 @@ class Game extends Application implements Serializable{
     private transient StackPane stack2;
     private transient StackPane stack3;
     private transient StackPane stack4;
+    private transient StackPane stack5;
 
     transient Label l;
     transient Label l2;
@@ -431,11 +488,19 @@ class Game extends Application implements Serializable{
     public void start(Stage theStage) throws FileNotFoundException
     {
     	theStage.setTitle( "Colour Switch" );
+    	
+//    	if(playmusic == true) {
+//    		String s = "C:\\Users\\Kirthana\\Documents\\AP\\Project\\colourswitchmusic.mp3";
+//    		Media media = new Media(new File(s).toURI().toString());  
+//    		MediaPlayer mediaPlayer = new MediaPlayer(media);  
+//    		mediaPlayer.setAutoPlay(true);  
+//    	}
     	stack = new StackPane();
         stack1 = new StackPane();
         stack2 = new StackPane();
         stack3 = new StackPane();
         stack4 = new StackPane();
+        stack5 = new StackPane();
         angle=0;
         angle2=0;
         //Group 
@@ -481,10 +546,10 @@ class Game extends Application implements Serializable{
         gc = canvas.getGraphicsContext2D();
         ball = new Ball();
         obstacle1 = new Obstacle1();
-//      obstacle1.img.setLayoutX(1000);
         obstacle2 = new Obstacle2();
         obstacle3 = new Obstacle3();
         obstacle4 = new Obstacle4();
+        obstacle6 = new Obstacle6();
     	star1= new Star[5];
     	ccr=new Colourchanger[5];
     	for(int i = 0; i<5; i++) {
@@ -503,7 +568,7 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg() );
+        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg(), obstacle6.getImg() );
         stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
@@ -512,6 +577,11 @@ class Game extends Application implements Serializable{
         stack2.setLayoutX(Main.screenWidth/2 - 3*obstacle2.getWidth()/4);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
+
+        stack5.getChildren().addAll( obstacle6.getImg());
+        stack5.setLayoutX(100);
+        stack5.setLayoutY(0);
+        root.getChildren().add(stack5);
         
         ccr[1]=new Colourchanger();
         stack3.getChildren().addAll( ccr[1].getImg());
@@ -564,6 +634,11 @@ class Game extends Application implements Serializable{
         obstacle4.getImg().setPreserveRatio(true);
         obstacle4.getImg().setX(600-Main.screenWidth);
         obstacle4.getImg().setY(300-Main.screenHeight);
+        
+//        obstacle6.getImg().setFitWidth(obstacle6.getWidth());
+//        obstacle6.getImg().setPreserveRatio(true);
+//        obstacle6.getImg().setX(50);
+//        obstacle6.getImg().setY(300-Main.screenHeight);
         
 //        ccr = data.getCc();
 //        star1 = data.getStar();
@@ -666,15 +741,16 @@ class Game extends Application implements Serializable{
 	            
 	            if(pause==false) {
 	            	if(getAngle2()>3200)
-	            		{angle2=0;
+	            	{
+	            		angle2=0;
 	            		stack4.getChildren().get(0).setVisible(true);
-	            		}
+	            	}
 	            	if(getAngle2()<-100)
+	            	{
 	            		angle2=3200;
+	            	}
 	            	rotateDuration = Duration.millis(3);
-	            	
 	        	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	        	    // obstacle1.img.getTransforms().add(rotate);
 	        	    
 	        	    int ddd= 500;
 	        	    long t2 = System.nanoTime() - startNanoTime;
@@ -685,7 +761,7 @@ class Game extends Application implements Serializable{
 	        	         
 	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - 2*ddd)),
 	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - 2*ddd))
-	        	            );
+	        	    );
 	        	    angle=angle+2;
 	        	    
 	                timeline.setCycleCount(Timeline.INDEFINITE);
@@ -697,7 +773,6 @@ class Game extends Application implements Serializable{
 	                obstacle4.movement(angle, getAngle2() - 5*ddd, canvas);
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
-		            //double x = Main.screenWidth/2 - ball.ballimg.getFitWidth(); //set to middle of page
 		            rand = new Random(); 
 					 if (y>=getAngle2() - ddd-20 && y<=getAngle2() - ddd-10) {
 						 ball.change_colour();
@@ -708,7 +783,6 @@ class Game extends Application implements Serializable{
 						 l.setText(Integer.toString(player.getCollectedStars())); 
 						 player.setScore(player.getScore()+1);
 						 l2.setText(Integer.toString(player.getScore()));
-						
 					 }
 					 //obstacle 1
 					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
@@ -717,18 +791,22 @@ class Game extends Application implements Serializable{
 						 System.out.println(angle%360);
 						
 						 int col=-1;
-						 if(angle%360 > 0 && angle%360 <90)
-							 {System.out.println("red");
-							 col =0; }
-						 if(angle%360 > 90 && angle%360 <180)
-						 { System.out.println("blue");
-						 col =1;}
-						 if(angle%360 > 180 && angle%360 <270)
-						 { System.out.println("yellow");
-						 col =2;}
-						 if(angle%360 > 270 && angle%360 <360)
-						 { System.out.println("green");
-						 col =3; }
+						 if(angle%360 > 0 && angle%360 <90) {
+							 System.out.println("red");
+							 col =0; 
+						 }
+						 if(angle%360 > 90 && angle%360 <180) { 
+							 System.out.println("blue");
+							 col =1;
+						 }
+						 if(angle%360 > 180 && angle%360 <270) { 
+							 System.out.println("yellow");
+							 col =2;
+						 }
+						 if(angle%360 > 270 && angle%360 <360) { 
+							 System.out.println("green");
+							 col =3; 
+						 }
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
@@ -741,18 +819,23 @@ class Game extends Application implements Serializable{
 						 System.out.println("colld");
 						 System.out.println(angle%360);
 						 int col=-1;
-						 if(angle%360 > 0 && angle%360 <90)
-							 {System.out.println("yellow");
-							 col =2; }
-						 if(angle%360 > 90 && angle%360 <180)
-						 { System.out.println("green");
-						 col =3;}
-						 if(angle%360 > 180 && angle%360 <270)
-						 { System.out.println("red");
-						 col =0;}
-						 if(angle%360 > 270 && angle%360 <360)
-						 { System.out.println("blue");
-						 col =1; }
+						 if(angle%360 > 0 && angle%360 <90) {
+							 System.out.println("yellow");
+							 col =2; 
+					     }
+						 if(angle%360 > 90 && angle%360 <180) { 
+							 System.out.println("green");
+							 col =3;
+						 }
+						 if(angle%360 > 180 && angle%360 <270) { 
+							 System.out.println("red");
+							 col =0;
+						 }
+						 if(angle%360 > 270 && angle%360 <360) { 
+							 System.out.println("blue");
+							 col =1; 
+						 }
+						 
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
@@ -1497,6 +1580,57 @@ class Obstacle5 extends Obstacle {
 	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
 	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
 	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
+
+	            );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(true);
+        timeline.play();
+	}
+}
+class Obstacle6 extends Obstacle {
+	
+	private static final long serialVersionUID = 320L;
+	private static transient Image pic = new Image("file:images/obstacle6a.png");
+	private static transient ImageView img = new ImageView(pic);
+	private static int width = 1000;
+	private transient Timeline timeline;
+	private transient Duration animateDuration;
+	private transient Translate translate;
+	
+	public Obstacle6() throws FileNotFoundException{
+		
+		img.setX(50);
+        img.setY(300-Main.screenHeight);
+        img.setFitWidth(getWidth());
+        img.setPreserveRatio(true);
+	}
+
+	public static ImageView getImg() {
+		return img;
+	}
+
+	public static int getWidth() {
+		return width;
+	}
+
+	@Override
+	protected void movement(float duration,int angle2, Canvas canvas) {
+		  
+	    timeline = new Timeline();
+	    animateDuration = Duration.millis(3);
+    	
+	    //rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
+	    // obstacle1.img.getTransforms().add(rotate);
+	    translate = new Translate();
+	    
+	    int ddd= 500;
+	    float angle =duration;
+	   
+	    timeline = new Timeline( 
+	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), 
+	            new KeyFrame(animateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
+	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
+	            new KeyFrame(animateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
 
 	            );
         timeline.setCycleCount(Timeline.INDEFINITE);
