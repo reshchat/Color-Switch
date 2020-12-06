@@ -906,6 +906,55 @@ class Game extends Application implements Serializable{
 							
 					 }
 					 
+					 //obstacle 4
+					 if (y>=angle2- 5*ddd -20 && y<=angle2 - 5*ddd-10) {
+							
+						 System.out.println("collup");
+						 System.out.println(angle%360);
+						 int abc =(angle)%360;
+						 int col=-1;
+						 if(abc > 0 && abc <120)
+							 {System.out.println("red");
+							 col =0; }
+						 if(abc > 120 && abc <240)
+						 { System.out.println("blue");
+						 col =1;}
+						  if(abc > 240 && abc <360)
+						 { System.out.println("green");
+						 col =3; }
+						 if (ball.getColour()!=3 && col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+							 y = angle2- 5*ddd -25;
+							 showResurrectmenu();
+						 }
+					 }
+					 if (y>=angle2 +obstacle4.getWidth() - 5*ddd-50 && y<=angle2 +obstacle4.getWidth()-40- 5*ddd) {
+						 
+						 System.out.println("colld");
+						 System.out.println(angle%360);
+						 int col=-1;
+						 int abc =(angle-45)%360;
+						 if(abc > 0 && abc <120)
+						 { System.out.println("green");
+						 col =3;}
+						 if(abc > 120 && abc <240)
+						 { System.out.println("red");
+						 col =0;}
+						 if(abc > 240 && abc <360)
+						 { System.out.println("blue");
+						 col =1; }
+						 if (ball.getColour()!=2 && col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+							 y = angle2 +obstacle3.getWidth() - 5*ddd-55;
+							 showResurrectmenu();
+						 }
+							
+					 }
+					 
+					 
+					 
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
 				 		 ball.setY(y);
@@ -997,6 +1046,16 @@ class Game extends Application implements Serializable{
        		 	stage = new Stage();
         		try {
 					Homepage.startNewgame(stage);
+					canvas.requestFocus();
+	        		try {
+	        		    Robot r = new Robot();
+	        		    //there are other methods such as positioning mouse and mouseclicks etc.
+	        		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
+	        		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
+	        		 } catch (AWTException e) {
+	        		    //Teleport penguins  
+	        		 }
+	        		pause = !pause;
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -1035,7 +1094,17 @@ class Game extends Application implements Serializable{
     
     private transient EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) { 
-	        pause=!(pause);	        
+	       // pause=!(pause);	
+	        canvas.requestFocus();
+    		try {
+    		    Robot r = new Robot();
+    		    //there are other methods such as positioning mouse and mouseclicks etc.
+    		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
+    		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
+    		 } catch (AWTException e1) {
+    		    //Teleport penguins  
+    		 }
+    		pause = !pause;
         } 
     };
     private transient EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
