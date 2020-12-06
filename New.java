@@ -747,14 +747,14 @@ class Game extends Application implements Serializable{
 	            y = ball.getY();
 	            
 	            if(pause==false) {
-	            	if(angle2>3200)
+	            	if(angle2>3500)
 	            	{
 	            		angle2=0;
 	            		stack4.getChildren().get(0).setVisible(true);
 	            	}
 	            	if(angle2<-100)
 	            	{
-	            		angle2=3200;
+	            		angle2=3500;
 	            	}
 	            	
 	            	rotateDuration = Duration.millis(3);
@@ -907,7 +907,7 @@ class Game extends Application implements Serializable{
 					 }
 					 
 					 //obstacle 4
-					 if (y>=angle2- 5*ddd -20 && y<=angle2 - 5*ddd-10) {
+					 if (y>=angle2- 5*ddd +40 && y<=angle2 - 5*ddd+50) {
 							
 						 System.out.println("collup");
 						 System.out.println(angle%360);
@@ -952,7 +952,36 @@ class Game extends Application implements Serializable{
 						 }
 							
 					 }
-					 
+					 //obstacle 6
+					 if (y>=angle2- 6*ddd -20 && y<=angle2 - 6*ddd-10) {
+						
+						 System.out.println("coll6");
+						 System.out.println(xpos);
+						
+						 int col=-1;
+						 if((xpos > -270 && xpos <-180)||(xpos > 90 && xpos <180)||(xpos > 360 && xpos <450)) {
+							 System.out.println("red");
+							 col =0; 
+						 }
+						 if((xpos > -450 && xpos <-360)||(xpos > -180 && xpos <-90)||(xpos > 180 && xpos <270)) { 
+							 System.out.println("blue");
+							 col =1;
+						 }
+						 if((xpos > -90 && xpos <0)||(xpos > 270 && xpos <360)) { 
+							 System.out.println("yellow");
+							 col =2;
+						 }
+						 if((xpos > -360 && xpos <-270)||(xpos > 0 && xpos <90)) { 
+							 System.out.println("green");
+							 col =3; 
+						 }
+						 if (col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+							 y = angle2- 6*ddd -25;
+							 showResurrectmenu();
+						 }
+					 }
 					 
 					 
 				 	 if (y<350 && y>150  ) {
@@ -981,7 +1010,7 @@ class Game extends Application implements Serializable{
 	            		 xshift *= -1;
 	            	 }
 	            	 xpos += xshift;
-	            	
+	            	 System.out.println("xpos "+ xpos);
 					 gc.drawImage(ball.get_ball(), x, y, 30, 30);
 					 
 				 }
@@ -1015,10 +1044,10 @@ class Game extends Application implements Serializable{
         		showSaveresmenu(stage);
         	}
         	else if(src.getText().equals("Save life and resume game")) {
-        		if(player.getCollectedStars()<=0) {
+        		/*if(player.getCollectedStars()<=0) {
         			System.out.println("Not enough stars");
         		}
-        		else {
+        		else {*/
         			//y=y+0;
         		ball.setY(ball.getY()+70);
         		player.resurrect();
@@ -1036,7 +1065,7 @@ class Game extends Application implements Serializable{
         		    //Teleport penguins  
         		 }
         		pause = !pause;
-        		}
+        		//}
         	}
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
