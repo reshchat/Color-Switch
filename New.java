@@ -145,8 +145,9 @@ class SaveObject implements Serializable{
 	private Obstacle3 ob3;
 	private Obstacle4 ob4;
 	private Obstacle5 ob5;
+	private Obstacle6 ob6;
 	
-	public SaveObject(Ball ball, Game game, Player player, Obstacle1 obstacle1, Obstacle2 obstacle2, Obstacle3 obstacle3, Obstacle4 obstacle4, Colourchanger[] ccr, Star[] star1) {
+	public SaveObject(Ball ball, Game game, Player player, Obstacle1 obstacle1, Obstacle2 obstacle2, Obstacle3 obstacle3, Obstacle4 obstacle4, Obstacle6 obstacle6, Colourchanger[] ccr, Star[] star1) {
 		this.ball = ball;
 		this.game = game;
 		this.player = player;
@@ -154,9 +155,10 @@ class SaveObject implements Serializable{
 		this.ob2 = obstacle2;
 		this.ob3 = obstacle3;
 		this.ob4 = obstacle4;
+		this.ob6 = obstacle6;
 		//this.ob5 = obstacle5;
 		this.cc = ccr;
-		this.star = star;
+		this.star = star1;
 	}
 	public Ball getBall() {
 		return this.ball;
@@ -175,6 +177,9 @@ class SaveObject implements Serializable{
 	}
 	public Obstacle4 getOb4() {
 		return ob4;
+	}
+	public Obstacle6 getOb6() {
+		return ob6;
 	}
 	public Colourchanger[] getCc() {
 		return cc;
@@ -345,7 +350,7 @@ class Homepage {
         	SaveObject loadedgame = SaveGame.load(src.getText()+".txt");
     		pane.getChildren().clear();
        		stage.close();
-       		stage = new Stage();
+       		//stage = new Stage();
        		 
        		try {
 					resumeGame(stage, loadedgame);
@@ -367,7 +372,7 @@ class Homepage {
         		
         		 pane.getChildren().clear();
         		 stage.close();
-        		 stage = new Stage();
+        		 //stage = new Stage();
         		 
         		try {
 					startNewgame(stage);
@@ -409,6 +414,8 @@ class Game extends Application implements Serializable{
 	private int distance;
 	private static boolean playmusic = false;
 	private static boolean playsounds = false;
+	private static Homepage homepage = new Homepage();
+	
 	public Game()  {
 		// launch();
 		//stage = new Stage(); 
@@ -445,7 +452,7 @@ class Game extends Application implements Serializable{
     private Obstacle2 obstacle2;
     private Obstacle3 obstacle3;
     private Obstacle4 obstacle4;
-    private Obstacle4 obstacle5;
+    private Obstacle5 obstacle5;
     private Obstacle6 obstacle6;
     private Star[] star1;
     private Colourchanger[] ccr;
@@ -497,7 +504,8 @@ class Game extends Application implements Serializable{
     	if(playmusic == true) {
     		String s = "colourswitchmusic.mp3";
     		media = new Media(new File(s).toURI().toString()); 
-    		mediaPlayer = new MediaPlayer(media);  
+    		mediaPlayer = new MediaPlayer(media); 
+    		mediaPlayer.setVolume(0.5);
     		mediaPlayer.setAutoPlay(true);  
     	}
     	stack = new StackPane();
@@ -575,30 +583,30 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg(), obstacle6.getImg() );
-        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2 );
+        stack.getChildren().addAll(Obstacle1.getImg(), Obstacle3.getImg(), Obstacle4.getImg(), Obstacle6.getImg() );
+        stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
-        stack2.getChildren().addAll( obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - 3*obstacle2.getWidth()/4);
+        stack2.getChildren().addAll( Obstacle2.getImg());
+        stack2.setLayoutX(Main.screenWidth/2 - 3*Obstacle2.getWidth()/4);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
-        stack5.getChildren().addAll( obstacle6.getImg());
+        stack5.getChildren().addAll( Obstacle6.getImg());
         stack5.setLayoutX(100);
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
         
         ccr[1]=new Colourchanger();
-        stack3.getChildren().addAll( ccr[1].getImg());
-        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getWidth()/2);
+        stack3.getChildren().addAll( Colourchanger.getImg());
+        stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
         
         star1[1]=new Star();
-        stack4.getChildren().addAll( star1[1].getImg());
-        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getWidth()/2);
+        stack4.getChildren().addAll( Star.getImg());
+        stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
         
@@ -619,33 +627,34 @@ class Game extends Application implements Serializable{
         obstacle2 = data.getOb2();
         obstacle3 = data.getOb3();
         obstacle4 = data.getOb4();
+        obstacle6 = data.getOb6();
         angle = data.getGame().getAngle();
         angle2 = data.getGame().getAngle2();
         
-        obstacle1.getImg().setFitWidth(obstacle1.getWidth());
+        obstacle1.getImg().setFitWidth(Obstacle1.getWidth());
         obstacle1.getImg().setPreserveRatio(true);
         obstacle1.getImg().setX(600-Main.screenWidth);
         obstacle1.getImg().setY(300-Main.screenHeight);
         
-        obstacle2.getImg().setFitWidth(obstacle2.getWidth());
+        obstacle2.getImg().setFitWidth(Obstacle2.getWidth());
         obstacle2.getImg().setPreserveRatio(true);
         obstacle2.getImg().setX(600-Main.screenWidth);
         obstacle2.getImg().setY(300-Main.screenHeight);
         
-        obstacle3.getImg().setFitWidth(obstacle3.getWidth());
+        obstacle3.getImg().setFitWidth(Obstacle3.getWidth());
         obstacle3.getImg().setPreserveRatio(true);
         obstacle3.getImg().setX(600-Main.screenWidth);
         obstacle3.getImg().setY(300-Main.screenHeight);
         
-        obstacle4.getImg().setFitWidth(obstacle4.getWidth());
+        obstacle4.getImg().setFitWidth(Obstacle4.getWidth());
         obstacle4.getImg().setPreserveRatio(true);
         obstacle4.getImg().setX(600-Main.screenWidth);
         obstacle4.getImg().setY(300-Main.screenHeight);
         
-//        obstacle6.getImg().setFitWidth(obstacle6.getWidth());
-//        obstacle6.getImg().setPreserveRatio(true);
-//        obstacle6.getImg().setX(50);
-//        obstacle6.getImg().setY(300-Main.screenHeight);
+        obstacle6.getImg().setFitWidth(Obstacle6.getWidth());
+        obstacle6.getImg().setPreserveRatio(true);
+        obstacle6.getImg().setX(50);
+        obstacle6.getImg().setY(300-Main.screenHeight);
         
 //        ccr = data.getCc();
 //        star1 = data.getStar();
@@ -712,23 +721,23 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg() );
-        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2 );
+        stack.getChildren().addAll(Obstacle1.getImg(), Obstacle3.getImg(), Obstacle4.getImg(), Obstacle6.getImg() );
+        stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
-        stack2.getChildren().addAll( obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - 3*obstacle2.getWidth()/4);
+        stack2.getChildren().addAll( Obstacle2.getImg());
+        stack2.setLayoutX(Main.screenWidth/2 - 3*Obstacle2.getWidth()/4);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
         
-        stack3.getChildren().addAll( ccr[1].getImg());
-        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getWidth()/2);
+        stack3.getChildren().addAll( Colourchanger.getImg());
+        stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
         
-        stack4.getChildren().addAll( star1[1].getImg());
-        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getWidth()/2);
+        stack4.getChildren().addAll( Star.getImg());
+        stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
         
@@ -785,6 +794,13 @@ class Game extends Application implements Serializable{
 		            rand = new Random(); 
 					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
 						 ball.change_colour();
+						 if(playsounds == true) {
+	                    		String s = "colourchangesound.wav";
+	                    		media = new Media(new File(s).toURI().toString()); 
+	                    		mediaPlayer = new MediaPlayer(media); 
+	                    		mediaPlayer.setVolume(2);
+	                    		mediaPlayer.setAutoPlay(true);  
+	                     } 
 					 }
 					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10 && stack4.getChildren().get(0).isVisible()) {
 						 stack4.getChildren().get(0).setVisible(false);
@@ -792,6 +808,14 @@ class Game extends Application implements Serializable{
 						 l.setText(Integer.toString(player.getCollectedStars())); 
 						 player.setScore(player.getScore()+1);
 						 l2.setText(Integer.toString(player.getScore()));
+						 if(playsounds == true) {
+	                    		//String s = "scorepointsound.wav";
+	                    		String s = "starsound.wav";
+	                    		media = new Media(new File(s).toURI().toString()); 
+	                    		mediaPlayer = new MediaPlayer(media); 
+	                    		mediaPlayer.setVolume(5);
+	                    		mediaPlayer.setAutoPlay(true);  
+	                     }
 					 }
 					 //obstacle 1
 					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
@@ -820,6 +844,15 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = getAngle2() -25;
+							 
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+							 
 							 showResurrectmenu();
 						 }
 					 }
@@ -849,6 +882,15 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = getAngle2() +obstacle1.getWidth() -55;
+							 
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+							 
 							 showResurrectmenu();
 						 }
 							
@@ -876,6 +918,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2- 4*ddd -25;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 					 }
@@ -901,6 +950,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2 +obstacle3.getWidth() - 4*ddd-55;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 							
@@ -926,6 +982,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2- 5*ddd -25;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 					 }
@@ -948,6 +1011,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2 +obstacle3.getWidth() - 5*ddd-55;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 							
@@ -979,6 +1049,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2- 6*ddd -25;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 					 }
@@ -1035,9 +1112,10 @@ class Game extends Application implements Serializable{
         		
         		SaveGame.filename = tf.getText()+".txt"; 
         		saveGame();
+        		pane.getChildren().clear();
         		stage.close();
-        		Platform.exit(); // or displayMainmenu
-        		
+        		//Platform.exit(); // or displayMainmenu
+        		homepage.displayMainmenu(stage, pane, scene);
         	}
         	else if(src.getText().equals("Back")) {
         		stage.close();
@@ -1070,9 +1148,9 @@ class Game extends Application implements Serializable{
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
        		 	stage.close();
-       		// canvas.requestFocus();
-     		//pause=!(pause);
-       		 	stage = new Stage();
+       		 	// canvas.requestFocus();
+       		 	//pause=!(pause);
+       		 	//stage = new Stage();
         		try {
 					Homepage.startNewgame(stage);
 					canvas.requestFocus();
@@ -1090,8 +1168,10 @@ class Game extends Application implements Serializable{
 				}
         	}
         	else if(src.getText().equals("Exit game")) {
+        		pane.getChildren().clear();
         		stage.close();
-        		Platform.exit(); // or displayMainmenu
+        		//Platform.exit(); // or displayMainmenu
+        		homepage.displayMainmenu(stage, pane, scene);
         	}
         }
     }
@@ -1113,7 +1193,16 @@ class Game extends Application implements Serializable{
             // start movement according to key pressed
             switch (event.getCode()) {
                 case UP:
-                    gravity = -2;
+                    {
+                    	gravity = -2;
+//                    	if(playsounds == true) {
+//                    		String s = "ballup.wav";
+//                    		media = new Media(new File(s).toURI().toString()); 
+//                    		mediaPlayer = new MediaPlayer(media); 
+//                    		mediaPlayer.setVolume(2);
+//                    		mediaPlayer.setAutoPlay(true);  
+//                    	}
+                    }
                     break;
                 case P:
                    pause =!(pause);
@@ -1145,7 +1234,7 @@ class Game extends Application implements Serializable{
     };
     
     public void saveGame() {
-    	SaveObject gametosave = new SaveObject(this.ball, this, this.player, this.obstacle1, this.obstacle2, this.obstacle3, this.obstacle4, this.ccr, this.star1);
+    	SaveObject gametosave = new SaveObject(this.ball, this, this.player, this.obstacle1, this.obstacle2, this.obstacle3, this.obstacle4, this.obstacle6, this.ccr, this.star1);
     	SaveGame.save(gametosave);
     }
     public void saveGameMenu(Stage theStage){
@@ -1382,7 +1471,7 @@ class Ball implements Serializable{
 	private Ball ball;
 	private static Image pic = new Image("file:images/colourchanger.png");
 	private static ImageView img = new ImageView(pic);
-	private static int width = 100;
+	private static int width = 60;
 
 	public Colourchanger() throws FileNotFoundException{
 		
