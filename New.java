@@ -230,7 +230,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -571,7 +571,7 @@ class Game extends Application implements Serializable{
         	ccr[i] = new Colourchanger();
         	star1[i] = new Star();
         }
-//      obstacle2.img.setLayoutX(1000);
+      //obstacle2.getImg().setLayoutX(1000);
         //root.getChildren().remove(l);
         final long startNanoTime = System.nanoTime();
         //canvas.setOnMouseClicked(event);
@@ -589,7 +589,7 @@ class Game extends Application implements Serializable{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( Obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - 3*Obstacle2.getWidth()/4);
+        stack2.setLayoutX(Main.screenWidth/2 - Obstacle2.getWidth());
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
@@ -727,7 +727,7 @@ class Game extends Application implements Serializable{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( Obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - 3*Obstacle2.getWidth()/4);
+        stack2.setLayoutX(Main.screenWidth/2 - 3*Obstacle2.getWidth()/4 -600);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
         
@@ -1026,7 +1026,7 @@ class Game extends Application implements Serializable{
 					 if (y>=angle2- 6*ddd -20 && y<=angle2 - 6*ddd-10) {
 						
 						 System.out.println("coll6");
-						 System.out.println(xpos);
+						// System.out.println(xpos);
 						
 						 int col=-1;
 						 if((xpos > -270 && xpos <-180)||(xpos > 90 && xpos <180)||(xpos > 360 && xpos <450)) {
@@ -1059,7 +1059,45 @@ class Game extends Application implements Serializable{
 							 showResurrectmenu();
 						 }
 					 }
-					 
+					 System.out.println("angle");
+					 System.out.println(angle%360);
+					//obstacle 2
+					 if (y>=angle2+(+obstacle2.getWidth()/2) -3*ddd -50 && y<=angle2 +(+obstacle2.getWidth()/2)- 3*ddd-10) {
+						 System.out.println("coll2");
+						 System.out.println(angle%360);
+						 int col=ball.getColour();
+						 if((angle%360 > 0 && angle%360 <20)||(angle%360 > 340 && angle%360 <360)) {
+							 System.out.println("gree");
+							 col =3; 
+						 }
+						 if(angle%360 > 70 && angle%360 <110) { 
+							 System.out.println("red");
+							 col =0;
+						 }
+						 if(angle%360 > 160 && angle%360 <200) { 
+							 System.out.println("blue");
+							 col =1;
+						 }
+						 if(angle%360 > 250 && angle%360 <290) { 
+							 System.out.println("yello");
+							 col =2; 
+						 }
+						 if (col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+							 y = angle2- 3*ddd -25;
+							 
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+							 
+							 showResurrectmenu();
+						 }
+					 }
 					 
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
@@ -1134,6 +1172,7 @@ class Game extends Application implements Serializable{
         		//pause=!(pause);
         		stage.close();
         		canvas.requestFocus();
+        		canvas.setVisible(true);
         		try {
         		    Robot r = new Robot();
         		    //there are other methods such as positioning mouse and mouseclicks etc.
@@ -1599,7 +1638,7 @@ class Obstacle2 extends Obstacle {
 	
 	public Obstacle2() throws FileNotFoundException{
 		
-		 img.setX(600-Main.screenWidth);
+		 img.setX(600-Main.screenWidth );
          img.setY(300-Main.screenHeight);
          img.setFitWidth(getWidth());
          img.setPreserveRatio(true);
