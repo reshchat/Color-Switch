@@ -26,6 +26,9 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -35,7 +38,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -65,13 +71,11 @@ public class Main extends Application {
 	
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		launch(args);
 	}
 	@Override
 	public void start(Stage theStage) throws Exception {
-		// TODO Auto-generated method stub
 		stage = theStage;
 		Homepage homepage = new Homepage();
 		homepage.displayMainmenu(theStage, pane, scene);
@@ -225,27 +229,29 @@ class Homepage {
 	public void displayMainmenu(Stage theStage, GridPane pane, Scene scene){
 		stage = theStage;
 		pane.setAlignment(Pos.CENTER);
-	    pane.setHgap(10);
-	    pane.setVgap(10);
+	    pane.setHgap(150);
+	    pane.setVgap(150);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
+		vbox.setSpacing(10);
 		Text t = new Text();
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
-		t.setFont(Font.font ("Montserrat", 20));
+		t.setFont(Font.font ("Montserrat", 25));
 		t.setFill(Color.WHITE);
 		
 //		Image img = new Image("file:images/settings.png");
 //      ImageView view = new ImageView(img);
 //      view.setFitHeight(50);
 //      view.setPreserveRatio(true);
-		Button button = new Button("Settings");
 
 		Button btn1 = new Button("Start new game");
 		Button btn2 = new Button("Resume a saved game");
+		Button button2 = new Button("View Leaderboard");
+		Button button = new Button("Settings");
 		Button btn3 = new Button("Exit");
 
 		buttonHandler bh = new buttonHandler();
@@ -254,9 +260,9 @@ class Homepage {
 		btn2.setOnAction(bh);
 		btn3.setOnAction(bh);
 		button.setOnAction(bh);
+		button2.setOnAction(bh);
 
-		vbox.getChildren().addAll(t, btn1, btn2, button, btn3);
-
+		vbox.getChildren().addAll(t, btn1, btn2, button2, button, btn3);
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch");
 		theStage.setScene(scene);
@@ -271,7 +277,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -287,8 +293,10 @@ class Homepage {
 		buttonHandler bh = new buttonHandler();
 		gamebuttonsHandler gh = new gamebuttonsHandler();
 		
-		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
-	    String contents[] = directoryPath.list();
+//		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
+		String path = new File("").getAbsolutePath();
+		File directoryPath = new File(path);
+		String contents[] = directoryPath.list();
 	    for(int i=0; i<contents.length; i++) {
 	    	if(contents[i].substring(contents[i].length() - 4).equals(".txt")) {
 	    		buttons.add(new Button(contents[i].substring(0, contents[i].length() - 4)));
@@ -315,7 +323,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -340,7 +348,91 @@ class Homepage {
 		theStage.setScene(scene);
 		theStage.show();
 	}
-	
+	public static class Row {
+		 
+        private final String gamename;
+        private final int score;
+ 
+        private Row(String filename, int score) {
+            this.gamename = filename;
+            this.score = score;
+        }
+
+		public String getGamename() {
+			return gamename;
+		}
+
+		public int getScore() {
+			return score;
+		}
+    }
+	public void displayLeaderboard(Stage theStage, GridPane pane, Scene scene){
+		stage = theStage;
+		pane.setAlignment(Pos.CENTER);
+	    pane.setHgap(20);
+	    pane.setVgap(20);
+	    pane.setPadding(new Insets(100, 80, 100, 80));
+	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
+	    VBox vbox = new VBox(5);
+		Text t = new Text();
+		t = new Text (10, 20, "Leaderboard\n");
+		t.setFont(Font.font ("Montserrat", 20));
+		t.setFill(Color.WHITE);
+		
+		TableView<Row> table = new TableView();
+		table.setMinWidth(300);
+        TableColumn<Row, String> gamename = new TableColumn("Game Name");
+        TableColumn<Row, Integer> score = new TableColumn("Score");
+        
+        gamename.setMinWidth(150);
+        score.setMinWidth(150);
+        score.setSortType(TableColumn.SortType.DESCENDING);
+        table.getSortOrder().addAll(score, gamename);
+        table.sort();
+		
+//		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
+	    String path = new File("").getAbsolutePath();
+		File directoryPath = new File(path);
+		String contents[] = directoryPath.list();
+		int s;
+		ObservableList<Row> data = FXCollections.observableArrayList();
+	    for(int i=0; i<contents.length; i++) {
+	    	String txt = contents[i].substring(contents[i].length() - 4);
+        	String filename = contents[i].substring(0, contents[i].length() - 4);
+	    	if(txt.equals(".txt")) {
+        		SaveObject loadedgame = SaveGame.load(contents[i]);
+        		s = loadedgame.getPlayer().getScore();
+        		data.add(new Row(filename, s));
+	    	}
+	    }
+	    gamename.setCellValueFactory(new PropertyValueFactory<Row, String>("gamename"));
+	    score.setCellValueFactory(new PropertyValueFactory<Row, Integer>("score"));
+	    table.setItems(data);
+	    table.getColumns().addAll(gamename, score);
+	    
+		Button btn1 = new Button("Back");
+		Button btn2 = new Button("Exit");
+
+		buttonHandler bh = new buttonHandler();
+
+		btn1.setOnAction(bh);
+		btn2.setOnAction(bh);
+
+//		pane.getChildren().add(t);
+//		pane.getChildren().add(table);
+//		pane.getChildren().add(btn1);
+//		pane.getChildren().add(btn2);
+		
+		vbox.getChildren().addAll(t, table, btn1, btn2);
+		pane.getChildren().add(vbox);
+		
+		theStage.setTitle("Colour Switch");
+		theStage.setScene(scene);
+		theStage.show();
+	}
 	private class gamebuttonsHandler implements javafx.event.EventHandler<ActionEvent>{
 
 		@Override
@@ -377,7 +469,6 @@ class Homepage {
         		try {
 					startNewgame(stage);
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
         		
@@ -395,6 +486,11 @@ class Homepage {
         		pane.getChildren().clear();
        		 	stage.close();
         		displaySettings(stage, pane, scene);
+        	}
+        	else if(src.getText().equals("View Leaderboard")) {
+        		pane.getChildren().clear();
+       		 	stage.close();
+        		displayLeaderboard(stage, pane, scene);
         	}
         	else if(src.getText().equals("Play music")) {
         		Game.setPlaymusic(true);
@@ -525,6 +621,9 @@ class Game extends Application implements Serializable{
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
         //root.getChildren().add( canvas );
         stack1.setStyle("-fx-background-color: #202020");
+        stack1.setId("panegame");
+//      stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
         player = new Player();
@@ -621,6 +720,7 @@ class Game extends Application implements Serializable{
         stack2 = new StackPane();
         stack3 = new StackPane();
         stack4 = new StackPane();
+        stack5 = new StackPane();
     	player = data.getPlayer();
         ball = data.getBall();
         obstacle1 = data.getOb1();
@@ -727,15 +827,22 @@ class Game extends Application implements Serializable{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( Obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - 3*Obstacle2.getWidth()/4 -600);
+        stack2.setLayoutX(Main.screenWidth/2 - Obstacle2.getWidth());
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
+
+        stack5.getChildren().addAll( Obstacle6.getImg());
+        stack5.setLayoutX(100);
+        stack5.setLayoutY(0);
+        root.getChildren().add(stack5);
         
+        ccr[1]=new Colourchanger();
         stack3.getChildren().addAll( Colourchanger.getImg());
         stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
         
+        star1[1]=new Star();
         stack4.getChildren().addAll( Star.getImg());
         stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
@@ -1136,7 +1243,7 @@ class Game extends Application implements Serializable{
         @Override
         public void handle(ActionEvent event) {
         	var src = (Button) event.getSource();
-        	if(src.getText().equals("Resume")) {
+        	if(src.getText().equals("Return to game")) {
         		canvas.requestFocus();
         		pause=!(pause);
         		stage.close();
@@ -1155,10 +1262,10 @@ class Game extends Application implements Serializable{
         		//Platform.exit(); // or displayMainmenu
         		homepage.displayMainmenu(stage, pane, scene);
         	}
-        	else if(src.getText().equals("Back")) {
-        		stage.close();
-        		showSaveresmenu(stage);
-        	}
+//        	else if(src.getText().equals("Back")) {
+//        		stage.close();
+//        		showSaveresmenu(stage);
+//        	}
         	else if(src.getText().equals("Save life and resume game")) {
         		/*if(player.getCollectedStars()<=0) {
         			System.out.println("Not enough stars");
@@ -1267,7 +1374,8 @@ class Game extends Application implements Serializable{
     private transient EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) { 
 	        stage = new Stage(); 
-	        showSaveresmenu(stage);
+	        //showSaveresmenu(stage);
+	        saveGameMenu(stage);
 	        pause=!(pause);
         } 
     };
@@ -1285,7 +1393,7 @@ class Game extends Application implements Serializable{
     	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
     	pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
@@ -1300,7 +1408,7 @@ class Game extends Application implements Serializable{
 		
 		tf = new TextField();
 		btn1 = new Button("Save and exit");
-		btn2 = new Button("Back");
+		btn2 = new Button("Return to game");
 		bh = new buttonHandler();
 
 		btn1.setOnAction(bh);
@@ -1312,37 +1420,37 @@ class Game extends Application implements Serializable{
 		theStage.setScene(scene);
 		theStage.show();
 	}
-    private void showSaveresmenu(Stage theStage) {
-    	pane = new GridPane();
-    	pane.setAlignment(Pos.CENTER);
-	    pane.setHgap(10);
-	    pane.setVgap(10);
-	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    
-    	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
-    	
-    	pane.setStyle("-fx-background-color: #202020");
-	    pane.setId("pane");
-	   // scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
-        
-		vbox = new VBox(5);
-        stage = theStage;
-        t = new Text();
-    	t = new Text (10, 20, "Color Switch\n");
-    	t.setFont(Font.font ("Montserrat", 20));
-    	t.setFill(Color.WHITE);
-    	btn1 = new Button("Save game");
-    	
-    	btn3 = new Button("Resume");
-    	bh = new buttonHandler();
-        btn1.setOnAction(bh);
-        btn3.setOnAction(bh);
-        vbox.getChildren().addAll(t, btn1, btn3);
-        pane.getChildren().addAll(vbox);
-        theStage.setTitle("Colour Switch");
-        theStage.setScene(scene);
-        theStage.show();
-	}
+//    private void showSaveresmenu(Stage theStage) {
+//    	pane = new GridPane();
+//    	pane.setAlignment(Pos.CENTER);
+//	    pane.setHgap(10);
+//	    pane.setVgap(10);
+//	    pane.setPadding(new Insets(25, 25, 25, 25));
+//	    
+//    	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+//    	
+//    	pane.setStyle("-fx-background-color: #202020");
+//	    pane.setId("pane");
+////	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//        
+//		vbox = new VBox(5);
+//        stage = theStage;
+//        t = new Text();
+//    	t = new Text (10, 20, "Color Switch\n");
+//    	t.setFont(Font.font ("Montserrat", 20));
+//    	t.setFill(Color.WHITE);
+//    	btn1 = new Button("Save game");
+//    	
+//    	btn3 = new Button("Resume");
+//    	bh = new buttonHandler();
+//        btn1.setOnAction(bh);
+//        btn3.setOnAction(bh);
+//        vbox.getChildren().addAll(t, btn1, btn3);
+//        pane.getChildren().addAll(vbox);
+//        theStage.setTitle("Colour Switch");
+//        theStage.setScene(scene);
+//        theStage.show();
+//	}
     public void showResurrectmenu(){
 		stage = new Stage();
 		pane = new GridPane();
@@ -1354,7 +1462,7 @@ class Game extends Application implements Serializable{
 	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
