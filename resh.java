@@ -26,6 +26,9 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -35,7 +38,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -65,13 +71,11 @@ public class Main extends Application {
 	
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		launch(args);
 	}
 	@Override
 	public void start(Stage theStage) throws Exception {
-		// TODO Auto-generated method stub
 		stage = theStage;
 		Homepage homepage = new Homepage();
 		homepage.displayMainmenu(theStage, pane, scene);
@@ -145,8 +149,9 @@ class SaveObject implements Serializable{
 	private Obstacle3 ob3;
 	private Obstacle4 ob4;
 	private Obstacle5 ob5;
+	private Obstacle6 ob6;
 	
-	public SaveObject(Ball ball, Game game, Player player, Obstacle1 obstacle1, Obstacle2 obstacle2, Obstacle3 obstacle3, Obstacle4 obstacle4, Colourchanger[] ccr, Star[] star1) {
+	public SaveObject(Ball ball, Game game, Player player, Obstacle1 obstacle1, Obstacle2 obstacle2, Obstacle3 obstacle3, Obstacle4 obstacle4, Obstacle6 obstacle6, Colourchanger[] ccr, Star[] star1) {
 		this.ball = ball;
 		this.game = game;
 		this.player = player;
@@ -154,9 +159,10 @@ class SaveObject implements Serializable{
 		this.ob2 = obstacle2;
 		this.ob3 = obstacle3;
 		this.ob4 = obstacle4;
+		this.ob6 = obstacle6;
 		//this.ob5 = obstacle5;
 		this.cc = ccr;
-		this.star = star;
+		this.star = star1;
 	}
 	public Ball getBall() {
 		return this.ball;
@@ -175,6 +181,9 @@ class SaveObject implements Serializable{
 	}
 	public Obstacle4 getOb4() {
 		return ob4;
+	}
+	public Obstacle6 getOb6() {
+		return ob6;
 	}
 	public Colourchanger[] getCc() {
 		return cc;
@@ -220,27 +229,29 @@ class Homepage {
 	public void displayMainmenu(Stage theStage, GridPane pane, Scene scene){
 		stage = theStage;
 		pane.setAlignment(Pos.CENTER);
-	    pane.setHgap(10);
-	    pane.setVgap(10);
+	    pane.setHgap(150);
+	    pane.setVgap(150);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
+		vbox.setSpacing(10);
 		Text t = new Text();
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
-		t.setFont(Font.font ("Montserrat", 20));
+		t.setFont(Font.font ("Montserrat", 25));
 		t.setFill(Color.WHITE);
 		
 //		Image img = new Image("file:images/settings.png");
 //      ImageView view = new ImageView(img);
 //      view.setFitHeight(50);
 //      view.setPreserveRatio(true);
-		Button button = new Button("Settings");
 
 		Button btn1 = new Button("Start new game");
 		Button btn2 = new Button("Resume a saved game");
+		Button button2 = new Button("View Leaderboard");
+		Button button = new Button("Settings");
 		Button btn3 = new Button("Exit");
 
 		buttonHandler bh = new buttonHandler();
@@ -249,9 +260,9 @@ class Homepage {
 		btn2.setOnAction(bh);
 		btn3.setOnAction(bh);
 		button.setOnAction(bh);
+		button2.setOnAction(bh);
 
-		vbox.getChildren().addAll(t, btn1, btn2, button, btn3);
-
+		vbox.getChildren().addAll(t, btn1, btn2, button2, button, btn3);
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch");
 		theStage.setScene(scene);
@@ -266,7 +277,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -282,8 +293,10 @@ class Homepage {
 		buttonHandler bh = new buttonHandler();
 		gamebuttonsHandler gh = new gamebuttonsHandler();
 		
-		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
-	    String contents[] = directoryPath.list();
+//		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
+		String path = new File("").getAbsolutePath();
+		File directoryPath = new File(path);
+		String contents[] = directoryPath.list();
 	    for(int i=0; i<contents.length; i++) {
 	    	if(contents[i].substring(contents[i].length() - 4).equals(".txt")) {
 	    		buttons.add(new Button(contents[i].substring(0, contents[i].length() - 4)));
@@ -310,7 +323,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -335,7 +348,91 @@ class Homepage {
 		theStage.setScene(scene);
 		theStage.show();
 	}
-	
+	public static class Row {
+		 
+        private final String gamename;
+        private final int score;
+ 
+        private Row(String filename, int score) {
+            this.gamename = filename;
+            this.score = score;
+        }
+
+		public String getGamename() {
+			return gamename;
+		}
+
+		public int getScore() {
+			return score;
+		}
+    }
+	public void displayLeaderboard(Stage theStage, GridPane pane, Scene scene){
+		stage = theStage;
+		pane.setAlignment(Pos.CENTER);
+	    pane.setHgap(20);
+	    pane.setVgap(20);
+	    pane.setPadding(new Insets(100, 80, 100, 80));
+	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
+	    VBox vbox = new VBox(5);
+		Text t = new Text();
+		t = new Text (10, 20, "Leaderboard\n");
+		t.setFont(Font.font ("Montserrat", 20));
+		t.setFill(Color.WHITE);
+		
+		TableView<Row> table = new TableView();
+		table.setMinWidth(300);
+        TableColumn<Row, String> gamename = new TableColumn("Game Name");
+        TableColumn<Row, Integer> score = new TableColumn("Score");
+        
+        gamename.setMinWidth(150);
+        score.setMinWidth(150);
+        score.setSortType(TableColumn.SortType.DESCENDING);
+        table.getSortOrder().addAll(score, gamename);
+        table.sort();
+		
+//		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
+	    String path = new File("").getAbsolutePath();
+		File directoryPath = new File(path);
+		String contents[] = directoryPath.list();
+		int s;
+		ObservableList<Row> data = FXCollections.observableArrayList();
+	    for(int i=0; i<contents.length; i++) {
+	    	String txt = contents[i].substring(contents[i].length() - 4);
+        	String filename = contents[i].substring(0, contents[i].length() - 4);
+	    	if(txt.equals(".txt")) {
+        		SaveObject loadedgame = SaveGame.load(contents[i]);
+        		s = loadedgame.getPlayer().getScore();
+        		data.add(new Row(filename, s));
+	    	}
+	    }
+	    gamename.setCellValueFactory(new PropertyValueFactory<Row, String>("gamename"));
+	    score.setCellValueFactory(new PropertyValueFactory<Row, Integer>("score"));
+	    table.setItems(data);
+	    table.getColumns().addAll(gamename, score);
+	    
+		Button btn1 = new Button("Back");
+		Button btn2 = new Button("Exit");
+
+		buttonHandler bh = new buttonHandler();
+
+		btn1.setOnAction(bh);
+		btn2.setOnAction(bh);
+
+//		pane.getChildren().add(t);
+//		pane.getChildren().add(table);
+//		pane.getChildren().add(btn1);
+//		pane.getChildren().add(btn2);
+		
+		vbox.getChildren().addAll(t, table, btn1, btn2);
+		pane.getChildren().add(vbox);
+		
+		theStage.setTitle("Colour Switch");
+		theStage.setScene(scene);
+		theStage.show();
+	}
 	private class gamebuttonsHandler implements javafx.event.EventHandler<ActionEvent>{
 
 		@Override
@@ -345,7 +442,7 @@ class Homepage {
         	SaveObject loadedgame = SaveGame.load(src.getText()+".txt");
     		pane.getChildren().clear();
        		stage.close();
-       		stage = new Stage();
+       		//stage = new Stage();
        		 
        		try {
 					resumeGame(stage, loadedgame);
@@ -367,12 +464,11 @@ class Homepage {
         		
         		 pane.getChildren().clear();
         		 stage.close();
-        		 stage = new Stage();
+        		 //stage = new Stage();
         		 
         		try {
 					startNewgame(stage);
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
         		
@@ -390,6 +486,11 @@ class Homepage {
         		pane.getChildren().clear();
        		 	stage.close();
         		displaySettings(stage, pane, scene);
+        	}
+        	else if(src.getText().equals("View Leaderboard")) {
+        		pane.getChildren().clear();
+       		 	stage.close();
+        		displayLeaderboard(stage, pane, scene);
         	}
         	else if(src.getText().equals("Play music")) {
         		Game.setPlaymusic(true);
@@ -409,6 +510,8 @@ class Game extends Application implements Serializable{
 	private int distance;
 	private static boolean playmusic = false;
 	private static boolean playsounds = false;
+	private static Homepage homepage = new Homepage();
+	
 	public Game()  {
 		// launch();
 		//stage = new Stage(); 
@@ -445,7 +548,7 @@ class Game extends Application implements Serializable{
     private Obstacle2 obstacle2;
     private Obstacle3 obstacle3;
     private Obstacle4 obstacle4;
-    private Obstacle4 obstacle5;
+    private Obstacle5 obstacle5;
     private Obstacle6 obstacle6;
     private Star[] star1;
     private Colourchanger[] ccr;
@@ -470,6 +573,10 @@ class Game extends Application implements Serializable{
     private transient GridPane pane;
     private transient VBox vbox;
     private transient Timeline timeline;
+    private transient Timeline timeline2;
+    private transient Timeline timeline3;
+    private transient Timeline timeline4;
+    private transient Timeline timeline5;
     private transient StackPane stack;
     private transient StackPane stack1;
     private transient StackPane stack2;
@@ -497,7 +604,8 @@ class Game extends Application implements Serializable{
     	if(playmusic == true) {
     		String s = "colourswitchmusic.mp3";
     		media = new Media(new File(s).toURI().toString()); 
-    		mediaPlayer = new MediaPlayer(media);  
+    		mediaPlayer = new MediaPlayer(media); 
+    		mediaPlayer.setVolume(0.5);
     		mediaPlayer.setAutoPlay(true);  
     	}
     	stack = new StackPane();
@@ -517,6 +625,9 @@ class Game extends Application implements Serializable{
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
         //root.getChildren().add( canvas );
         stack1.setStyle("-fx-background-color: #202020");
+        stack1.setId("panegame");
+//      stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
         player = new Player();
@@ -563,7 +674,7 @@ class Game extends Application implements Serializable{
         	ccr[i] = new Colourchanger();
         	star1[i] = new Star();
         }
-//      obstacle2.img.setLayoutX(1000);
+      //obstacle2.getImg().setLayoutX(1000);
         //root.getChildren().remove(l);
         final long startNanoTime = System.nanoTime();
         //canvas.setOnMouseClicked(event);
@@ -575,30 +686,33 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg(), obstacle6.getImg() );
-        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2 );
+        stack.getChildren().addAll(Obstacle1.getImg(), Obstacle3.getImg(), Obstacle4.getImg(), Obstacle6.getImg() );
+        stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
-        stack2.getChildren().addAll( obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - 3*obstacle2.getWidth()/4);
+        stack2.getChildren().addAll( Obstacle2.getImg());
+        stack2.setLayoutX(Main.screenWidth/2);// + Obstacle2.getWidth()/2);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
-        stack5.getChildren().addAll( obstacle6.getImg());
+        stack5.getChildren().addAll( Obstacle6.getImg());
         stack5.setLayoutX(100);
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
+        for (int i=0; i<5;i++) {
+        	ccr[i]=new Colourchanger();
+        }
         
-        ccr[1]=new Colourchanger();
-        stack3.getChildren().addAll( ccr[1].getImg());
-        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getWidth()/2);
+        stack3.getChildren().addAll( Colourchanger.getImg());
+        stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
-        
-        star1[1]=new Star();
-        stack4.getChildren().addAll( star1[1].getImg());
-        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getWidth()/2);
+        for (int i=0; i<5;i++) {
+        star1[i]=new Star();
+        }
+        stack4.getChildren().addAll( Star.getImg());
+        stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
         
@@ -613,39 +727,41 @@ class Game extends Application implements Serializable{
         stack2 = new StackPane();
         stack3 = new StackPane();
         stack4 = new StackPane();
+        stack5 = new StackPane();
     	player = data.getPlayer();
         ball = data.getBall();
         obstacle1 = data.getOb1();
         obstacle2 = data.getOb2();
         obstacle3 = data.getOb3();
         obstacle4 = data.getOb4();
+        obstacle6 = data.getOb6();
         angle = data.getGame().getAngle();
         angle2 = data.getGame().getAngle2();
         
-        obstacle1.getImg().setFitWidth(obstacle1.getWidth());
+        obstacle1.getImg().setFitWidth(Obstacle1.getWidth());
         obstacle1.getImg().setPreserveRatio(true);
         obstacle1.getImg().setX(600-Main.screenWidth);
         obstacle1.getImg().setY(300-Main.screenHeight);
         
-        obstacle2.getImg().setFitWidth(obstacle2.getWidth());
+        obstacle2.getImg().setFitWidth(Obstacle2.getWidth());
         obstacle2.getImg().setPreserveRatio(true);
         obstacle2.getImg().setX(600-Main.screenWidth);
         obstacle2.getImg().setY(300-Main.screenHeight);
         
-        obstacle3.getImg().setFitWidth(obstacle3.getWidth());
+        obstacle3.getImg().setFitWidth(Obstacle3.getWidth());
         obstacle3.getImg().setPreserveRatio(true);
         obstacle3.getImg().setX(600-Main.screenWidth);
         obstacle3.getImg().setY(300-Main.screenHeight);
         
-        obstacle4.getImg().setFitWidth(obstacle4.getWidth());
+        obstacle4.getImg().setFitWidth(Obstacle4.getWidth());
         obstacle4.getImg().setPreserveRatio(true);
         obstacle4.getImg().setX(600-Main.screenWidth);
         obstacle4.getImg().setY(300-Main.screenHeight);
         
-//        obstacle6.getImg().setFitWidth(obstacle6.getWidth());
-//        obstacle6.getImg().setPreserveRatio(true);
-//        obstacle6.getImg().setX(50);
-//        obstacle6.getImg().setY(300-Main.screenHeight);
+        obstacle6.getImg().setFitWidth(Obstacle6.getWidth());
+        obstacle6.getImg().setPreserveRatio(true);
+        obstacle6.getImg().setX(50);
+        obstacle6.getImg().setY(300-Main.screenHeight);
         
 //        ccr = data.getCc();
 //        star1 = data.getStar();
@@ -712,23 +828,36 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg() );
-        stack.setLayoutX(Main.screenWidth/2 - obstacle1.getWidth()/2 );
+        stack.getChildren().addAll(Obstacle1.getImg(), Obstacle3.getImg(), Obstacle4.getImg(), Obstacle6.getImg() );
+        stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
-        stack2.getChildren().addAll( obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - 3*obstacle2.getWidth()/4);
+        stack2.getChildren().addAll( Obstacle2.getImg());
+        stack2.setLayoutX(Main.screenWidth/2 - Obstacle2.getWidth());
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
+
+        stack5.getChildren().addAll( Obstacle6.getImg());
+        stack5.setLayoutX(100);
+        stack5.setLayoutY(0);
+        root.getChildren().add(stack5);
         
-        stack3.getChildren().addAll( ccr[1].getImg());
-        stack3.setLayoutX(Main.screenWidth/2 - ccr[1].getWidth()/2);
+        
+        for (int i=0; i<5;i++) {
+        	ccr[i]=new Colourchanger();
+        }
+        
+        stack3.getChildren().addAll( Colourchanger.getImg());
+        stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
+        for (int i=0; i<5;i++) {
+        star1[i]=new Star();
+        }
         
-        stack4.getChildren().addAll( star1[1].getImg());
-        stack4.setLayoutX(Main.screenWidth/2 - star1[1].getWidth()/2);
+        stack4.getChildren().addAll( Star.getImg(),Star.getImg(),Star.getImg(),Star.getImg(),Star.getImg());
+        stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
         
@@ -761,20 +890,61 @@ class Game extends Application implements Serializable{
 	        	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	        	    
 	        	    int ddd= 500;
+	        	    int cc= 150;
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    	       	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[0].getImg().translateYProperty(), getAngle2() - ddd*0+cc)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[0].getImg().translateYProperty(), getAngle2()+2 - ddd*0 +cc)),
 	        	         
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - 2*ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - 2*ddd))
-	        	    );
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[0].getImg().translateYProperty(), getAngle2() - 0*ddd+ 2*cc)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(star1[0].getImg().translateYProperty(), getAngle2()+2 - 0*ddd+2*cc))
+	        	             	 );
+	        	    timeline2 = new Timeline( 
+	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd*1+cc)),
+	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd*1 +cc)),
+	    	    	    	        	         
+	    	    	    	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - 1*ddd+ 2*cc)),
+	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - 1*ddd+2*cc))
+	    	    	        	            		);
+	    	    	        	            timeline3 = new Timeline( 
+	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[2].getImg().translateYProperty(), getAngle2() - ddd*2+cc)),
+	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[2].getImg().translateYProperty(), getAngle2()+2 - ddd*2 +cc)),
+	    	    	    	        	         
+	    	    	    	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[2].getImg().translateYProperty(), getAngle2() - 2*ddd+ 2*cc)),
+	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(star1[2].getImg().translateYProperty(), getAngle2()+2 - 2*ddd+2*cc))
+	    	    	        	            		);
+	    	    	        	            timeline4 = new Timeline(
+	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[3].getImg().translateYProperty(), getAngle2() - ddd*3+cc)),
+	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[3].getImg().translateYProperty(), getAngle2()+2 - ddd*3 +cc)),
+	    	    	    	        	         
+	    	    	    	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[3].getImg().translateYProperty(), getAngle2() - 3*ddd+ 2*cc)),
+	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(star1[3].getImg().translateYProperty(), getAngle2()+2 - 3*ddd+2*cc))
+	    	    	    	        	            		
+	    	    	        	            		);
+	    	    	        	            timeline5 = new Timeline( 
+	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[4].getImg().translateYProperty(), getAngle2() - ddd*4+cc)),
+	    	    		    	    	    	    new KeyFrame(rotateDuration, new KeyValue(ccr[4].getImg().translateYProperty(), getAngle2()+2 - ddd*4 +cc)),
+	    	    		    	    	    	     new KeyFrame(Duration.ZERO, new KeyValue(star1[4].getImg().translateYProperty(), getAngle2() - 4*ddd+ 2*cc)),
+	    	    		    	    	    	     new KeyFrame(rotateDuration, new KeyValue(star1[4].getImg().translateYProperty(), getAngle2()+2 - 4*ddd+2*cc))
+	    	    	        	            		);
 	        	    angle=angle+2;
 	        	    
 	                timeline.setCycleCount(Timeline.INDEFINITE);
 	                timeline.setAutoReverse(false);
 	                timeline.play();
+	                timeline2.setCycleCount(Timeline.INDEFINITE);
+	                timeline2.setAutoReverse(false);
+	                timeline2.play();
+	                timeline3.setCycleCount(Timeline.INDEFINITE);
+	                timeline3.setAutoReverse(false);
+	                timeline3.play();
+	                timeline4.setCycleCount(Timeline.INDEFINITE);
+	                timeline4.setAutoReverse(false);
+	                timeline4.play();
+	                timeline5.setCycleCount(Timeline.INDEFINITE);
+	                timeline5.setAutoReverse(false);
+	                timeline5.play();
 	                obstacle1.movement(angle, angle2, 0, pane);
 	                obstacle2.movement(angle, angle2 - 3*ddd, 0, pane);
 	                obstacle3.movement(angle, angle2 - 4*ddd, 0, pane);
@@ -782,17 +952,38 @@ class Game extends Application implements Serializable{
 	                obstacle6.movement(angle, angle2 - 6*ddd, xpos, pane);
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
-		            rand = new Random(); 
-					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
-						 ball.change_colour();
-					 }
-					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10 && stack4.getChildren().get(0).isVisible()) {
-						 stack4.getChildren().get(0).setVisible(false);
-						 player.setCollectedStars(player.getCollectedStars()+1);
-						 l.setText(Integer.toString(player.getCollectedStars())); 
-						 player.setScore(player.getScore()+1);
-						 l2.setText(Integer.toString(player.getScore()));
-					 }
+		            for (int i=0;i<5;i++) {
+		            	if (y>=angle2 - i*ddd-cc-20 && y<=angle2 - i*ddd-cc-10) {
+							 ball.change_colour();
+							 if(playsounds == true) {
+		                    		String s = "colourchangesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(2);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+		            	}
+		            }
+					  
+					 
+					 for (int i=0;i<5;i++) {
+						 if (y>=getAngle2() - i*ddd-2*cc-20 && y<=getAngle2() - i*ddd-2*cc-10 && stack4.getChildren().get(0).isVisible()) {
+							 stack4.getChildren().get(i).setVisible(false);
+							 player.setCollectedStars(player.getCollectedStars()+1);
+							 l.setText(Integer.toString(player.getCollectedStars())); 
+							 player.setScore(player.getScore()+1);
+							 l2.setText(Integer.toString(player.getScore()));
+							 if(playsounds == true) {
+		                    		//String s = "scorepointsound.wav";
+		                    		String s = "starsound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+						 }
+			            }
+					
 					 //obstacle 1
 					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
 						
@@ -820,6 +1011,15 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = getAngle2() -25;
+							 
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+							 
 							 showResurrectmenu();
 						 }
 					 }
@@ -849,6 +1049,15 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = getAngle2() +obstacle1.getWidth() -55;
+							 
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+							 
 							 showResurrectmenu();
 						 }
 							
@@ -876,6 +1085,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2- 4*ddd -25;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 					 }
@@ -901,6 +1117,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2 +obstacle3.getWidth() - 4*ddd-55;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 							
@@ -926,6 +1149,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2- 5*ddd -25;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 					 }
@@ -948,6 +1178,13 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2 +obstacle3.getWidth() - 5*ddd-55;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 							
@@ -956,7 +1193,7 @@ class Game extends Application implements Serializable{
 					 if (y>=angle2- 6*ddd -20 && y<=angle2 - 6*ddd-10) {
 						
 						 System.out.println("coll6");
-						 System.out.println(xpos);
+						// System.out.println(xpos);
 						
 						 int col=-1;
 						 if((xpos > -270 && xpos <-180)||(xpos > 90 && xpos <180)||(xpos > 360 && xpos <450)) {
@@ -979,10 +1216,55 @@ class Game extends Application implements Serializable{
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2- 6*ddd -25;
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
 							 showResurrectmenu();
 						 }
 					 }
-					 
+					 System.out.println("angle");
+					 System.out.println(angle%360);
+					//obstacle 2
+					 if (y>=angle2+(+obstacle2.getWidth()/2) -3*ddd -50 && y<=angle2 +(+obstacle2.getWidth()/2)- 3*ddd-10) {
+						 System.out.println("coll2");
+						 System.out.println(angle%360);
+						 int col=ball.getColour();
+						 if((angle%360 > 0 && angle%360 <20)||(angle%360 > 340 && angle%360 <360)) {
+							 System.out.println("blue");
+							 col =1; 
+						 }
+						 if(angle%360 > 70 && angle%360 <110) { 
+							 System.out.println("yellow");
+							 col =2;
+						 }
+						 if(angle%360 > 160 && angle%360 <200) { 
+							 System.out.println("green");
+							 col =3;
+						 }
+						 if(angle%360 > 250 && angle%360 <290) { 
+							 System.out.println("red");
+							 col =0; 
+						 }
+						 if (col!=ball.getColour()) {
+							 System.out.println("coll");
+							 pause=!pause;
+							 y = angle2- 3*ddd -25;
+							 
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+							 
+							 showResurrectmenu();
+						 }
+					 }
 					 
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
@@ -1021,7 +1303,7 @@ class Game extends Application implements Serializable{
         @Override
         public void handle(ActionEvent event) {
         	var src = (Button) event.getSource();
-        	if(src.getText().equals("Resume")) {
+        	if(src.getText().equals("Return to game")) {
         		canvas.requestFocus();
         		pause=!(pause);
         		stage.close();
@@ -1035,19 +1317,20 @@ class Game extends Application implements Serializable{
         		
         		SaveGame.filename = tf.getText()+".txt"; 
         		saveGame();
+        		pane.getChildren().clear();
         		stage.close();
-        		Platform.exit(); // or displayMainmenu
-        		
+        		//Platform.exit(); // or displayMainmenu
+        		homepage.displayMainmenu(stage, pane, scene);
         	}
-        	else if(src.getText().equals("Back")) {
-        		stage.close();
-        		showSaveresmenu(stage);
-        	}
+//        	else if(src.getText().equals("Back")) {
+//        		stage.close();
+//        		showSaveresmenu(stage);
+//        	}
         	else if(src.getText().equals("Save life and resume game")) {
-        		/*if(player.getCollectedStars()<=0) {
+        		if(player.getCollectedStars()<=0) {
         			System.out.println("Not enough stars");
         		}
-        		else {*/
+        		else {
         			//y=y+0;
         		ball.setY(ball.getY()+70);
         		player.resurrect();
@@ -1056,23 +1339,23 @@ class Game extends Application implements Serializable{
         		//pause=!(pause);
         		stage.close();
         		canvas.requestFocus();
+        		canvas.setVisible(true);
         		try {
         		    Robot r = new Robot();
-        		    //there are other methods such as positioning mouse and mouseclicks etc.
         		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
         		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
         		 } catch (AWTException e) {
-        		    //Teleport penguins  
+        		     
         		 }
         		pause = !pause;
-        		//}
+        		}
         	}
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
        		 	stage.close();
-       		// canvas.requestFocus();
-     		//pause=!(pause);
-       		 	stage = new Stage();
+       		 	// canvas.requestFocus();
+       		 	//pause=!(pause);
+       		 	//stage = new Stage();
         		try {
 					Homepage.startNewgame(stage);
 					canvas.requestFocus();
@@ -1090,8 +1373,10 @@ class Game extends Application implements Serializable{
 				}
         	}
         	else if(src.getText().equals("Exit game")) {
+        		pane.getChildren().clear();
         		stage.close();
-        		Platform.exit(); // or displayMainmenu
+        		//Platform.exit(); // or displayMainmenu
+        		homepage.displayMainmenu(stage, pane, scene);
         	}
         }
     }
@@ -1113,7 +1398,16 @@ class Game extends Application implements Serializable{
             // start movement according to key pressed
             switch (event.getCode()) {
                 case UP:
-                    gravity = -2;
+                    {
+                    	gravity = -2;
+//                    	if(playsounds == true) {
+//                    		String s = "ballup.wav";
+//                    		media = new Media(new File(s).toURI().toString()); 
+//                    		mediaPlayer = new MediaPlayer(media); 
+//                    		mediaPlayer.setVolume(2);
+//                    		mediaPlayer.setAutoPlay(true);  
+//                    	}
+                    }
                     break;
                 case P:
                    pause =!(pause);
@@ -1139,13 +1433,14 @@ class Game extends Application implements Serializable{
     private transient EventHandler<ActionEvent> event2 = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) { 
 	        stage = new Stage(); 
-	        showSaveresmenu(stage);
+	        //showSaveresmenu(stage);
+	        saveGameMenu(stage);
 	        pause=!(pause);
         } 
     };
     
     public void saveGame() {
-    	SaveObject gametosave = new SaveObject(this.ball, this, this.player, this.obstacle1, this.obstacle2, this.obstacle3, this.obstacle4, this.ccr, this.star1);
+    	SaveObject gametosave = new SaveObject(this.ball, this, this.player, this.obstacle1, this.obstacle2, this.obstacle3, this.obstacle4, this.obstacle6, this.ccr, this.star1);
     	SaveGame.save(gametosave);
     }
     public void saveGameMenu(Stage theStage){
@@ -1157,7 +1452,7 @@ class Game extends Application implements Serializable{
     	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
     	pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
@@ -1172,7 +1467,7 @@ class Game extends Application implements Serializable{
 		
 		tf = new TextField();
 		btn1 = new Button("Save and exit");
-		btn2 = new Button("Back");
+		btn2 = new Button("Return to game");
 		bh = new buttonHandler();
 
 		btn1.setOnAction(bh);
@@ -1184,37 +1479,37 @@ class Game extends Application implements Serializable{
 		theStage.setScene(scene);
 		theStage.show();
 	}
-    private void showSaveresmenu(Stage theStage) {
-    	pane = new GridPane();
-    	pane.setAlignment(Pos.CENTER);
-	    pane.setHgap(10);
-	    pane.setVgap(10);
-	    pane.setPadding(new Insets(25, 25, 25, 25));
-	    
-    	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
-    	
-    	pane.setStyle("-fx-background-color: #202020");
-	    pane.setId("pane");
-	   // scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
-        
-		vbox = new VBox(5);
-        stage = theStage;
-        t = new Text();
-    	t = new Text (10, 20, "Color Switch\n");
-    	t.setFont(Font.font ("Montserrat", 20));
-    	t.setFill(Color.WHITE);
-    	btn1 = new Button("Save game");
-    	
-    	btn3 = new Button("Resume");
-    	bh = new buttonHandler();
-        btn1.setOnAction(bh);
-        btn3.setOnAction(bh);
-        vbox.getChildren().addAll(t, btn1, btn3);
-        pane.getChildren().addAll(vbox);
-        theStage.setTitle("Colour Switch");
-        theStage.setScene(scene);
-        theStage.show();
-	}
+//    private void showSaveresmenu(Stage theStage) {
+//    	pane = new GridPane();
+//    	pane.setAlignment(Pos.CENTER);
+//	    pane.setHgap(10);
+//	    pane.setVgap(10);
+//	    pane.setPadding(new Insets(25, 25, 25, 25));
+//	    
+//    	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+//    	
+//    	pane.setStyle("-fx-background-color: #202020");
+//	    pane.setId("pane");
+////	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//        
+//		vbox = new VBox(5);
+//        stage = theStage;
+//        t = new Text();
+//    	t = new Text (10, 20, "Color Switch\n");
+//    	t.setFont(Font.font ("Montserrat", 20));
+//    	t.setFill(Color.WHITE);
+//    	btn1 = new Button("Save game");
+//    	
+//    	btn3 = new Button("Resume");
+//    	bh = new buttonHandler();
+//        btn1.setOnAction(bh);
+//        btn3.setOnAction(bh);
+//        vbox.getChildren().addAll(t, btn1, btn3);
+//        pane.getChildren().addAll(vbox);
+//        theStage.setTitle("Colour Switch");
+//        theStage.setScene(scene);
+//        theStage.show();
+//	}
     public void showResurrectmenu(){
 		stage = new Stage();
 		pane = new GridPane();
@@ -1226,7 +1521,7 @@ class Game extends Application implements Serializable{
 	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-	    //scene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
@@ -1382,7 +1677,7 @@ class Ball implements Serializable{
 	private Ball ball;
 	private static Image pic = new Image("file:images/colourchanger.png");
 	private static ImageView img = new ImageView(pic);
-	private static int width = 100;
+	private static int width = 60;
 
 	public Colourchanger() throws FileNotFoundException{
 		
@@ -1510,7 +1805,7 @@ class Obstacle2 extends Obstacle {
 	
 	public Obstacle2() throws FileNotFoundException{
 		
-		 img.setX(600-Main.screenWidth);
+		 img.setX(600-Main.screenWidth );
          img.setY(300-Main.screenHeight);
          img.setFitWidth(getWidth());
          img.setPreserveRatio(true);
