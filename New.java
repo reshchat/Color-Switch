@@ -863,14 +863,25 @@ class Game extends Application implements Serializable{
 	            y = ball.getY();
 	            
 	            if(pause==false) {
-	            	if(angle2>3500)
+	            	if(angle2>4700)
 	            	{
 	            		angle2=0;
 	            		stack4.getChildren().get(0).setVisible(true);
 	            	}
 	            	if(angle2<-100)
 	            	{
-	            		angle2=3500;
+	            		angle2=4700;
+	            	}
+	            	int kk;
+	            	int cc;
+	            	if (angle2>2000) {
+	            		stack4.getChildren().get(0).setVisible(true);
+	            		kk=7;
+	            		cc=8;
+	            	}
+	            	else {
+	            		kk=1;
+	            		cc=2;
 	            	}
 	            	
 	            	rotateDuration = Duration.millis(3);
@@ -880,11 +891,11 @@ class Game extends Application implements Serializable{
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    	       	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd*kk)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd*kk)),
 	        	         
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - 2*ddd)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - 2*ddd))
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - cc*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - cc*ddd))
 	        	    );
 	        	    angle=angle+2;
 	        	    
@@ -1085,7 +1096,7 @@ class Game extends Application implements Serializable{
 						  if(abc > 240 && abc <360)
 						 { System.out.println("green");
 						 col =3; }
-						 if (ball.getColour()!=3 && col!=ball.getColour()) {
+						 if (ball.getColour()!=2 && col!=ball.getColour()) {
 							 System.out.println("coll");
 							 pause=!pause;
 							 y = angle2- 5*ddd -25;
