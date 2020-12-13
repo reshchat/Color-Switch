@@ -573,16 +573,14 @@ class Game extends Application implements Serializable{
     private transient GridPane pane;
     private transient VBox vbox;
     private transient Timeline timeline;
-    private transient Timeline timeline2;
-    private transient Timeline timeline3;
-    private transient Timeline timeline4;
-    private transient Timeline timeline5;
     private transient StackPane stack;
     private transient StackPane stack1;
     private transient StackPane stack2;
     private transient StackPane stack3;
     private transient StackPane stack4;
     private transient StackPane stack5;
+    private transient StackPane stack6;
+    private transient StackPane stack7;
 
     transient Label l;
     transient Label l2;
@@ -614,6 +612,8 @@ class Game extends Application implements Serializable{
         stack3 = new StackPane();
         stack4 = new StackPane();
         stack5 = new StackPane();
+        stack6 = new StackPane();
+        stack7 = new StackPane();
         angle=0;
         angle2=0;
         xpos = -40;
@@ -700,22 +700,30 @@ class Game extends Application implements Serializable{
         stack5.setLayoutX(100);
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
-        for (int i=0; i<5;i++) {
-        	ccr[i]=new Colourchanger();
-        }
         
-        stack3.getChildren().addAll( Colourchanger.getImg());
+        ccr[1]=new Colourchanger();
+        stack3.getChildren().addAll( ccr[1].getImg());
         stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
-        for (int i=0; i<5;i++) {
-        star1[i]=new Star();
-        }
-        stack4.getChildren().addAll( Star.getImg());
+        
+        star1[1]=new Star();
+        stack4.getChildren().addAll( star1[1].getImg());
         stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
         
+        ccr[2]=new Colourchanger();
+        stack6.getChildren().addAll( ccr[2].getImg());
+        stack6.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
+        stack6.setLayoutY(ccr[2].getY());
+        root.getChildren().add(stack6);
+        
+        star1[2]=new Star();
+        stack7.getChildren().addAll( star1[1].getImg());
+        stack7.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
+        stack7.setLayoutY(star1[2].getY());
+        root.getChildren().add(stack7);
         theStage.show();
         timer.start(); 
     }
@@ -728,6 +736,8 @@ class Game extends Application implements Serializable{
         stack3 = new StackPane();
         stack4 = new StackPane();
         stack5 = new StackPane();
+        stack6 = new StackPane();
+        stack7 = new StackPane();
     	player = data.getPlayer();
         ball = data.getBall();
         obstacle1 = data.getOb1();
@@ -834,7 +844,7 @@ class Game extends Application implements Serializable{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( Obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - Obstacle2.getWidth());
+        stack2.setLayoutX(Main.screenWidth/2 );
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
@@ -843,23 +853,29 @@ class Game extends Application implements Serializable{
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
         
-        
-        for (int i=0; i<5;i++) {
-        	ccr[i]=new Colourchanger();
-        }
-        
-        stack3.getChildren().addAll( Colourchanger.getImg());
+        ccr[1]=new Colourchanger();
+        stack3.getChildren().addAll( ccr[1].getImg());
         stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(ccr[1].getY());
         root.getChildren().add(stack3);
-        for (int i=0; i<5;i++) {
-        star1[i]=new Star();
-        }
         
-        stack4.getChildren().addAll( Star.getImg(),Star.getImg(),Star.getImg(),Star.getImg(),Star.getImg());
+        star1[1]=new Star();
+        stack4.getChildren().addAll( star1[1].getImg());
         stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
+        
+        ccr[2]=new Colourchanger();
+        stack6.getChildren().addAll( ccr[2].getImg());
+        stack6.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
+        stack6.setLayoutY(ccr[2].getY());
+        root.getChildren().add(stack6);
+        
+        star1[2]=new Star();
+        stack7.getChildren().addAll( star1[2].getImg());
+        stack7.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
+        stack7.setLayoutY(star1[2].getY());
+        root.getChildren().add(stack7);
         
         theStage.show();
         timer.start(); 
@@ -876,75 +892,39 @@ class Game extends Application implements Serializable{
 	            y = ball.getY();
 	            
 	            if(pause==false) {
-	            	if(angle2>3500)
+	            	if(angle2>4700)
 	            	{
 	            		angle2=0;
 	            		stack4.getChildren().get(0).setVisible(true);
 	            	}
 	            	if(angle2<-100)
 	            	{
-	            		angle2=3500;
+	            		angle2=4700;
 	            	}
 	            	
 	            	rotateDuration = Duration.millis(3);
 	        	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	        	    
 	        	    int ddd= 500;
-	        	    int cc= 150;
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    	       	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[0].getImg().translateYProperty(), getAngle2() - ddd*0+cc)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[0].getImg().translateYProperty(), getAngle2()+2 - ddd*0 +cc)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd)),
 	        	         
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[0].getImg().translateYProperty(), getAngle2() - 0*ddd+ 2*cc)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(star1[0].getImg().translateYProperty(), getAngle2()+2 - 0*ddd+2*cc))
-	        	             	 );
-	        	    timeline2 = new Timeline( 
-	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd*1+cc)),
-	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd*1 +cc)),
-	    	    	    	        	         
-	    	    	    	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - 1*ddd+ 2*cc)),
-	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - 1*ddd+2*cc))
-	    	    	        	            		);
-	    	    	        	            timeline3 = new Timeline( 
-	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[2].getImg().translateYProperty(), getAngle2() - ddd*2+cc)),
-	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[2].getImg().translateYProperty(), getAngle2()+2 - ddd*2 +cc)),
-	    	    	    	        	         
-	    	    	    	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[2].getImg().translateYProperty(), getAngle2() - 2*ddd+ 2*cc)),
-	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(star1[2].getImg().translateYProperty(), getAngle2()+2 - 2*ddd+2*cc))
-	    	    	        	            		);
-	    	    	        	            timeline4 = new Timeline(
-	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[3].getImg().translateYProperty(), getAngle2() - ddd*3+cc)),
-	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[3].getImg().translateYProperty(), getAngle2()+2 - ddd*3 +cc)),
-	    	    	    	        	         
-	    	    	    	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[3].getImg().translateYProperty(), getAngle2() - 3*ddd+ 2*cc)),
-	    	    	    	        	            new KeyFrame(rotateDuration, new KeyValue(star1[3].getImg().translateYProperty(), getAngle2()+2 - 3*ddd+2*cc))
-	    	    	    	        	            		
-	    	    	        	            		);
-	    	    	        	            timeline5 = new Timeline( 
-	    	    	        	            		new KeyFrame(Duration.ZERO, new KeyValue(ccr[4].getImg().translateYProperty(), getAngle2() - ddd*4+cc)),
-	    	    		    	    	    	    new KeyFrame(rotateDuration, new KeyValue(ccr[4].getImg().translateYProperty(), getAngle2()+2 - ddd*4 +cc)),
-	    	    		    	    	    	     new KeyFrame(Duration.ZERO, new KeyValue(star1[4].getImg().translateYProperty(), getAngle2() - 4*ddd+ 2*cc)),
-	    	    		    	    	    	     new KeyFrame(rotateDuration, new KeyValue(star1[4].getImg().translateYProperty(), getAngle2()+2 - 4*ddd+2*cc))
-	    	    	        	            		);
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - 2*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - 2*ddd)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[2].getImg().translateYProperty(), getAngle2() - 7*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[2].getImg().translateYProperty(), getAngle2()+2 - 7*ddd)),
+	        	         
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[2].getImg().translateYProperty(), getAngle2() - 8*ddd)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(star1[2].getImg().translateYProperty(), getAngle2()+2 - 8*ddd))
+	        	    );
 	        	    angle=angle+2;
 	        	    
 	                timeline.setCycleCount(Timeline.INDEFINITE);
 	                timeline.setAutoReverse(false);
 	                timeline.play();
-	                timeline2.setCycleCount(Timeline.INDEFINITE);
-	                timeline2.setAutoReverse(false);
-	                timeline2.play();
-	                timeline3.setCycleCount(Timeline.INDEFINITE);
-	                timeline3.setAutoReverse(false);
-	                timeline3.play();
-	                timeline4.setCycleCount(Timeline.INDEFINITE);
-	                timeline4.setAutoReverse(false);
-	                timeline4.play();
-	                timeline5.setCycleCount(Timeline.INDEFINITE);
-	                timeline5.setAutoReverse(false);
-	                timeline5.play();
 	                obstacle1.movement(angle, angle2, 0, pane);
 	                obstacle2.movement(angle, angle2 - 3*ddd, 0, pane);
 	                obstacle3.movement(angle, angle2 - 4*ddd, 0, pane);
@@ -952,38 +932,32 @@ class Game extends Application implements Serializable{
 	                obstacle6.movement(angle, angle2 - 6*ddd, xpos, pane);
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
-		            for (int i=0;i<5;i++) {
-		            	if (y>=angle2 - i*ddd-cc-20 && y<=angle2 - i*ddd-cc-10) {
-							 ball.change_colour();
-							 if(playsounds == true) {
-		                    		String s = "colourchangesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(2);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-		            	}
-		            }
-					  
-					 
-					 for (int i=0;i<5;i++) {
-						 if (y>=getAngle2() - i*ddd-2*cc-20 && y<=getAngle2() - i*ddd-2*cc-10 && stack4.getChildren().get(0).isVisible()) {
-							 stack4.getChildren().get(i).setVisible(false);
-							 player.setCollectedStars(player.getCollectedStars()+1);
-							 l.setText(Integer.toString(player.getCollectedStars())); 
-							 player.setScore(player.getScore()+1);
-							 l2.setText(Integer.toString(player.getScore()));
-							 if(playsounds == true) {
-		                    		//String s = "scorepointsound.wav";
-		                    		String s = "starsound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-						 }
-			            }
-					
+		            rand = new Random(); 
+					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
+						 ball.change_colour();
+						 if(playsounds == true) {
+	                    		String s = "colourchangesound.wav";
+	                    		media = new Media(new File(s).toURI().toString()); 
+	                    		mediaPlayer = new MediaPlayer(media); 
+	                    		mediaPlayer.setVolume(2);
+	                    		mediaPlayer.setAutoPlay(true);  
+	                     } 
+					 }
+					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10  ) {// && stack4.getChildren().get(0).isVisible()) {
+						// stack4.getChildren().get(0).setVisible(false);
+						 player.setCollectedStars(player.getCollectedStars()+1);
+						 l.setText(Integer.toString(player.getCollectedStars())); 
+						 player.setScore(player.getScore()+1);
+						 l2.setText(Integer.toString(player.getScore()));
+						 if(playsounds == true) {
+	                    		//String s = "scorepointsound.wav";
+	                    		String s = "starsound.wav";
+	                    		media = new Media(new File(s).toURI().toString()); 
+	                    		mediaPlayer = new MediaPlayer(media); 
+	                    		mediaPlayer.setVolume(5);
+	                    		mediaPlayer.setAutoPlay(true);  
+	                     }
+					 }
 					 //obstacle 1
 					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
 						
@@ -1327,10 +1301,10 @@ class Game extends Application implements Serializable{
 //        		showSaveresmenu(stage);
 //        	}
         	else if(src.getText().equals("Save life and resume game")) {
-        		if(player.getCollectedStars()<=0) {
+        		/*if(player.getCollectedStars()<=0) {
         			System.out.println("Not enough stars");
         		}
-        		else {
+        		else {*/
         			//y=y+0;
         		ball.setY(ball.getY()+70);
         		player.resurrect();
@@ -1342,13 +1316,14 @@ class Game extends Application implements Serializable{
         		canvas.setVisible(true);
         		try {
         		    Robot r = new Robot();
+        		    //there are other methods such as positioning mouse and mouseclicks etc.
         		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
         		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
         		 } catch (AWTException e) {
-        		     
+        		    //Teleport penguins  
         		 }
         		pause = !pause;
-        		}
+        		//}
         	}
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
@@ -1653,7 +1628,7 @@ class Ball implements Serializable{
 		this.y = 0;
 	}
 	
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 	public static int getWidth() {
@@ -1686,7 +1661,7 @@ class Ball implements Serializable{
 		this.y = 0;
 	}
 	
-	public static ImageView getImg() {
+	public ImageView getImg() {
 		return img;
 	}
 	public static int getWidth() {
