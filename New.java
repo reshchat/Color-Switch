@@ -688,7 +688,7 @@ class Game extends Application implements Serializable{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( Obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - Obstacle2.getWidth());
+        stack2.setLayoutX(Main.screenWidth/2);// + Obstacle2.getWidth()/2);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
@@ -827,7 +827,7 @@ class Game extends Application implements Serializable{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( Obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2 - Obstacle2.getWidth());
+        stack2.setLayoutX(Main.screenWidth/2 );
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
@@ -1174,20 +1174,20 @@ class Game extends Application implements Serializable{
 						 System.out.println(angle%360);
 						 int col=ball.getColour();
 						 if((angle%360 > 0 && angle%360 <20)||(angle%360 > 340 && angle%360 <360)) {
-							 System.out.println("gree");
-							 col =3; 
+							 System.out.println("blue");
+							 col =1; 
 						 }
 						 if(angle%360 > 70 && angle%360 <110) { 
-							 System.out.println("red");
-							 col =0;
+							 System.out.println("yellow");
+							 col =2;
 						 }
 						 if(angle%360 > 160 && angle%360 <200) { 
-							 System.out.println("blue");
-							 col =1;
+							 System.out.println("green");
+							 col =3;
 						 }
 						 if(angle%360 > 250 && angle%360 <290) { 
-							 System.out.println("yello");
-							 col =2; 
+							 System.out.println("red");
+							 col =0; 
 						 }
 						 if (col!=ball.getColour()) {
 							 System.out.println("coll");
