@@ -874,8 +874,10 @@ class Game extends Application implements Serializable{
 	            	}
 	            	int kk;
 	            	int cc;
+	            	if (angle2>2000 && angle2<3000) {
+	            		stack4.getChildren().get(0).setVisible(true);}
 	            	if (angle2>2000) {
-	            		stack4.getChildren().get(0).setVisible(true);
+	            		//stack4.getChildren().get(0).setVisible(true);
 	            		kk=7;
 	            		cc=8;
 	            	}
@@ -920,7 +922,32 @@ class Game extends Application implements Serializable{
 	                    		mediaPlayer.setAutoPlay(true);  
 	                     } 
 					 }
+					 if (y>=angle2 - 7*ddd-20 && y<=angle2 - 7*ddd-10) {
+						 ball.change_colour();
+						 if(playsounds == true) {
+	                    		String s = "colourchangesound.wav";
+	                    		media = new Media(new File(s).toURI().toString()); 
+	                    		mediaPlayer = new MediaPlayer(media); 
+	                    		mediaPlayer.setVolume(2);
+	                    		mediaPlayer.setAutoPlay(true);  
+	                     } 
+					 }
 					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10 && stack4.getChildren().get(0).isVisible()) {
+						 stack4.getChildren().get(0).setVisible(false);
+						 player.setCollectedStars(player.getCollectedStars()+1);
+						 l.setText(Integer.toString(player.getCollectedStars())); 
+						 player.setScore(player.getScore()+1);
+						 l2.setText(Integer.toString(player.getScore()));
+						 if(playsounds == true) {
+	                    		//String s = "scorepointsound.wav";
+	                    		String s = "starsound.wav";
+	                    		media = new Media(new File(s).toURI().toString()); 
+	                    		mediaPlayer = new MediaPlayer(media); 
+	                    		mediaPlayer.setVolume(5);
+	                    		mediaPlayer.setAutoPlay(true);  
+	                     }
+					 }
+					 if (y>=getAngle2() - 8*ddd-20 && y<=getAngle2() - 8*ddd-10 && stack4.getChildren().get(0).isVisible()) {
 						 stack4.getChildren().get(0).setVisible(false);
 						 player.setCollectedStars(player.getCollectedStars()+1);
 						 l.setText(Integer.toString(player.getCollectedStars())); 
