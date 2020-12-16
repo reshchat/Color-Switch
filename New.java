@@ -1035,35 +1035,9 @@ class Game extends Application implements Serializable{
 							 showResurrectmenu(); 
 					 }
 
-/*
+
 if (obstacle6.obstacleHit( y)) {
-	 
-}*/
-					 //obstacle 6
-					 if (y>=angle2- 6*ddd -20 && y<=angle2 - 6*ddd-10) {
-						
-						 System.out.println("coll6");
-						// System.out.println(xpos);
-						
-						 int col=-1;
-						 if((xpos > -270 && xpos <-180)||(xpos > 90 && xpos <180)||(xpos > 360 && xpos <450)) {
-							 System.out.println("red");
-							 col =0; 
-						 }
-						 if((xpos > -450 && xpos <-360)||(xpos > -180 && xpos <-90)||(xpos > 180 && xpos <270)) { 
-							 System.out.println("blue");
-							 col =1;
-						 }
-						 if((xpos > -90 && xpos <0)||(xpos > 270 && xpos <360)) { 
-							 System.out.println("yellow");
-							 col =2;
-						 }
-						 if((xpos > -360 && xpos <-270)||(xpos > 0 && xpos <90)) { 
-							 System.out.println("green");
-							 col =3; 
-						 }
-						 if (col!=ball.getColour()) {
-							 System.out.println("coll");
+	  System.out.println("coll66");
 							 pause=!pause;
 							 y = angle2- 6*ddd -25;
 							 if(playsounds == true) {
@@ -1074,8 +1048,8 @@ if (obstacle6.obstacleHit( y)) {
 		                    		mediaPlayer.setAutoPlay(true);  
 		                     }
 							 showResurrectmenu();
-						 }
-					 }
+}
+					 
 					 System.out.println("angle");
 					 System.out.println(angle%360);
 					//obstacle 2
@@ -1991,8 +1965,8 @@ class Obstacle6 extends Obstacle {
 	    translate = new Translate();
 	    
 	    int ddd= 500;
-	    this.angle =(int) duration;
-	    setY(xpos);
+	    this.angle =xpos;
+	    setY(angle2);
 	    timeline = new Timeline( 
 	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateXProperty(), xpos)),
 	            new KeyFrame(xanimateDuration, new KeyValue(this.getImg().translateXProperty(), xpos+2)),
@@ -2014,6 +1988,35 @@ class Obstacle6 extends Obstacle {
 	}
 	@Override
 	protected boolean obstacleHit(int y) {
+		int xpos=this.angle;
+		//obstacle 6
+		 if (y>=this.getY() -20 && y<=this.getY()-10) {
+			
+			 System.out.println("coll6");
+			// System.out.println(xpos);
+			
+			 int col=-1;
+			 if((xpos > -270 && xpos <-180)||(xpos > 90 && xpos <180)||(xpos > 360 && xpos <450)) {
+				 System.out.println("red");
+				 col =0; 
+			 }
+			 if((xpos > -450 && xpos <-360)||(xpos > -180 && xpos <-90)||(xpos > 180 && xpos <270)) { 
+				 System.out.println("blue");
+				 col =1;
+			 }
+			 if((xpos > -90 && xpos <0)||(xpos > 270 && xpos <360)) { 
+				 System.out.println("yellow");
+				 col =2;
+			 }
+			 if((xpos > -360 && xpos <-270)||(xpos > 0 && xpos <90)) { 
+				 System.out.println("green");
+				 col =3; 
+			 }
+			 if (col!=this.getPassposition()) {
+				 System.out.println("coll");
+				 return true;
+			 }
+		 }
 	return false;	
 	}
 	
