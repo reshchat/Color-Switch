@@ -917,7 +917,7 @@ class Game extends Application implements Serializable{
 		            rand = new Random(); 
 					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
 						 Colourchanger.changeColour(ball);
-						 //ball.change_colour();
+						 
 						 Colourchanger.setColours(ball.getColour());
 						 if(playsounds == true) {
 	                    		String s = "colourchangesound.wav";
@@ -1544,18 +1544,14 @@ class Ball implements Serializable{
 	private static Image blue = new Image("file:images/blue.png");
 	private static Image green = new Image("file:images/green.png");
     private static int ballwidth = 30;
-    private transient Random rand;
+    
     
     public Ball() throws FileNotFoundException {
     	
         //this.x = Main.screenWidth/2 - 10;
         this.y = 299;
     }
-    public void change_colour() {
-		rand = new Random(); 
-		this.colour = rand.nextInt(4); 
-	}
-	public int getX() {
+   	public int getX() {
 		return this.x;
 	}
 	public int getY() {
@@ -1567,14 +1563,14 @@ class Ball implements Serializable{
 	public static int getBallwidth() {
 		return ballwidth;
 	}
-	public void setX(int a) {
-		this.x=a;
+	public void setX(int x) {
+		this.x=x;
 	}
-	public void setY(int a) {
-		this.y=a;
+	public void setY(int y) {
+		this.y=y;
 	}
-	public void setColour(int a) {
-		this.colour=a;
+	public void setColour(int colour) {
+		this.colour=colour;
 	}
 	public Image get_ball() {
 		if(this.colour==0) {
@@ -1690,10 +1686,14 @@ class Ball implements Serializable{
 		return this.y;
 	}
 	public void setY(int y) {
-		
+		this.y=y;
 	}
+	private transient static Random rand;
 	public static void changeColour(Ball ball) {
-		ball.change_colour();
+		
+		 rand = new Random(); 
+		int colour = rand.nextInt(4); 
+		ball.setColour(colour);
 	}
 }
 abstract class Obstacle implements Serializable{
