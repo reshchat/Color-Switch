@@ -916,7 +916,8 @@ class Game extends Application implements Serializable{
 		            double x = ball.getX();
 		            rand = new Random(); 
 					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
-						 ball.change_colour();
+						 Colourchanger.changeColour(ball);
+						 //ball.change_colour();
 						 Colourchanger.setColours(ball.getColour());
 						 if(playsounds == true) {
 	                    		String s = "colourchangesound.wav";
@@ -927,7 +928,7 @@ class Game extends Application implements Serializable{
 	                     } 
 					 }
 					 if (y>=angle2 - 7*ddd-20 && y<=angle2 - 7*ddd-10) {
-						 ball.change_colour();
+						 Colourchanger.changeColour(ball);
 						 Colourchanger.setColours(ball.getColour());
 						 if(playsounds == true) {
 	                    		String s = "colourchangesound.wav";
@@ -1691,11 +1692,8 @@ class Ball implements Serializable{
 	public void setY(int y) {
 		
 	}
-	public boolean changeColour(Ball ball) {
-		if(ball.getY() >= this.y-50 && ball.getY() <= this.y+50) {
-			return true;
-		}
-		return false;
+	public static void changeColour(Ball ball) {
+		ball.change_colour();
 	}
 }
 abstract class Obstacle implements Serializable{
