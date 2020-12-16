@@ -1018,12 +1018,24 @@ class Game extends Application implements Serializable{
 						    }
 							 showResurrectmenu();
 						}
-					 /*
+					 
 					 if (obstacle2.obstacleHit( y)) {
-						 
+						System.out.println("coll22");
+							 pause=!pause;
+							 y = angle2- 3*ddd -25;
+							 
+							 if(playsounds == true) {
+		                    		String s = "hitobstaclesound.wav";
+		                    		media = new Media(new File(s).toURI().toString()); 
+		                    		mediaPlayer = new MediaPlayer(media); 
+		                    		mediaPlayer.setVolume(5);
+		                    		mediaPlayer.setAutoPlay(true);  
+		                     }
+							 
+							 showResurrectmenu(); 
 					 }
 
-
+/*
 if (obstacle6.obstacleHit( y)) {
 	 
 }*/
@@ -1067,42 +1079,7 @@ if (obstacle6.obstacleHit( y)) {
 					 System.out.println("angle");
 					 System.out.println(angle%360);
 					//obstacle 2
-					 if (y>=angle2+(+obstacle2.getWidth()/2) -3*ddd -50 && y<=angle2 +(+obstacle2.getWidth()/2)- 3*ddd-10) {
-						 System.out.println("coll2");
-						 System.out.println(angle%360);
-						 int col=ball.getColour();
-						 if((angle%360 > 0 && angle%360 <20)||(angle%360 > 340 && angle%360 <360)) {
-							 System.out.println("blue");
-							 col =1; 
-						 }
-						 if(angle%360 > 70 && angle%360 <110) { 
-							 System.out.println("yellow");
-							 col =2;
-						 }
-						 if(angle%360 > 160 && angle%360 <200) { 
-							 System.out.println("green");
-							 col =3;
-						 }
-						 if(angle%360 > 250 && angle%360 <290) { 
-							 System.out.println("red");
-							 col =0; 
-						 }
-						 if (col!=ball.getColour()) {
-							 System.out.println("coll");
-							 pause=!pause;
-							 y = angle2- 3*ddd -25;
-							 
-							 if(playsounds == true) {
-		                    		String s = "hitobstaclesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-							 
-							 showResurrectmenu();
-						 }
-					 }
+					
 					 
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
@@ -1748,6 +1725,31 @@ class Obstacle2 extends Obstacle {
 	}
 	@Override
 	protected boolean obstacleHit(int y) {
+		 if (y>=getY()+(getWidth()/2) -50 && y<=getY() +(getWidth()/2)-10) {
+			 System.out.println("coll2");
+			 System.out.println(angle%360);
+			 int col=this.getPassposition();
+			 if((angle%360 > 0 && angle%360 <20)||(angle%360 > 340 && angle%360 <360)) {
+				 System.out.println("blue");
+				 col =1; 
+			 }
+			 if(angle%360 > 70 && angle%360 <110) { 
+				 System.out.println("yellow");
+				 col =2;
+			 }
+			 if(angle%360 > 160 && angle%360 <200) { 
+				 System.out.println("green");
+				 col =3;
+			 }
+			 if(angle%360 > 250 && angle%360 <290) { 
+				 System.out.println("red");
+				 col =0; 
+			 }
+			 if (col!=this.getPassposition()) {
+				 System.out.println("coll");
+				 return true;
+			 }
+		 }
 	return false;	
 	}
 }
