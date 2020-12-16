@@ -916,6 +916,11 @@ class Game extends Application implements Serializable{
 	                obstacle3.movement(angle, angle2 - 4*ddd, 0, pane);
 	                obstacle4.movement(angle, angle2 - 5*ddd, 0, pane);
 	                obstacle6.movement(angle, angle2 - 6*ddd, xpos, pane);
+	                obstacle1.setPassposition(ball.getColour());
+	                obstacle2.setPassposition(ball.getColour());
+	                obstacle3.setPassposition(ball.getColour());
+	                obstacle4.setPassposition(ball.getColour());
+	                obstacle6.setPassposition(ball.getColour());
 		            double t = (currentNanoTime - startNanoTime) / 1000000000.0; 
 		            double x = ball.getX();
 		            rand = new Random(); 
@@ -973,6 +978,23 @@ class Game extends Application implements Serializable{
 	                     }
 					 }
 					 //obstacle 1
+					 
+					 if (obstacle1.obstacleHit( y)) {
+						 System.out.println("collisiomn1");
+						 pause=!pause;
+						 y = getAngle2() -25;
+						 
+						 if(playsounds == true) {
+	                    		String s = "hitobstaclesound.wav";
+	                    		media = new Media(new File(s).toURI().toString()); 
+	                    		mediaPlayer = new MediaPlayer(media); 
+	                    		mediaPlayer.setVolume(5);
+	                    		mediaPlayer.setAutoPlay(true);  
+	                     }
+						 
+						 showResurrectmenu();
+					 }
+					/* 
 					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
 						
 						 System.out.println("collup");
@@ -1050,6 +1072,8 @@ class Game extends Application implements Serializable{
 						 }
 							
 					 }
+					 
+					 */
 					 //obstacle 3
 					 if (y>=angle2- 4*ddd -20 && y<=angle2 - 4*ddd-10) {
 							
@@ -1706,6 +1730,7 @@ abstract class Obstacle implements Serializable{
 	protected int passposition;
 	protected boolean hit;
 	protected int y;
+	protected int angle;
 	
 	public Obstacle() throws FileNotFoundException {
 		setNoofcolours(4);
@@ -1729,7 +1754,7 @@ abstract class Obstacle implements Serializable{
 	public void setPassposition(int pass) {
 		this.passposition=pass;
 	}	
-	protected boolean obstacleHit(double y2) {
+	protected boolean obstacleHit(int y2) {
 		if(y2 >= passposition-100 && y2 <= passposition+100) {
 			return false;
 		}
@@ -1771,10 +1796,10 @@ class Obstacle1 extends Obstacle{
     	
 	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
 	    // obstacle1.img.getTransforms().add(rotate);
-	    
+	    setY(angle2);
 	    int ddd= 500;
-	    float angle =duration;
-	   
+	    this.angle =(int) duration;
+	    
 	    timeline = new Timeline( 
 	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
 	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
@@ -1787,6 +1812,63 @@ class Obstacle1 extends Obstacle{
         timeline.play();
 	   // return timeline;
 		
+	}
+	@Override
+	protected boolean obstacleHit(int y) {
+		if (y>=getY() -20 && y<=getY() -10) {
+			
+			 System.out.println("collup");
+			 System.out.println(angle%360);
+			
+			 int col=-1;
+			 if(angle%360 > 0 && angle%360 <90) {
+				 System.out.println("red");
+				 col =0; 
+			 }
+			 if(angle%360 > 90 && angle%360 <180) { 
+				 System.out.println("blue");
+				 col =1;
+			 }
+			 if(angle%360 > 180 && angle%360 <270) { 
+				 System.out.println("yellow");
+				 col =2;
+			 }
+			 if(angle%360 > 270 && angle%360 <360) { 
+				 System.out.println("green");
+				 col =3; 
+			 }
+			 if (col!=this.getPassposition()) {
+					return true;
+					 }
+		 }
+		 if (y>=getY() +getWidth() -50 && y<=getY() +getWidth()-40) {
+			 
+			 System.out.println("colld");
+			 System.out.println(angle%360);
+			 int col=-1;
+			 if(angle%360 > 0 && angle%360 <90) {
+				 System.out.println("yellow");
+				 col =2; 
+		     }
+			 if(angle%360 > 90 && angle%360 <180) { 
+				 System.out.println("green");
+				 col =3;
+			 }
+			 if(angle%360 > 180 && angle%360 <270) { 
+				 System.out.println("red");
+				 col =0;
+			 }
+			 if(angle%360 > 270 && angle%360 <360) { 
+				 System.out.println("blue");
+				 col =1; 
+			 }
+			 
+			 if (col!=this.getPassposition()) {
+			return true;
+			 }
+				
+		 }
+		 return false;
 	}
 }
 class Obstacle2 extends Obstacle {
@@ -1825,8 +1907,8 @@ class Obstacle2 extends Obstacle {
 	    // obstacle1.img.getTransforms().add(rotate);
 	    
 	    int ddd= 500;
-	    float angle =duration;
-	   
+	    this.angle =(int) duration;
+	    setY(angle2);
 	    timeline = new Timeline( 
 	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
 	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
@@ -1875,8 +1957,8 @@ class Obstacle3 extends Obstacle {
 	    // obstacle1.img.getTransforms().add(rotate);
 	    
 	    int ddd= 500;
-	    float angle =duration;
-	   
+	    this.angle =(int) duration;
+	    setY(angle2);
 	    timeline = new Timeline( 
 	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
 	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
@@ -1925,8 +2007,8 @@ class Obstacle4 extends Obstacle {
 	    // obstacle1.img.getTransforms().add(rotate);
 	    
 	    int ddd= 500;
-	    float angle =duration;
-	   
+	    this.angle =(int) duration;
+	    setY(angle2);
 	    timeline = new Timeline( 
 	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
 	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
@@ -1978,8 +2060,8 @@ class Obstacle6 extends Obstacle {
 	    translate = new Translate();
 	    
 	    int ddd= 500;
-	    float angle =duration;
-	   
+	    this.angle =(int) duration;
+	    setY(xpos);
 	    timeline = new Timeline( 
 	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateXProperty(), xpos)),
 	            new KeyFrame(xanimateDuration, new KeyValue(this.getImg().translateXProperty(), xpos+2)),
