@@ -868,10 +868,10 @@ class Game extends Application implements Serializable{
 	            if(pause==false) {
 	            	if(angle2>4700)
 	            	{
-	            		angle2=0;
+	            		angle2=-200;
 	            		stack4.getChildren().get(0).setVisible(true);
 	            	}
-	            	if(angle2<-100)
+	            	if(angle2<-200)
 	            	{
 	            		angle2=4700;
 	            	}
