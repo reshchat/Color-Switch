@@ -977,8 +977,6 @@ class Game extends Application implements Serializable{
 	                    		mediaPlayer.setAutoPlay(true);  
 	                     }
 					 }
-					 //obstacle 1
-					 
 					 if (obstacle1.obstacleHit( y)) {
 						 System.out.println("collisiomn1");
 						 pause=!pause;
@@ -994,213 +992,41 @@ class Game extends Application implements Serializable{
 						 
 						 showResurrectmenu();
 					 }
-					/* 
-					 if (y>=getAngle2() -20 && y<=getAngle2() -10) {
-						
-						 System.out.println("collup");
-						 System.out.println(angle%360);
-						
-						 int col=-1;
-						 if(angle%360 > 0 && angle%360 <90) {
-							 System.out.println("red");
-							 col =0; 
-						 }
-						 if(angle%360 > 90 && angle%360 <180) { 
-							 System.out.println("blue");
-							 col =1;
-						 }
-						 if(angle%360 > 180 && angle%360 <270) { 
-							 System.out.println("yellow");
-							 col =2;
-						 }
-						 if(angle%360 > 270 && angle%360 <360) { 
-							 System.out.println("green");
-							 col =3; 
-						 }
-						 if (col!=ball.getColour()) {
-							 System.out.println("coll");
-							 pause=!pause;
-							 y = getAngle2() -25;
-							 
-							 if(playsounds == true) {
-		                    		String s = "hitobstaclesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-							 
-							 showResurrectmenu();
-						 }
-					 }
-					 if (y>=getAngle2() +obstacle1.getWidth() -50 && y<=getAngle2() +obstacle1.getWidth()-40) {
-						 
-						 System.out.println("colld");
-						 System.out.println(angle%360);
-						 int col=-1;
-						 if(angle%360 > 0 && angle%360 <90) {
-							 System.out.println("yellow");
-							 col =2; 
+					 if (obstacle3.obstacleHit( y)) {
+						 System.out.println("coll3");
+						 pause=!pause;
+						 y = angle2 +obstacle3.getWidth() - 4*ddd-55;
+						 if(playsounds == true) {
+					    		String s = "hitobstaclesound.wav";
+					    		media = new Media(new File(s).toURI().toString()); 
+					    		mediaPlayer = new MediaPlayer(media); 
+					    		mediaPlayer.setVolume(5);
+					    		mediaPlayer.setAutoPlay(true);  
 					     }
-						 if(angle%360 > 90 && angle%360 <180) { 
-							 System.out.println("green");
-							 col =3;
-						 }
-						 if(angle%360 > 180 && angle%360 <270) { 
-							 System.out.println("red");
-							 col =0;
-						 }
-						 if(angle%360 > 270 && angle%360 <360) { 
-							 System.out.println("blue");
-							 col =1; 
-						 }
+						 showResurrectmenu();
+										 }
+					 if (obstacle4.obstacleHit( y)) {
+							System.out.println("coll44");
+							 pause=!pause;
+							 y = angle2- 5*ddd+obstacle4.getWidth() -55;
+							 if(playsounds == true) {
+						   		String s = "hitobstaclesound.wav";
+						   		media = new Media(new File(s).toURI().toString()); 
+						   		mediaPlayer = new MediaPlayer(media); 
+						   		mediaPlayer.setVolume(5);
+						   		mediaPlayer.setAutoPlay(true);  
+						    }
+							 showResurrectmenu();
+						}
+					 /*
+					 if (obstacle2.obstacleHit( y)) {
 						 
-						 if (col!=ball.getColour()) {
-							 System.out.println("coll");
-							 pause=!pause;
-							 y = getAngle2() +obstacle1.getWidth() -55;
-							 
-							 if(playsounds == true) {
-		                    		String s = "hitobstaclesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-							 
-							 showResurrectmenu();
-						 }
-							
 					 }
-					 
-					 */
-					 //obstacle 3
-					 if (y>=angle2- 4*ddd -20 && y<=angle2 - 4*ddd-10) {
-							
-						 System.out.println("collup");
-						 System.out.println(angle%360);
-						 int abc =(angle-45)%360;
-						 int col=-1;
-						 if(abc > 0 && abc <90)
-							 {System.out.println("red");
-							 col =0; }
-						 if(abc > 90 && abc <180)
-						 { System.out.println("blue");
-						 col =1;}
-						 if(abc > 180 && abc <270)
-						 { System.out.println("yellow");
-						 col =2;}
-						 if(abc > 270 && abc <360)
-						 { System.out.println("green");
-						 col =3; }
-						 if (col!=ball.getColour()) {
-							 System.out.println("coll");
-							 pause=!pause;
-							 y = angle2- 4*ddd -25;
-							 if(playsounds == true) {
-		                    		String s = "hitobstaclesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-							 showResurrectmenu();
-						 }
-					 }
-					 if (y>=angle2 +obstacle3.getWidth() - 4*ddd-50 && y<=angle2 +obstacle3.getWidth()-40- 4*ddd) {
-						 
-						 System.out.println("colld");
-						 System.out.println(angle%360);
-						 int col=-1;
-						 int abc =(angle-45)%360;
-						 if(abc > 0 &&abc <90)
-							 {System.out.println("yellow");
-							 col =2; }
-						 if(abc > 90 && abc <180)
-						 { System.out.println("green");
-						 col =3;}
-						 if(abc > 180 && abc <270)
-						 { System.out.println("red");
-						 col =0;}
-						 if(abc > 270 && abc <360)
-						 { System.out.println("blue");
-						 col =1; }
-						 if (col!=ball.getColour()) {
-							 System.out.println("coll");
-							 pause=!pause;
-							 y = angle2 +obstacle3.getWidth() - 4*ddd-55;
-							 if(playsounds == true) {
-		                    		String s = "hitobstaclesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-							 showResurrectmenu();
-						 }
-							
-					 }
-					 
-					 //obstacle 4
-					 if (y>=angle2- 5*ddd +40 && y<=angle2 - 5*ddd+50) {
-							
-						 System.out.println("collup");
-						 System.out.println(angle%360);
-						 int abc =(angle)%360;
-						 int col=-1;
-						 if(abc > 0 && abc <120)
-							 {System.out.println("red");
-							 col =0; }
-						 if(abc > 120 && abc <240)
-						 { System.out.println("blue");
-						 col =1;}
-						  if(abc > 240 && abc <360)
-						 { System.out.println("green");
-						 col =3; }
-						 if (ball.getColour()!=2 && col!=ball.getColour()) {
-							 System.out.println("coll");
-							 pause=!pause;
-							 y = angle2- 5*ddd -25;
-							 if(playsounds == true) {
-		                    		String s = "hitobstaclesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-							 showResurrectmenu();
-						 }
-					 }
-					 if (y>=angle2 +obstacle4.getWidth() - 5*ddd-50 && y<=angle2 +obstacle4.getWidth()-40- 5*ddd) {
-						 
-						 System.out.println("colld");
-						 System.out.println(angle%360);
-						 int col=-1;
-						 int abc =(angle-45)%360;
-						 if(abc > 0 && abc <120)
-						 { System.out.println("green");
-						 col =3;}
-						 if(abc > 120 && abc <240)
-						 { System.out.println("red");
-						 col =0;}
-						 if(abc > 240 && abc <360)
-						 { System.out.println("blue");
-						 col =1; }
-						 if (ball.getColour()!=2 && col!=ball.getColour()) {
-							 System.out.println("coll");
-							 pause=!pause;
-							 y = angle2 +obstacle3.getWidth() - 5*ddd-55;
-							 if(playsounds == true) {
-		                    		String s = "hitobstaclesound.wav";
-		                    		media = new Media(new File(s).toURI().toString()); 
-		                    		mediaPlayer = new MediaPlayer(media); 
-		                    		mediaPlayer.setVolume(5);
-		                    		mediaPlayer.setAutoPlay(true);  
-		                     }
-							 showResurrectmenu();
-						 }
-							
-					 }
+
+
+if (obstacle6.obstacleHit( y)) {
+	 
+}*/
 					 //obstacle 6
 					 if (y>=angle2- 6*ddd -20 && y<=angle2 - 6*ddd-10) {
 						
@@ -1920,6 +1746,10 @@ class Obstacle2 extends Obstacle {
         timeline.setAutoReverse(true);
         timeline.play();
 	}
+	@Override
+	protected boolean obstacleHit(int y) {
+	return false;	
+	}
 }
 class Obstacle3 extends Obstacle {
 	
@@ -1969,6 +1799,58 @@ class Obstacle3 extends Obstacle {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(true);
         timeline.play();
+	}
+	@Override
+	protected boolean obstacleHit(int y) {
+		int ddd=500;
+		if (y>=getY() -20 && y<=getY()-10) {
+			
+			 System.out.println("collup");
+			 System.out.println(angle%360);
+			 int abc =(angle-45)%360;
+			 int col=-1;
+			 if(abc > 0 && abc <90)
+				 {System.out.println("red");
+				 col =0; }
+			 if(abc > 90 && abc <180)
+			 { System.out.println("blue");
+			 col =1;}
+			 if(abc > 180 && abc <270)
+			 { System.out.println("yellow");
+			 col =2;}
+			 if(abc > 270 && abc <360)
+			 { System.out.println("green");
+			 col =3; }
+			 if (col!=this.getPassposition()) {
+				 System.out.println("coll");
+				return true;
+			 }
+		 }
+		 if (y>=getY() +getWidth() -50 && y<=getY() +getWidth()-40) {
+			 
+			 System.out.println("colld");
+			 System.out.println(angle%360);
+			 int col=-1;
+			 int abc =(angle-45)%360;
+			 if(abc > 0 &&abc <90)
+				 {System.out.println("yellow");
+				 col =2; }
+			 if(abc > 90 && abc <180)
+			 { System.out.println("green");
+			 col =3;}
+			 if(abc > 180 && abc <270)
+			 { System.out.println("red");
+			 col =0;}
+			 if(abc > 270 && abc <360)
+			 { System.out.println("blue");
+			 col =1; }
+			 if (col!=this.getPassposition()) {
+				 System.out.println("coll");
+				 return true;
+			 }
+				
+		 }
+		 return false;
 	}
 }
 class Obstacle4 extends Obstacle {
@@ -2020,6 +1902,53 @@ class Obstacle4 extends Obstacle {
         timeline.setAutoReverse(true);
         timeline.play();
 	}
+	@Override
+	protected boolean obstacleHit(int y) {
+
+		 if (y>=this.getY() +40 && y<=this.getY()+50) {
+				
+			 System.out.println("collup");
+			 System.out.println(angle%360);
+			 int abc =(angle)%360;
+			 int col=-1;
+			 if(abc > 0 && abc <120)
+				 {System.out.println("red");
+				 col =0; }
+			 if(abc > 120 && abc <240)
+			 { System.out.println("blue");
+			 col =1;}
+			  if(abc > 240 && abc <360)
+			 { System.out.println("green");
+			 col =3; }
+			  if (this.getPassposition()!=2 && col!=this.getPassposition()) {
+				 System.out.println("coll");
+				return true;
+			 }
+		 }
+		 if (y>=this.getY() +getWidth()-50 && y<=this.getY() +getWidth()-40) {
+			 
+			 System.out.println("colld");
+			 System.out.println(angle%360);
+			 int col=-1;
+			 int abc =(angle-45)%360;
+			 if(abc > 0 && abc <120)
+			 { System.out.println("green");
+			 col =3;}
+			 if(abc > 120 && abc <240)
+			 { System.out.println("red");
+			 col =0;}
+			 if(abc > 240 && abc <360)
+			 { System.out.println("blue");
+			 col =1; }
+			 if (this.getPassposition()!=2 && col!=this.getPassposition()) {
+				 System.out.println("coll");
+				 return true;
+				
+		 }
+		
+	}
+		 return false;
+}
 }
 class Obstacle6 extends Obstacle {
 	
@@ -2081,4 +2010,11 @@ class Obstacle6 extends Obstacle {
         
         timeline.play();
 	}
-}
+	@Override
+	protected boolean obstacleHit(int y) {
+	return false;	
+	}
+	
+	}
+
+
