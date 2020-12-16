@@ -68,16 +68,20 @@ public class Main extends Application {
     static Scene scene = new Scene(pane, screenWidth, screenHeight);
     static Stage stage;
 	StackPane pane2 = new StackPane();
+	Homepage homepage;
 	
 	
 	public static void main(String[] args) {
 		
+		showMainmenu( args);
+	}
+	private static void showMainmenu(String[] args) {
 		launch(args);
 	}
 	@Override
 	public void start(Stage theStage) throws Exception {
 		stage = theStage;
-		Homepage homepage = new Homepage();
+		 homepage = new Homepage();
 		homepage.displayMainmenu(theStage, pane, scene);
 	}
 }	
@@ -142,16 +146,16 @@ class SaveObject implements Serializable{
 	private Game game;
 	private Player player;
 	private Ball ball;
-	private Star star[];
+	private Star star_list[];
 	private Colourchanger cc[];
 	private Obstacle1 ob1;
 	private Obstacle2 ob2;
 	private Obstacle3 ob3;
 	private Obstacle4 ob4;
-	private Obstacle5 ob5;
+
 	private Obstacle6 ob6;
 	
-	public SaveObject(Ball ball, Game game, Player player, Obstacle1 obstacle1, Obstacle2 obstacle2, Obstacle3 obstacle3, Obstacle4 obstacle4, Obstacle6 obstacle6, Colourchanger[] ccr, Star[] star1) {
+	public SaveObject(Ball ball, Game game, Player player, Obstacle1 obstacle1, Obstacle2 obstacle2, Obstacle3 obstacle3, Obstacle4 obstacle4, Obstacle6 obstacle6, Colourchanger[] colourchanger, Star[] star1) {
 		this.ball = ball;
 		this.game = game;
 		this.player = player;
@@ -160,9 +164,8 @@ class SaveObject implements Serializable{
 		this.ob3 = obstacle3;
 		this.ob4 = obstacle4;
 		this.ob6 = obstacle6;
-		//this.ob5 = obstacle5;
-		this.cc = ccr;
-		this.star = star1;
+		this.cc = colourchanger;
+		this.star_list = star1;
 	}
 	public Ball getBall() {
 		return this.ball;
@@ -189,7 +192,7 @@ class SaveObject implements Serializable{
 		return cc;
 	}
 	public Star[] getStar() {
-		return star;
+		return star_list;
 	}
 	public Game getGame() {
 		return game;
@@ -514,33 +517,6 @@ class Game extends Application implements Serializable{
 	private static boolean playmusic = false;
 	private static boolean playsounds = false;
 	private static Homepage homepage = new Homepage();
-	
-	public Game()  {
-		// launch();
-		//stage = new Stage(); 
-        //start(stage);
-    }
-    public boolean getPlaymusic() {
-		return playmusic;
-	}
-	public static void setPlaymusic(boolean pm) {
-		playmusic = pm;
-	}
-	public boolean getPlaysounds() {
-		return playsounds;
-	}
-	public static void setPlaysounds(boolean ps) {
-		playsounds = ps;
-	}
-	public int getGravity() {
-		return gravity;
-	}
-    public int getAngle() {
-		return angle;
-	}
-	public int getAngle2() {
-		return angle2;
-	}
 	private boolean pause = false;
 	private boolean obhit = false;
     private transient final long startNanoTime = System.nanoTime();
@@ -551,10 +527,10 @@ class Game extends Application implements Serializable{
     private Obstacle2 obstacle2;
     private Obstacle3 obstacle3;
     private Obstacle4 obstacle4;
-    private Obstacle5 obstacle5;
+    
     private Obstacle6 obstacle6;
     private Star[] star1;
-    private Colourchanger[] ccr;
+    private Colourchanger[] colourchanger;
     private Player player;
     private int y=299;
     private int colour=0;
@@ -594,7 +570,35 @@ class Game extends Application implements Serializable{
     
     private static MediaPlayer mediaPlayer;
     private static Media media;
-   
+    public Game()  {
+		// launch();
+		//stage = new Stage(); 
+        //start(stage);
+    }
+    private void pause() {
+    	pause=false;
+    }
+    public boolean getPlaymusic() {
+		return playmusic;
+	}
+	public static void setPlaymusic(boolean pm) {
+		playmusic = pm;
+	}
+	public boolean getPlaysounds() {
+		return playsounds;
+	}
+	public static void setPlaysounds(boolean ps) {
+		playsounds = ps;
+	}
+	public int getGravity() {
+		return gravity;
+	}
+    public int getAngle() {
+		return angle;
+	}
+	public int getAngle2() {
+		return angle2;
+	}
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     {
@@ -668,9 +672,9 @@ class Game extends Application implements Serializable{
         obstacle4 = new Obstacle4();
         obstacle6 = new Obstacle6();
     	star1= new Star[5];
-    	ccr=new Colourchanger[5];
+    	colourchanger=new Colourchanger[5];
     	for(int i = 0; i<5; i++) {
-        	ccr[i] = new Colourchanger();
+        	colourchanger[i] = new Colourchanger();
         	star1[i] = new Star();
         }
       //obstacle2.getImg().setLayoutX(1000);
@@ -700,10 +704,10 @@ class Game extends Application implements Serializable{
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
         
-        ccr[1]=new Colourchanger();
+        colourchanger[1]=new Colourchanger();
         stack3.getChildren().addAll( Colourchanger.getImg());
         stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
-        stack3.setLayoutY(ccr[1].getY());
+        stack3.setLayoutY(colourchanger[1].getY());
         root.getChildren().add(stack3);
         
         star1[1]=new Star();
@@ -759,16 +763,16 @@ class Game extends Application implements Serializable{
         obstacle6.getImg().setX(50);
         obstacle6.getImg().setY(300-Main.screenHeight);
         
-//        ccr = data.getCc();
+//        colourchanger = data.getCc();
 //        star1 = data.getStar();
-        ccr = new Colourchanger[5];
+        colourchanger = new Colourchanger[5];
         star1 = new Star[5];
 //        for(int i = 0; i<5; i++) {
-//        	ccr[i] = data.getCc()[i];
+//        	colourchanger[i] = data.getCc()[i];
 //        	star1[i] = data.getStar()[i];
 //        }
         for(int i = 0; i<5; i++) {
-        	ccr[i] = new Colourchanger();
+        	colourchanger[i] = new Colourchanger();
         	star1[i] = new Star();
         }
         //Group 
@@ -839,10 +843,10 @@ class Game extends Application implements Serializable{
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
         
-        ccr[1]=new Colourchanger();
+        colourchanger[1]=new Colourchanger();
         stack3.getChildren().addAll( Colourchanger.getImg());
         stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
-        stack3.setLayoutY(ccr[1].getY());
+        stack3.setLayoutY(colourchanger[1].getY());
         root.getChildren().add(stack3);
         
         star1[1]=new Star();
@@ -896,8 +900,8 @@ class Game extends Application implements Serializable{
 	        	    long t2 = System.nanoTime() - startNanoTime;
 	        	    timeline = new Timeline( 
 	        	    	       	            
-	        	            new KeyFrame(Duration.ZERO, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2() - ddd*kk)),
-	        	            new KeyFrame(rotateDuration, new KeyValue(ccr[1].getImg().translateYProperty(), getAngle2()+2 - ddd*kk)),
+	        	            new KeyFrame(Duration.ZERO, new KeyValue(colourchanger[1].getImg().translateYProperty(), getAngle2() - ddd*kk)),
+	        	            new KeyFrame(rotateDuration, new KeyValue(colourchanger[1].getImg().translateYProperty(), getAngle2()+2 - ddd*kk)),
 	        	         
 	        	            new KeyFrame(Duration.ZERO, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2() - cc*ddd)),
 	        	            new KeyFrame(rotateDuration, new KeyValue(star1[1].getImg().translateYProperty(), getAngle2()+2 - cc*ddd))
@@ -1425,7 +1429,7 @@ class Game extends Application implements Serializable{
     };
     
     public void saveGame() {
-    	SaveObject gametosave = new SaveObject(this.ball, this, this.player, this.obstacle1, this.obstacle2, this.obstacle3, this.obstacle4, this.obstacle6, this.ccr, this.star1);
+    	SaveObject gametosave = new SaveObject(this.ball, this, this.player, this.obstacle1, this.obstacle2, this.obstacle3, this.obstacle4, this.obstacle6, this.colourchanger, this.star1);
     	SaveGame.save(gametosave);
     }
     public void saveGameMenu(Stage theStage){
@@ -1894,56 +1898,6 @@ class Obstacle4 extends Obstacle {
          img.setY(300-Main.screenHeight);
          img.setFitWidth(getWidth());
          img.setPreserveRatio(true);
-	}
-
-	public static ImageView getImg() {
-		return img;
-	}
-
-	public static int getWidth() {
-		return width;
-	}
-
-	@Override
-	protected void movement(float duration,int angle2, int xpos, GridPane pane) {
-		  
-	    timeline = new Timeline();
-	    rotateDuration = Duration.millis(3);
-    	
-	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	    // obstacle1.img.getTransforms().add(rotate);
-	    
-	    int ddd= 500;
-	    float angle =duration;
-	   
-	    timeline = new Timeline( 
-	    		new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().rotateProperty(), angle)), // initial rotate
-	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().rotateProperty(), angle+2)),
-	            new KeyFrame(Duration.ZERO, new KeyValue(this.getImg().translateYProperty(), angle2)),
-	            new KeyFrame(rotateDuration, new KeyValue(this.getImg().translateYProperty(), angle2+2)) 
-
-	            );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(true);
-        timeline.play();
-	}
-}
-class Obstacle5 extends Obstacle {
-	
-	private static final long serialVersionUID = 300L;
-	private static transient Image pic = new Image("file:images/obstacle2.png");
-	private static transient ImageView img = new ImageView(pic);
-	private static int width = 250;
-	private transient Timeline timeline;
-	private transient Duration rotateDuration;
-	private transient Rotate rotate;
-	
-	public Obstacle5() throws FileNotFoundException{
-		
-		img.setX(600-Main.screenWidth);
-        img.setY(300-Main.screenHeight);
-        img.setFitWidth(getWidth());
-        img.setPreserveRatio(true);
 	}
 
 	public static ImageView getImg() {
