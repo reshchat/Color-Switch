@@ -234,7 +234,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		vbox.setSpacing(10);
@@ -276,8 +276,7 @@ class Homepage {
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
-	    pane.setId("pane");
-//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -295,10 +294,13 @@ class Homepage {
 		
 //		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
 		String path = new File("").getAbsolutePath();
+		System.out.println(path);
 		File directoryPath = new File(path);
 		String contents[] = directoryPath.list();
 	    for(int i=0; i<contents.length; i++) {
-	    	if(contents[i].substring(contents[i].length() - 4).equals(".txt")) {
+	    	//System.out.println(i);
+	    	//System.out.println(contents[i]);
+	    	if(contents[i].length()>4 && contents[i].substring(contents[i].length() - 4).equals(".txt")) {
 	    		buttons.add(new Button(contents[i].substring(0, contents[i].length() - 4)));
 	    	}
 	    }
@@ -323,7 +325,7 @@ class Homepage {
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -374,7 +376,7 @@ class Homepage {
 	    pane.setPadding(new Insets(100, 80, 100, 80));
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 	    VBox vbox = new VBox(5);
 		Text t = new Text();
@@ -400,12 +402,13 @@ class Homepage {
 		int s;
 		ObservableList<Row> data = FXCollections.observableArrayList();
 	    for(int i=0; i<contents.length; i++) {
+	    	if(contents[i].length()>4) {
 	    	String txt = contents[i].substring(contents[i].length() - 4);
         	String filename = contents[i].substring(0, contents[i].length() - 4);
 	    	if(txt.equals(".txt")) {
         		SaveObject loadedgame = SaveGame.load(contents[i]);
         		s = loadedgame.getPlayer().getScore();
-        		data.add(new Row(filename, s));
+        		data.add(new Row(filename, s));}
 	    	}
 	    }
 	    gamename.setCellValueFactory(new PropertyValueFactory<Row, String>("gamename"));
@@ -622,7 +625,7 @@ class Game extends Application implements Serializable{
         //root.getChildren().add( canvas );
         stack1.setStyle("-fx-background-color: #202020");
         stack1.setId("panegame");
-//      stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+      stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
@@ -1431,7 +1434,7 @@ class Game extends Application implements Serializable{
     	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
     	pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
@@ -1500,7 +1503,7 @@ class Game extends Application implements Serializable{
 	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 	    pane.setStyle("-fx-background-color: #202020");
 	    pane.setId("pane");
-//	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
 		t = new Text();
