@@ -16,6 +16,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.JOptionPane;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -245,11 +248,6 @@ class Homepage {
 		t = new Text (10, 20, "Welcome to Color Switch!\n");
 		t.setFont(Font.font ("Montserrat", 25));
 		t.setFill(Color.WHITE);
-		
-//		Image img = new Image("file:images/settings.png");
-//      ImageView view = new ImageView(img);
-//      view.setFitHeight(50);
-//      view.setPreserveRatio(true);
 
 		Button btn1 = new Button("Start new game");
 		Button btn2 = new Button("Resume a saved game");
@@ -295,14 +293,11 @@ class Homepage {
 		buttonHandler bh = new buttonHandler();
 		gamebuttonsHandler gh = new gamebuttonsHandler();
 		
-//		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
 		String path = new File("").getAbsolutePath();
 		System.out.println(path);
 		File directoryPath = new File(path);
 		String contents[] = directoryPath.list();
 	    for(int i=0; i<contents.length; i++) {
-	    	//System.out.println(i);
-	    	//System.out.println(contents[i]);
 	    	if(contents[i].length()>4 && contents[i].substring(contents[i].length() - 4).equals(".txt")) {
 	    		buttons.add(new Button(contents[i].substring(0, contents[i].length() - 4)));
 	    	}
@@ -398,7 +393,6 @@ class Homepage {
         table.getSortOrder().addAll(score, gamename);
         table.sort();
 		
-//		File directoryPath = new File("C:\\Users\\Kirthana\\eclipse-workspace\\colorswitch");
 	    String path = new File("").getAbsolutePath();
 		File directoryPath = new File(path);
 		String contents[] = directoryPath.list();
@@ -426,11 +420,6 @@ class Homepage {
 
 		btn1.setOnAction(bh);
 		btn2.setOnAction(bh);
-
-//		pane.getChildren().add(t);
-//		pane.getChildren().add(table);
-//		pane.getChildren().add(btn1);
-//		pane.getChildren().add(btn2);
 		
 		vbox.getChildren().addAll(t, table, btn1, btn2);
 		pane.getChildren().add(vbox);
@@ -448,7 +437,6 @@ class Homepage {
         	SaveObject loadedgame = SaveGame.load(src.getText()+".txt");
     		pane.getChildren().clear();
        		stage.close();
-       		//stage = new Stage();
        		 
        		try {
 					resumeGame(stage, loadedgame);
@@ -470,7 +458,6 @@ class Homepage {
         		
         		 pane.getChildren().clear();
         		 stage.close();
-        		 //stage = new Stage();
         		 
         		try {
 					startNewgame(stage);
@@ -571,9 +558,6 @@ class Game extends Application implements Serializable{
     private static MediaPlayer mediaPlayer;
     private static Media media;
     public Game()  {
-		// launch();
-		//stage = new Stage(); 
-        //start(stage);
     }
     private void pause() {
     	pause=false;
@@ -626,10 +610,9 @@ class Game extends Application implements Serializable{
         theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
         theStage.setScene( theScene );
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
-        //root.getChildren().add( canvas );
         stack1.setStyle("-fx-background-color: #202020");
         stack1.setId("panegame");
-      stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
@@ -677,13 +660,9 @@ class Game extends Application implements Serializable{
         	colourchanger[i] = new Colourchanger();
         	star1[i] = new Star();
         }
-      //obstacle2.getImg().setLayoutX(1000);
-        //root.getChildren().remove(l);
         final long startNanoTime = System.nanoTime();
-        //canvas.setOnMouseClicked(event);
         
         canvas.setFocusTraversable(true);
-        // canvas.requestFocus();
         canvas.setOnKeyPressed(keyPressed);
         canvas.setOnKeyReleased(keyReleased);
         button2.setOnAction(event);
@@ -695,7 +674,7 @@ class Game extends Application implements Serializable{
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( Obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2);// + Obstacle2.getWidth()/2);
+        stack2.setLayoutX(Main.screenWidth/2);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
@@ -763,14 +742,8 @@ class Game extends Application implements Serializable{
         obstacle6.getImg().setX(50);
         obstacle6.getImg().setY(300-Main.screenHeight);
         
-//        colourchanger = data.getCc();
-//        star1 = data.getStar();
         colourchanger = new Colourchanger[5];
         star1 = new Star[5];
-//        for(int i = 0; i<5; i++) {
-//        	colourchanger[i] = data.getCc()[i];
-//        	star1[i] = data.getStar()[i];
-//        }
         for(int i = 0; i<5; i++) {
         	colourchanger[i] = new Colourchanger();
         	star1[i] = new Star();
@@ -780,27 +753,17 @@ class Game extends Application implements Serializable{
         theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
         theStage.setScene( theScene );
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
-        //root.getChildren().add( canvas );
         stack1.setStyle("-fx-background-color: #202020");
+        pane.setId("pane");
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
         t = new Text();
 		t = new Text (50, 100, "Score:\n\n" + player.getScore());
-		l2 = new Label(Integer.toString(player.getScore()));
-		l2.setTextFill(Color.WHITE);
-		l2.setLayoutX(60);
-		l2.setLayoutY(120);
-		root.getChildren().add( l2 );
 		t.setFont(Font.font ("Montserrat", 15));
 		t.setFill(Color.WHITE);
 		t2 = new Text();
-		t2 = new Text (50, 200, "Lives left:\n\n" );
-		l = new Label(Integer.toString(player.getCollectedStars()));
-		l.setTextFill(Color.WHITE);
-		l.setLayoutX(60);
-		l.setLayoutY(220);
-		root.getChildren().add( l );
-		//Label l2= new Label();
+		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
 		t2.setFont(Font.font ("Montserrat", 15));
 		t2.setFill(Color.WHITE);
 		root.getChildren().addAll(t, t2);
@@ -815,14 +778,9 @@ class Game extends Application implements Serializable{
         btn.setLayoutY(300);
         root.getChildren().add(btn);
         gc = canvas.getGraphicsContext2D();
-        
-//      obstacle2.img.setLayoutX(1000);
-        //root.getChildren().remove(l);
         final long startNanoTime = System.nanoTime();
-        //canvas.setOnMouseClicked(event);
         
         canvas.setFocusTraversable(true);
-        // canvas.requestFocus();
         canvas.setOnKeyPressed(keyPressed);
         canvas.setOnKeyReleased(keyReleased);
         button2.setOnAction(event);
@@ -969,7 +927,6 @@ class Game extends Application implements Serializable{
 						 player.setScore(player.getScore()+1);
 						 l2.setText(Integer.toString(player.getScore()));
 						 if(playsounds == true) {
-	                    		//String s = "scorepointsound.wav";
 	                    		String s = "starsound.wav";
 	                    		media = new Media(new File(s).toURI().toString()); 
 	                    		mediaPlayer = new MediaPlayer(media); 
@@ -1036,8 +993,8 @@ class Game extends Application implements Serializable{
 					 }
 
 
-if (obstacle6.obstacleHit( y)) {
-	  System.out.println("coll66");
+					 if (obstacle6.obstacleHit( y)) {
+						 	 System.out.println("coll66");
 							 pause=!pause;
 							 y = angle2- 6*ddd -25;
 							 if(playsounds == true) {
@@ -1048,7 +1005,7 @@ if (obstacle6.obstacleHit( y)) {
 		                    		mediaPlayer.setAutoPlay(true);  
 		                     }
 							 showResurrectmenu();
-}
+					 }
 					 
 					 System.out.println("angle");
 					 System.out.println(angle%360);
@@ -1108,44 +1065,37 @@ if (obstacle6.obstacleHit( y)) {
         		saveGame();
         		pane.getChildren().clear();
         		stage.close();
-        		//Platform.exit(); // or displayMainmenu
         		homepage.displayMainmenu(stage, pane, scene);
         	}
-//        	else if(src.getText().equals("Back")) {
-//        		stage.close();
-//        		showSaveresmenu(stage);
-//        	}
         	else if(src.getText().equals("Save life and resume game")) {
-        		/*if(player.getCollectedStars()<=0) {
-        			System.out.println("Not enough stars");
+        		if(player.getCollectedStars()<=0) {
+        			JOptionPane.showMessageDialog(null, "Not enough stars");
+        			stage.close();
         		}
-        		else {*/
-        			//y=y+0;
-        		ball.setY(ball.getY()+70);
-        		player.resurrect();
-        		l.setText(Integer.toString(player.getCollectedStars()));
-        		canvas.requestFocus();
-        		//pause=!(pause);
-        		stage.close();
-        		canvas.requestFocus();
-        		canvas.setVisible(true);
-        		try {
-        		    Robot r = new Robot();
-        		    //there are other methods such as positioning mouse and mouseclicks etc.
-        		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
-        		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
-        		 } catch (AWTException e) {
-        		    //Teleport penguins  
-        		 }
-        		pause = !pause;
-        		//}
+        		else {
+        			y=y+0;
+        		
+	        		ball.setY(ball.getY()+70);
+	        		player.resurrect();
+	        		l.setText(Integer.toString(player.getCollectedStars()));
+	        		canvas.requestFocus();
+	        		stage.close();
+	        		canvas.requestFocus();
+	        		canvas.setVisible(true);
+	        		try {
+	        		    Robot r = new Robot();
+	        		    //there are other methods such as positioning mouse and mouseclicks etc.
+	        		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
+	        		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
+	        		 } catch (AWTException e) {
+	        		    //Teleport penguins  
+	        		 }
+	        		pause = !pause;
+	        	}
         	}
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
        		 	stage.close();
-       		 	// canvas.requestFocus();
-       		 	//pause=!(pause);
-       		 	//stage = new Stage();
         		try {
 					Homepage.startNewgame(stage);
 					canvas.requestFocus();
@@ -1190,13 +1140,6 @@ if (obstacle6.obstacleHit( y)) {
                 case UP:
                     {
                     	gravity = -2;
-//                    	if(playsounds == true) {
-//                    		String s = "ballup.wav";
-//                    		media = new Media(new File(s).toURI().toString()); 
-//                    		mediaPlayer = new MediaPlayer(media); 
-//                    		mediaPlayer.setVolume(2);
-//                    		mediaPlayer.setAutoPlay(true);  
-//                    	}
                     }
                     break;
                 case P:
@@ -1269,37 +1212,6 @@ if (obstacle6.obstacleHit( y)) {
 		theStage.setScene(scene);
 		theStage.show();
 	}
-//    private void showSaveresmenu(Stage theStage) {
-//    	pane = new GridPane();
-//    	pane.setAlignment(Pos.CENTER);
-//	    pane.setHgap(10);
-//	    pane.setVgap(10);
-//	    pane.setPadding(new Insets(25, 25, 25, 25));
-//	    
-//    	scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
-//    	
-//    	pane.setStyle("-fx-background-color: #202020");
-//	    pane.setId("pane");
-////	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
-//        
-//		vbox = new VBox(5);
-//        stage = theStage;
-//        t = new Text();
-//    	t = new Text (10, 20, "Color Switch\n");
-//    	t.setFont(Font.font ("Montserrat", 20));
-//    	t.setFill(Color.WHITE);
-//    	btn1 = new Button("Save game");
-//    	
-//    	btn3 = new Button("Resume");
-//    	bh = new buttonHandler();
-//        btn1.setOnAction(bh);
-//        btn3.setOnAction(bh);
-//        vbox.getChildren().addAll(t, btn1, btn3);
-//        pane.getChildren().addAll(vbox);
-//        theStage.setTitle("Colour Switch");
-//        theStage.setScene(scene);
-//        theStage.show();
-//	}
     public void showResurrectmenu(){
 		stage = new Stage();
 		pane = new GridPane();
@@ -1353,7 +1265,6 @@ class Ball implements Serializable{
     
     public Ball() throws FileNotFoundException {
     	
-        //this.x = Main.screenWidth/2 - 10;
         this.y = 299;
     }
    	public int getX() {
@@ -1587,7 +1498,6 @@ class Obstacle1 extends Obstacle{
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.setAutoReverse(true);
         timeline.play();
-	   // return timeline;
 		
 	}
 	@Override
@@ -1681,7 +1591,6 @@ class Obstacle2 extends Obstacle {
 	    rotateDuration = Duration.millis(3);
     	
 	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	    // obstacle1.img.getTransforms().add(rotate);
 	    
 	    int ddd= 500;
 	    this.angle =(int) duration;
@@ -1760,7 +1669,6 @@ class Obstacle3 extends Obstacle {
 	    rotateDuration = Duration.millis(3);
     	
 	    rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	    // obstacle1.img.getTransforms().add(rotate);
 	    
 	    int ddd= 500;
 	    this.angle =(int) duration;
@@ -1960,8 +1868,6 @@ class Obstacle6 extends Obstacle {
 	    animateDuration = Duration.millis(3);
 	    xanimateDuration = Duration.millis(1);
     	
-	    //rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	    // obstacle1.img.getTransforms().add(rotate);
 	    translate = new Translate();
 	    
 	    int ddd= 500;
@@ -1993,7 +1899,6 @@ class Obstacle6 extends Obstacle {
 		 if (y>=this.getY() -20 && y<=this.getY()-10) {
 			
 			 System.out.println("coll6");
-			// System.out.println(xpos);
 			
 			 int col=-1;
 			 if((xpos > -270 && xpos <-180)||(xpos > 90 && xpos <180)||(xpos > 360 && xpos <450)) {
@@ -2020,6 +1925,6 @@ class Obstacle6 extends Obstacle {
 	return false;	
 	}
 	
-	}
+}
 
 
