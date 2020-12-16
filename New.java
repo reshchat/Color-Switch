@@ -1705,9 +1705,10 @@ abstract class Obstacle implements Serializable{
 	protected int noofcolours;
 	protected int passposition;
 	protected boolean hit;
+	protected int y;
 	
 	public Obstacle() throws FileNotFoundException {
-		this.noofcolours = 4;
+		setNoofcolours(4);
 		this.hit = false;
 	}
 	public int getNoofcolours() {
@@ -1716,11 +1717,17 @@ abstract class Obstacle implements Serializable{
 	public void setNoofcolours(int colours) {
 		this.noofcolours = colours;
 	}
+	public void setY(int y) {
+		this.y = y;
+	}
+	public int getY() {
+		return this.y ;
+	}
 	public int getPassposition() {
 		return passposition;
 	}
 	public void setPassposition(int pass) {
-		
+		this.passposition=pass;
 	}	
 	protected boolean obstacleHit(double y2) {
 		if(y2 >= passposition-100 && y2 <= passposition+100) {
