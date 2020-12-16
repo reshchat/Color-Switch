@@ -917,6 +917,7 @@ class Game extends Application implements Serializable{
 		            rand = new Random(); 
 					 if (y>=angle2 - ddd-20 && y<=angle2 - ddd-10) {
 						 ball.change_colour();
+						 Colourchanger.setColours(ball.getColour());
 						 if(playsounds == true) {
 	                    		String s = "colourchangesound.wav";
 	                    		media = new Media(new File(s).toURI().toString()); 
@@ -927,6 +928,7 @@ class Game extends Application implements Serializable{
 					 }
 					 if (y>=angle2 - 7*ddd-20 && y<=angle2 - 7*ddd-10) {
 						 ball.change_colour();
+						 Colourchanger.setColours(ball.getColour());
 						 if(playsounds == true) {
 	                    		String s = "colourchangesound.wav";
 	                    		media = new Media(new File(s).toURI().toString()); 
@@ -1654,7 +1656,7 @@ class Ball implements Serializable{
  class Colourchanger implements Serializable{
 	
 	private static final long serialVersionUID = 200L;
-	private transient int[] colours;
+	private transient static int[] colours;
 	private int y;
 	private Ball ball;
 	private static Image pic = new Image("file:images/colourchanger.png");
@@ -1666,6 +1668,7 @@ class Ball implements Serializable{
 		img.setFitWidth(width);
 		img.setPreserveRatio(true);
 		this.y = 0;
+		colours=new int[5];
 	}
 	
 	public static ImageView getImg() {
@@ -1677,8 +1680,10 @@ class Ball implements Serializable{
 	public int[] getColours() {
 		return this.colours;
 	}
-	public void setColours(int colour) {
-		
+	public static void setColours(int colour) {
+		for(int i=0; i<5;i++) {
+			colours[i]=colour;
+		}
 	}
 	public int getY() {
 		return this.y;
