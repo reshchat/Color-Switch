@@ -940,7 +940,7 @@ class Game extends Application implements Serializable{
 					 }
 					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10 && stack4.getChildren().get(0).isVisible()) {
 						 stack4.getChildren().get(0).setVisible(false);
-						 player.setCollectedStars(player.getCollectedStars()+1);
+						 Star.addLife(player);
 						 l.setText(Integer.toString(player.getCollectedStars())); 
 						 player.setScore(player.getScore()+1);
 						 l2.setText(Integer.toString(player.getScore()));
@@ -955,7 +955,7 @@ class Game extends Application implements Serializable{
 					 }
 					 if (y>=getAngle2() - 8*ddd-20 && y<=getAngle2() - 8*ddd-10 && stack4.getChildren().get(0).isVisible()) {
 						 stack4.getChildren().get(0).setVisible(false);
-						 player.setCollectedStars(player.getCollectedStars()+1);
+						 Star.addLife(player);
 						 l.setText(Integer.toString(player.getCollectedStars())); 
 						 player.setScore(player.getScore()+1);
 						 l2.setText(Integer.toString(player.getScore()));
@@ -1644,10 +1644,10 @@ class Ball implements Serializable{
 		return this.y;
 	}
 	public void setY(int y) {
-		
+		this.y=y;
 	}
-	private void addLife(Player player) {
-		
+	public static void addLife(Player player) {
+		player.setCollectedStars(player.getCollectedStars()+1);
 	}
 }
  class Colourchanger implements Serializable{
