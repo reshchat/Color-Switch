@@ -1,5 +1,5 @@
 #pane{
-    -fx-background-image: url("bgimg.jpg");
+    -fx-background-image: url("bgimg.png");
     -fx-background-repeat: stretch;   
     -fx-background-size: 1100 600;
     -fx-background-position: center center;
@@ -8,5 +8,11 @@
     -fx-background-image: url("starsbg.jpg");
     -fx-background-repeat: stretch;   
     -fx-background-size: 1150 600;
+    -fx-background-position: center center;
+}
+#multiend{
+    -fx-background-image: url("endgame.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 1100 400;
     -fx-background-position: center center;
 }
