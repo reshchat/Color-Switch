@@ -593,6 +593,7 @@ class Game extends Application implements Serializable{
     transient Text t;
     transient Text t2;
     transient TextField tf;
+    transient Text ptext;
     transient Duration rotateDuration;
     transient Rotate rotate;
     transient Random rand;
@@ -661,39 +662,55 @@ class Game extends Application implements Serializable{
         stack1.setStyle("-fx-background-color: #202020");
         stack1.setId("panegame");
         stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
-        
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
         player = new Player();
-        t = new Text();
-		t = new Text (50, 100, "Score:\n\n" );
-		t.setFont(Font.font ("Montserrat", 15));
-		l2 = new Label(Integer.toString(player.getScore()));
-		l2.setTextFill(Color.WHITE);
-		l2.setLayoutX(60);
-		l2.setLayoutY(120);
-		root.getChildren().add( l2 );
-		t.setFill(Color.WHITE);
-		t2 = new Text();
-		t2 = new Text (50, 200, "Lives left:\n\n" );
-		l = new Label(Integer.toString(player.getCollectedStars()));
-		l.setTextFill(Color.WHITE);
-		l.setLayoutX(60);
-		l.setLayoutY(220);
-		root.getChildren().add( l );
-		t2.setFont(Font.font ("Montserrat", 15));
-		t2.setFill(Color.WHITE);
-		root.getChildren().addAll(t, t2);
         
-        button2 = new Button("Pause");
-        button2.setLayoutX(1000);
-        button2.setLayoutY(250);
-        root.getChildren().add( button2 ); 
-        btn = new Button();
-        btn.setText("Save");
-        btn.setLayoutX(1003);
-        btn.setLayoutY(300);
-        root.getChildren().add(btn);
+        if(this.no == 1) {
+        	ptext = new Text();
+            ptext = new Text(50, 50, "You are Player 1\nUse UP key");
+            ptext.setFont(Font.font ("Montserrat", 15));
+            root.getChildren().add(ptext);
+        }
+        if(this.no == 2) {
+        	ptext = new Text();
+            ptext = new Text(50, 50, "You are Player 2\nUse w key");
+            ptext.setFont(Font.font ("Montserrat", 15));
+            root.getChildren().add(ptext);
+        }
+        if(no == 0) {
+	        t = new Text();
+			t = new Text (50, 100, "Score:\n\n" );
+			t.setFont(Font.font ("Montserrat", 15));
+			l2 = new Label(Integer.toString(player.getScore()));
+			l2.setTextFill(Color.WHITE);
+			l2.setLayoutX(60);
+			l2.setLayoutY(120);
+			root.getChildren().add( l2 );
+			t.setFill(Color.WHITE);
+			t2 = new Text();
+			t2 = new Text (50, 200, "Lives left:\n\n" );
+			l = new Label(Integer.toString(player.getCollectedStars()));
+			l.setTextFill(Color.WHITE);
+			l.setLayoutX(60);
+			l.setLayoutY(220);
+			root.getChildren().add( l );
+			t2.setFont(Font.font ("Montserrat", 15));
+			t2.setFill(Color.WHITE);
+			root.getChildren().addAll(t, t2);
+        
+	        button2 = new Button("Pause");
+	        button2.setLayoutX(1000);
+	        button2.setLayoutY(250);
+	        root.getChildren().add( button2 ); 
+	        button2.setOnAction(event);
+	        btn = new Button();
+	        btn.setText("Save");
+	        btn.setLayoutX(1003);
+	        btn.setLayoutY(300);
+	        root.getChildren().add(btn);
+	        btn.setOnAction(event2);
+		}
         gc = canvas.getGraphicsContext2D();
         ball = new Ball();
         obstacle1 = new Obstacle1();
@@ -712,8 +729,6 @@ class Game extends Application implements Serializable{
         canvas.setFocusTraversable(true);
         canvas.setOnKeyPressed(keyPressed);
         canvas.setOnKeyReleased(keyReleased);
-        button2.setOnAction(event);
-        btn.setOnAction(event2);
         
         stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg(), obstacle6.getImg() );
         stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
@@ -896,8 +911,6 @@ class Game extends Application implements Serializable{
 	            
 	            if(pause==false) {
 	            	if (share.winner!=0) {
-	            		System.out.println("winner is player no");
-	            		System.out.println(share.winner);
 	            		multiplayerEnd();
 	            		pause=true;
 	            		
@@ -1003,7 +1016,9 @@ class Game extends Application implements Serializable{
 					 if (y>=getAngle2() - 8*ddd-20 && y<=getAngle2() - 8*ddd-10 && stack4.getChildren().get(0).isVisible()) {
 						 stack4.getChildren().get(0).setVisible(false);
 						 Star.addLife(player);
-						 l.setText(Integer.toString(player.getCollectedStars())); 
+						 if(no == 0) {
+							 l.setText(Integer.toString(player.getCollectedStars())); 
+						 }
 						 player.setScore(player.getScore()+1);
 						 l2.setText(Integer.toString(player.getScore()));
 						 if(playsounds == true) {
@@ -1367,11 +1382,11 @@ class Game extends Application implements Serializable{
 		pane.setAlignment(Pos.CENTER);
 	    pane.setHgap(10);
 	    pane.setVgap(10);
-	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    pane.setPadding(new Insets(25, 250, 25, 25));
 	    
 	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
 	    pane.setStyle("-fx-background-color: #202020");
-	    pane.setId("pane");
+	    pane.setId("multiend");
 	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		vbox = new VBox(5);
@@ -1380,11 +1395,15 @@ class Game extends Application implements Serializable{
 		t.setFont(Font.font ("Montserrat", 20));
 		t.setFill(Color.WHITE);
 		btn1 = new Button("Exit game");
+		btn1.setLayoutX(980);
+		btn1.setLayoutY(500);
 		bh = new buttonHandler();
 		btn1.setOnAction(bh);
 
 		vbox.getChildren().addAll(t, btn1);
+		vbox.setAlignment(Pos.CENTER_LEFT);
 		pane.getChildren().addAll(vbox);
+		pane.setAlignment(Pos.BOTTOM_CENTER);
 		stage.setTitle("Colour Switch");
 		stage.setScene(scene);
 		stage.show();
