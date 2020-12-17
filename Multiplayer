@@ -631,7 +631,7 @@ class Game extends Application implements Serializable{
 	}
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
-    {
+    { stage=theStage;
     	theStage.setTitle( "Colour Switch" );
     	
     	if(playmusic == true) {
@@ -881,6 +881,20 @@ class Game extends Application implements Serializable{
 	            y = ball.getY();
 	            
 	            if(pause==false) {
+	            	if (share.winner!=0) {
+	            		System.out.println("winner is player no");
+	            		System.out.println(share.winner);
+	            		pause=true;
+	            		
+	            		try {
+		        		    Robot r = new Robot();
+		        		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
+		        		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
+		        		 } catch (AWTException e) {
+		        		 	}
+	            		//return;
+	            		
+	            	}
 	            	if(angle2>4700)
 	            	{
 	            		angle2=-200;
@@ -1009,6 +1023,12 @@ class Game extends Application implements Serializable{
 					 }
 					 if (obstacle3.obstacleHit( y)) {
 						 pause=!pause;
+						 if(no==1) {
+							 share.winner=2;
+						 }
+						 else if(no==2) {
+							 share.winner=1;
+						 }
 						 y = angle2 +obstacle3.getWidth() - 4*ddd-55;
 						 if(playsounds == true) {
 					    		String s = "hitobstaclesound.wav";
@@ -1023,6 +1043,12 @@ class Game extends Application implements Serializable{
 					 }
 					 if (obstacle4.obstacleHit(y)) {
 							 pause=!pause;
+							 if(no==1) {
+								 share.winner=2;
+							 }
+							 else if(no==2) {
+								 share.winner=1;
+							 }
 							 y = angle2- 5*ddd+obstacle4.getWidth() -55;
 							 if(playsounds == true) {
 						   		String s = "hitobstaclesound.wav";
@@ -1039,7 +1065,12 @@ class Game extends Application implements Serializable{
 					 if (obstacle2.obstacleHit( y)) {
 							 pause=!pause;
 							 y = angle2- 3*ddd -25;
-							 
+							 if(no==1) {
+								 share.winner=2;
+							 }
+							 else if(no==2) {
+								 share.winner=1;
+							 }
 							 if(playsounds == true) {
 		                    		String s = "hitobstaclesound.wav";
 		                    		media = new Media(new File(s).toURI().toString()); 
@@ -1055,6 +1086,12 @@ class Game extends Application implements Serializable{
 
 					 if (obstacle6.obstacleHit(y)) {
 							 pause=!pause;
+							 if(no==1) {
+								 share.winner=2;
+							 }
+							 else if(no==2) {
+								 share.winner=1;
+							 }
 							 y = angle2- 6*ddd -25;
 							 if(playsounds == true) {
 		                    		String s = "hitobstaclesound.wav";
@@ -1194,6 +1231,10 @@ class Game extends Application implements Serializable{
                 case UP:
                     {
                     	gravity = -2;
+                    	if (share.winner!=0) {
+                    		stage.close();
+                    		
+                    	}
                     }
                     break;
                 case W:
