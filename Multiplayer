@@ -230,7 +230,7 @@ class Homepage {
 		game.no=1;
 		game2.no=2;
 		game.start(stage);
-		stage2=new Stage();
+		stage2 = new Stage();
 		game2.start(stage2);
 	}
 	private void resumeGame(Stage theStage, SaveObject data) throws FileNotFoundException{
@@ -635,7 +635,7 @@ class Game extends Application implements Serializable{
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
     { 
-		stage2=theStage;
+		stage2 = theStage;
 		if(this.no == 0) {
 	        theStage.setTitle( "Colour Switch" );
 		}
@@ -665,9 +665,31 @@ class Game extends Application implements Serializable{
         xshift = 3;
         //Group 
         root = new Group();
-        theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
+        ball = new Ball();
+        obstacle1 = new Obstacle1();
+        obstacle2 = new Obstacle2();
+        obstacle3 = new Obstacle3();
+        obstacle4 = new Obstacle4();
+        obstacle6 = new Obstacle6();
+    	star1= new Star[5];
+    	colourchanger=new Colourchanger[5];
+    	for(int i = 0; i<5; i++) {
+        	colourchanger[i] = new Colourchanger();
+        	star1[i] = new Star();
+        }
+        int screenw = Main.screenWidth;
+        if(no != 0) {
+        	screenw = Main.screenWidth/2;
+        	ball.setX(screenw/2 - 15);
+        	obstacle1.getImg().setX(600-Main.screenWidth);
+        	obstacle2.getImg().setX(600-Main.screenWidth);
+        	obstacle3.getImg().setX(600-Main.screenWidth);
+        	obstacle4.getImg().setX(600-Main.screenWidth);
+        	obstacle6.getImg().setX(50);
+        }
+        theScene = new Scene( root , screenw, Main.screenHeight );
         theStage.setScene( theScene );
-        canvas = new Canvas( Main.screenWidth, Main.screenHeight );
+        canvas = new Canvas( screenw, Main.screenHeight );
         stack1.setStyle("-fx-background-color: #202020");
         stack1.setId("panegame");
         stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
@@ -709,18 +731,6 @@ class Game extends Application implements Serializable{
 	        btn.setOnAction(event2);
 		}
         gc = canvas.getGraphicsContext2D();
-        ball = new Ball();
-        obstacle1 = new Obstacle1();
-        obstacle2 = new Obstacle2();
-        obstacle3 = new Obstacle3();
-        obstacle4 = new Obstacle4();
-        obstacle6 = new Obstacle6();
-    	star1= new Star[5];
-    	colourchanger=new Colourchanger[5];
-    	for(int i = 0; i<5; i++) {
-        	colourchanger[i] = new Colourchanger();
-        	star1[i] = new Star();
-        }
         final long startNanoTime = System.nanoTime();
         
         canvas.setFocusTraversable(true);
@@ -728,12 +738,12 @@ class Game extends Application implements Serializable{
         canvas.setOnKeyReleased(keyReleased);
         
         stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg(), obstacle6.getImg() );
-        stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
+        stack.setLayoutX(screenw/2 - Obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
         stack2.getChildren().addAll( obstacle2.getImg());
-        stack2.setLayoutX(Main.screenWidth/2);
+        stack2.setLayoutX(screenw/2);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
@@ -744,13 +754,13 @@ class Game extends Application implements Serializable{
         
         colourchanger[1]=new Colourchanger();
         stack3.getChildren().addAll( colourchanger[1].getImg());
-        stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
+        stack3.setLayoutX(screenw/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(colourchanger[1].getY());
         root.getChildren().add(stack3);
         
         star1[1]=new Star();
         stack4.getChildren().addAll( star1[1].getImg());
-        stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
+        stack4.setLayoutX(screenw/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
         
@@ -918,7 +928,6 @@ class Game extends Application implements Serializable{
 		        		 } catch (AWTException e) {
 		        		 	}
 	            		//return;
-	            		
 	            	}
 	            	if(angle2>4700)
 	            	{
@@ -999,9 +1008,13 @@ class Game extends Application implements Serializable{
 					 if (y>=getAngle2() - 2*ddd-20 && y<=getAngle2() - 2*ddd-10 && stack4.getChildren().get(0).isVisible()) {
 						 stack4.getChildren().get(0).setVisible(false);
 						 Star.addLife(player);
-						 l.setText(Integer.toString(player.getCollectedStars())); 
+						 if(no == 0) {
+							 l.setText(Integer.toString(player.getCollectedStars())); 
+						 }
 						 player.setScore(player.getScore()+1);
-						 l2.setText(Integer.toString(player.getScore()));
+						 if(no == 0) {
+							 l2.setText(Integer.toString(player.getScore()));
+						 }
 						 if(playsounds == true) {
 	                    		String s = "starsound.wav";
 	                    		media = new Media(new File(s).toURI().toString()); 
@@ -1017,7 +1030,9 @@ class Game extends Application implements Serializable{
 							 l.setText(Integer.toString(player.getCollectedStars())); 
 						 }
 						 player.setScore(player.getScore()+1);
-						 l2.setText(Integer.toString(player.getScore()));
+						 if(no == 0) {
+							 l2.setText(Integer.toString(player.getScore()));
+						 }
 						 if(playsounds == true) {
 	                    		String s = "starsound.wav";
 	                    		media = new Media(new File(s).toURI().toString()); 
