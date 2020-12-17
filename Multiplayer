@@ -557,7 +557,6 @@ class Game extends Application implements Serializable{
     private Obstacle2 obstacle2;
     private Obstacle3 obstacle3;
     private Obstacle4 obstacle4;
-    
     private Obstacle6 obstacle6;
     private Star[] star1;
     private Colourchanger[] colourchanger;
@@ -626,6 +625,12 @@ class Game extends Application implements Serializable{
 	}
 	public int getAngle2() {
 		return angle2;
+	}
+	public int getXpos() {
+		return xpos;
+	}
+	public int getXshift() {
+		return xshift;
 	}
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
@@ -760,6 +765,8 @@ class Game extends Application implements Serializable{
         obstacle6 = data.getOb6();
         angle = data.getGame().getAngle();
         angle2 = data.getGame().getAngle2();
+        xpos = data.getGame().getXpos();
+        xshift = data.getGame().getXshift();
         obstacle1=new Obstacle1();
         obstacle2=new Obstacle2();
         obstacle3=new Obstacle3();
@@ -810,7 +817,8 @@ class Game extends Application implements Serializable{
         root.getChildren().add( stack1 );
         
         t = new Text();
-		t = new Text (50, 100, "Score:\n\n" + player.getScore());
+		t = new Text (50, 100, "Score:\n\n" );
+		t.setFont(Font.font ("Montserrat", 15));
 		l2 = new Label(Integer.toString(player.getScore()));
 		l2.setTextFill(Color.WHITE);
 		l2.setLayoutX(60);
@@ -824,6 +832,9 @@ class Game extends Application implements Serializable{
 		l.setLayoutX(60);
 		l.setLayoutY(220);
 		root.getChildren().add( l );
+		t2.setFont(Font.font ("Montserrat", 15));
+		t2.setFill(Color.WHITE);
+		root.getChildren().addAll(t, t2);
         
         button2 = new Button("Pause");
         button2.setLayoutX(1000);
