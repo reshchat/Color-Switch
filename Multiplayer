@@ -634,8 +634,17 @@ class Game extends Application implements Serializable{
 	}
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
-    { stage2=theStage;
-    	theStage.setTitle( "Colour Switch" );
+    { 
+		stage2=theStage;
+		if(this.no == 0) {
+	        theStage.setTitle( "Colour Switch" );
+		}
+		else if(this.no == 1) {
+	        theStage.setTitle( "Game Screen for Player 1: Use UP key" );
+		}
+		else if(this.no == 2) {
+	        theStage.setTitle( "Game Screen for Player 2: Use w key" );
+		}
     	
     	if(playmusic == true) {
     		String s = "colourswitchmusic.mp3";
@@ -666,18 +675,6 @@ class Game extends Application implements Serializable{
         root.getChildren().add( stack1 );
         player = new Player();
         
-        if(this.no == 1) {
-        	ptext = new Text();
-            ptext = new Text(50, 50, "You are Player 1\nUse UP key");
-            ptext.setFont(Font.font ("Montserrat", 15));
-            root.getChildren().add(ptext);
-        }
-        if(this.no == 2) {
-        	ptext = new Text();
-            ptext = new Text(50, 50, "You are Player 2\nUse w key");
-            ptext.setFont(Font.font ("Montserrat", 15));
-            root.getChildren().add(ptext);
-        }
         if(no == 0) {
 	        t = new Text();
 			t = new Text (50, 100, "Score:\n\n" );
