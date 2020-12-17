@@ -219,6 +219,8 @@ class Homepage {
 		this.bestscore = best;
 	}
 	public static void startNewgame(Stage stage) throws FileNotFoundException{	
+		Shared share= new Shared();
+		game.share=share;
 		game.start(stage);
 	}
 	public static void startNewgame2(Stage stage) throws FileNotFoundException{	
@@ -536,11 +538,12 @@ class Shared{
 	
 }
 class Game extends Application implements Serializable{
+	
+	private static final long serialVersionUID = 120L;
 	public transient Shared share;
 	public transient int no=0;
 	//n=1 up
 	//n=2=w
-	private static final long serialVersionUID = 120L;
 	private String name;
 	private int level;
 	private int distance;
@@ -577,6 +580,7 @@ class Game extends Application implements Serializable{
     private int xshift;
     private transient Canvas canvas;
     private transient Stage stage;
+    private transient Stage stage2;
     private transient Scene scene;
     private transient Scene theScene;
     private transient GridPane pane;
@@ -628,7 +632,7 @@ class Game extends Application implements Serializable{
 	}
 	@Override
     public void start(Stage theStage) throws FileNotFoundException
-    { stage=theStage;
+    { stage2=theStage;
     	theStage.setTitle( "Colour Switch" );
     	
     	if(playmusic == true) {
@@ -1153,6 +1157,7 @@ class Game extends Application implements Serializable{
         		SaveGame.filename = tf.getText()+".txt"; 
         		saveGame();
         		pane.getChildren().clear();
+        		stage2.close();
         		stage.close();
         		homepage.displayMainmenu(stage, pane, scene);
         	}
@@ -1160,6 +1165,7 @@ class Game extends Application implements Serializable{
         		if(player.getCollectedStars()<=0) {
         			JOptionPane.showMessageDialog(null, "Not enough stars. Game over!");
         			pane.getChildren().clear();
+        			stage2.close();
         			stage.close();
         			homepage.displayMainmenu(stage, pane, scene);
         		}
@@ -1229,7 +1235,7 @@ class Game extends Application implements Serializable{
                     {
                     	gravity = -2;
                     	if (share.winner!=0) {
-                    		stage.close();
+                    		stage2.close();
                     		
                     	}
                     }
