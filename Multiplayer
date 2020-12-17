@@ -200,11 +200,13 @@ class Homepage {
     static Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
     static Stage stage;
 	private static Game game;
+	private static Game game2;
 	private int bestscore;
 	private ArrayList<Button> buttons;
 	
 	public Homepage() {
 		game = new Game();
+		game2 = new Game();
 		buttons = new ArrayList<Button>();
 		bestscore = 0;
 	}
@@ -246,6 +248,7 @@ class Homepage {
 
 		Button btn1 = new Button("Start new game");
 		Button btn2 = new Button("Resume a saved game");
+		Button button3 = new Button("Enter multiplayer mode");
 		Button button2 = new Button("View Leaderboard");
 		Button button = new Button("Settings");
 		Button btn3 = new Button("Exit");
@@ -257,8 +260,9 @@ class Homepage {
 		btn3.setOnAction(bh);
 		button.setOnAction(bh);
 		button2.setOnAction(bh);
+		button3.setOnAction(bh);
 
-		vbox.getChildren().addAll(t, btn1, btn2, button2, button, btn3);
+		vbox.getChildren().addAll(t, btn1, btn2, button3, button2, button, btn3);
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch");
 		theStage.setScene(scene);
@@ -498,6 +502,11 @@ class Homepage {
         		pane.getChildren().clear();
         		stage.close();
         		showSavedgames(stage, pane, scene);
+        	}
+        	else if(src.getText().equals("Enter multiplayer mode")) {
+        		pane.getChildren().clear();
+       		 	stage.close();
+        		//multiplayer(stage, pane, scene);
         	}
         }
 	}
