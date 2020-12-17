@@ -137,6 +137,7 @@ class SaveGame{
 class SaveObject implements Serializable{
 	
 	private static final long serialVersionUID = 100L;
+	
 	private Game game;
 	private Player player;
 	private Ball ball;
@@ -199,6 +200,7 @@ class Homepage {
 	static GridPane pane = new GridPane();
     static Scene scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
     static Stage stage;
+    static Stage stage2;
 	private static Game game;
 	private static Game game2;
 	private int bestscore;
@@ -220,8 +222,17 @@ class Homepage {
 		game.start(stage);
 	}
 	public static void startNewgame2(Stage stage) throws FileNotFoundException{	
+		Shared share= new Shared();
+		game.share=share;
+		game2.share=share;
+		game.no=1;
+		game2.no=2;
+		System.out.println(111);
 		game.start(stage);
-		game2.start(stage);
+		System.out.println(2222);
+		stage2=new Stage();
+		game2.start(stage2);
+		System.out.println(333);
 	}
 	private void resumeGame(Stage theStage, SaveObject data) throws FileNotFoundException{
 		game.resume(theStage, data);
@@ -353,6 +364,7 @@ class Homepage {
 		theStage.setScene(scene);
 		theStage.show();
 	}
+	
 	public static class Row {
 		 
         private final String gamename;
@@ -506,14 +518,30 @@ class Homepage {
         	else if(src.getText().equals("Enter multiplayer mode")) {
         		pane.getChildren().clear();
        		 	stage.close();
+       		 try {
+					startNewgame2(stage);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
         		//multiplayer(stage, pane, scene);
         	}
         }
 	}
 }
-
-class Game extends Application implements Serializable{
+class Shared{
+	//public int n=0;
+	public int a=0;
+	public int b=0;
+	public int s1=0;
+	public int s2=0;
+	public int winner=0;
 	
+}
+class Game extends Application implements Serializable{
+	public transient Shared share;
+	public transient int no=0;
+	//n=1 up
+	//n=2=w
 	private static final long serialVersionUID = 120L;
 	private String name;
 	private int level;
@@ -684,29 +712,29 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(Obstacle1.getImg(), Obstacle3.getImg(), Obstacle4.getImg(), Obstacle6.getImg() );
+        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg(), obstacle6.getImg() );
         stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
-        stack2.getChildren().addAll( Obstacle2.getImg());
+        stack2.getChildren().addAll( obstacle2.getImg());
         stack2.setLayoutX(Main.screenWidth/2);
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
-        stack5.getChildren().addAll( Obstacle6.getImg());
+        stack5.getChildren().addAll( obstacle6.getImg());
         stack5.setLayoutX(100);
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
         
         colourchanger[1]=new Colourchanger();
-        stack3.getChildren().addAll( Colourchanger.getImg());
+        stack3.getChildren().addAll( colourchanger[1].getImg());
         stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(colourchanger[1].getY());
         root.getChildren().add(stack3);
         
         star1[1]=new Star();
-        stack4.getChildren().addAll( Star.getImg());
+        stack4.getChildren().addAll( star1[1].getImg());
         stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
@@ -810,29 +838,29 @@ class Game extends Application implements Serializable{
         button2.setOnAction(event);
         btn.setOnAction(event2);
         
-        stack.getChildren().addAll(Obstacle1.getImg(), Obstacle3.getImg(), Obstacle4.getImg(), Obstacle6.getImg() );
+        stack.getChildren().addAll(obstacle1.getImg(), obstacle3.getImg(), obstacle4.getImg(), obstacle6.getImg() );
         stack.setLayoutX(Main.screenWidth/2 - Obstacle1.getWidth()/2 );
         stack.setLayoutY(0);
         root.getChildren().add(stack);
         
-        stack2.getChildren().addAll( Obstacle2.getImg());
+        stack2.getChildren().addAll( obstacle2.getImg());
         stack2.setLayoutX(Main.screenWidth/2 );
         stack2.setLayoutY(0);
         root.getChildren().add(stack2);
 
-        stack5.getChildren().addAll( Obstacle6.getImg());
+        stack5.getChildren().addAll( obstacle6.getImg());
         stack5.setLayoutX(100);
         stack5.setLayoutY(0);
         root.getChildren().add(stack5);
         
         colourchanger[1]=new Colourchanger();
-        stack3.getChildren().addAll( Colourchanger.getImg());
+        stack3.getChildren().addAll( colourchanger[1].getImg());
         stack3.setLayoutX(Main.screenWidth/2 - Colourchanger.getWidth()/2);
         stack3.setLayoutY(colourchanger[1].getY());
         root.getChildren().add(stack3);
         
         star1[1]=new Star();
-        stack4.getChildren().addAll( Star.getImg());
+        stack4.getChildren().addAll( star1[1].getImg());
         stack4.setLayoutX(Main.screenWidth/2 - Star.getWidth()/2);
         stack4.setLayoutY(star1[1].getY());
         root.getChildren().add(stack4);
@@ -1024,7 +1052,9 @@ class Game extends Application implements Serializable{
 							 showResurrectmenu();
 					 }
 					 
-					//obstacle 2
+					if (no==2) {
+						gravity=share.b;
+					}
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
 				 		 ball.setY(y);
@@ -1134,6 +1164,9 @@ class Game extends Application implements Serializable{
                 case UP:
                 	gravity = 0;
                 	break;
+                case W:
+                	share.b =0;
+                	break;
             }
         }
     };
@@ -1147,8 +1180,12 @@ class Game extends Application implements Serializable{
                     	gravity = -2;
                     }
                     break;
+                case W:
+                	share.b =-2;
+                	break;
                 case P:
                    pause =!(pause);
+                
             }
         }
     };
@@ -1344,8 +1381,8 @@ class Ball implements Serializable{
 	private static final long serialVersionUID = 180L;
 	private int y;
 	private Player player;
-	private static transient Image pic = new Image("file:images/star.png");
-	private static transient ImageView img = new ImageView(pic);
+	private  transient Image pic = new Image("file:images/star.png");
+	private  transient ImageView img = new ImageView(pic);
 	private static int width = 80;
 	
 	public Star() throws FileNotFoundException{
@@ -1355,7 +1392,7 @@ class Ball implements Serializable{
 		this.y = 0;
 	}
 	
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 	public static int getWidth() {
@@ -1377,8 +1414,8 @@ class Ball implements Serializable{
 	private transient static int[] colours;
 	private int y;
 	private Ball ball;
-	private static Image pic = new Image("file:images/colourchanger.png");
-	private static ImageView img = new ImageView(pic);
+	private  Image pic = new Image("file:images/colourchanger.png");
+	private  ImageView img = new ImageView(pic);
 	private static int width = 60;
 
 	public Colourchanger() throws FileNotFoundException{
@@ -1389,7 +1426,7 @@ class Ball implements Serializable{
 		colours=new int[5];
 	}
 	
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 	public static int getWidth() {
@@ -1461,8 +1498,8 @@ abstract class Obstacle implements Serializable{
 class Obstacle1 extends Obstacle{
 	
 	private static final long serialVersionUID = 220L;
-	private static transient Image pic = new Image("file:images/obstacle1.png");
-	private static ImageView img = new ImageView(pic);
+	private  transient Image pic = new Image("file:images/obstacle1.png");
+	private  ImageView img = new ImageView(pic);
 	private static int width = 250;
 	
 	public Obstacle1 () throws FileNotFoundException{
@@ -1473,7 +1510,7 @@ class Obstacle1 extends Obstacle{
         img.setY(300-Main.screenHeight);
 	}
 	
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 
@@ -1551,8 +1588,8 @@ class Obstacle1 extends Obstacle{
 class Obstacle2 extends Obstacle {
 	
 	private static final long serialVersionUID = 240L;
-	private static transient Image pic = new Image("file:images/obstacle2.png");
-	private static transient ImageView img = new ImageView(pic);
+	private  transient Image pic = new Image("file:images/obstacle2.png");
+	private  transient ImageView img = new ImageView(pic);
 	private static int width = 250;
 	transient Timeline timeline;
 	transient Duration rotateDuration;
@@ -1566,7 +1603,7 @@ class Obstacle2 extends Obstacle {
          img.setPreserveRatio(true);
 	}
 
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 
@@ -1622,8 +1659,8 @@ class Obstacle2 extends Obstacle {
 class Obstacle3 extends Obstacle {
 	
 	private static final long serialVersionUID = 260L;
-	private static transient Image pic = new Image("file:images/obstacle3.png");
-	private static transient ImageView img = new ImageView(pic);
+	private  transient Image pic = new Image("file:images/obstacle3.png");
+	private  transient ImageView img = new ImageView(pic);
 	private static int width = 250;
 	transient Timeline timeline;
 	transient Duration rotateDuration;
@@ -1637,7 +1674,7 @@ class Obstacle3 extends Obstacle {
          img.setPreserveRatio(true);
 	}
 
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 
@@ -1716,8 +1753,8 @@ class Obstacle3 extends Obstacle {
 class Obstacle4 extends Obstacle {
 	
 	private static final long serialVersionUID = 280L;
-	private static transient Image pic = new Image("file:images/obstacle4.png");
-	private static transient ImageView img = new ImageView(pic);
+	private  transient Image pic = new Image("file:images/obstacle4.png");
+	private  transient ImageView img = new ImageView(pic);
 	private static int width = 250;
 	transient Timeline timeline;
 	transient Duration rotateDuration;
@@ -1731,7 +1768,7 @@ class Obstacle4 extends Obstacle {
          img.setPreserveRatio(true);
 	}
 
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 
@@ -1805,8 +1842,8 @@ class Obstacle4 extends Obstacle {
 class Obstacle6 extends Obstacle {
 	
 	private static final long serialVersionUID = 320L;
-	private static transient Image pic = new Image("file:images/obstacle6a.png");
-	private static transient ImageView img = new ImageView(pic);
+	private  transient Image pic = new Image("file:images/obstacle6a.png");
+	private  transient ImageView img = new ImageView(pic);
 	private static int width = 1000;
 	private transient Timeline timeline;
 	private transient Duration animateDuration;
@@ -1821,7 +1858,7 @@ class Obstacle6 extends Obstacle {
         img.setPreserveRatio(true);
 	}
 
-	public static ImageView getImg() {
+	public  ImageView getImg() {
 		return img;
 	}
 
