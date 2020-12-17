@@ -528,14 +528,11 @@ class Homepage {
 	}
 }
 class Shared{
-	//public int n=0;
-	//public int a=0;
 	public int b=0;
 	//scores
 	public int s1=0;
 	public int s2=0;
-	public int winner=0;
-	
+	public static int winner=0;
 }
 class Game extends Application implements Serializable{
 	
@@ -891,6 +888,7 @@ class Game extends Application implements Serializable{
 	            	if (share.winner!=0) {
 	            		System.out.println("winner is player no");
 	            		System.out.println(share.winner);
+	            		multiplayerEnd();
 	            		pause=true;
 	            		
 	            		try {
@@ -1196,6 +1194,7 @@ class Game extends Application implements Serializable{
         	else if(src.getText().equals("Restart game")) {
         		pane.getChildren().clear();
        		 	stage.close();
+       		 	stage2.close();
         		try {
 					Homepage.startNewgame(stage);
 					canvas.requestFocus();
@@ -1356,7 +1355,34 @@ class Game extends Application implements Serializable{
 		stage.setScene(scene);
 		stage.show();
 	}
+    public void multiplayerEnd(){
+		stage = new Stage();
+		pane = new GridPane();
+		pane.setAlignment(Pos.CENTER);
+	    pane.setHgap(10);
+	    pane.setVgap(10);
+	    pane.setPadding(new Insets(25, 25, 25, 25));
+	    
+	    scene = new Scene(pane, Main.screenWidth, Main.screenHeight);
+	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
+	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
+		vbox = new VBox(5);
+		t = new Text();
+		t = new Text (10, 20, "Player "+ Shared.winner + " has won the game!");
+		t.setFont(Font.font ("Montserrat", 20));
+		t.setFill(Color.WHITE);
+		btn1 = new Button("Exit game");
+		bh = new buttonHandler();
+		btn1.setOnAction(bh);
 
+		vbox.getChildren().addAll(t, btn1);
+		pane.getChildren().addAll(vbox);
+		stage.setTitle("Colour Switch");
+		stage.setScene(scene);
+		stage.show();
+	}
 }
 class Ball implements Serializable{
 	
