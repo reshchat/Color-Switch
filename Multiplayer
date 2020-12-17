@@ -745,7 +745,7 @@ class Game extends Application implements Serializable{
         timer.start(); 
     }
 	public void resume(Stage theStage, SaveObject data) throws FileNotFoundException
-    {
+    {stage2=theStage;
     	theStage.setTitle( "Colour Switch" );
     	stack = new StackPane();
         stack1 = new StackPane();
