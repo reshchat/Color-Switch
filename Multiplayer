@@ -227,12 +227,9 @@ class Homepage {
 		game2.share=share;
 		game.no=1;
 		game2.no=2;
-		System.out.println(111);
 		game.start(stage);
-		System.out.println(2222);
 		stage2=new Stage();
 		game2.start(stage2);
-		System.out.println(333);
 	}
 	private void resumeGame(Stage theStage, SaveObject data) throws FileNotFoundException{
 		game.resume(theStage, data);
