@@ -1017,8 +1017,10 @@ class Game extends Application implements Serializable{
 					    		mediaPlayer.setVolume(5);
 					    		mediaPlayer.setAutoPlay(true);  
 					     }
-						 showResurrectmenu();
-										 }
+						 if(no==0) {
+							 showResurrectmenu(); 
+						 }
+					 }
 					 if (obstacle4.obstacleHit(y)) {
 							 pause=!pause;
 							 y = angle2- 5*ddd+obstacle4.getWidth() -55;
@@ -1029,7 +1031,9 @@ class Game extends Application implements Serializable{
 						   		mediaPlayer.setVolume(5);
 						   		mediaPlayer.setAutoPlay(true);  
 						    }
-							 showResurrectmenu();
+							if(no==0) {
+								showResurrectmenu(); 
+							}
 						}
 					 
 					 if (obstacle2.obstacleHit( y)) {
@@ -1043,8 +1047,9 @@ class Game extends Application implements Serializable{
 		                    		mediaPlayer.setVolume(5);
 		                    		mediaPlayer.setAutoPlay(true);  
 		                     }
-							 
-							 showResurrectmenu(); 
+							 if(no==0) {
+								 showResurrectmenu(); 
+							 }
 					 }
 
 
@@ -1058,7 +1063,9 @@ class Game extends Application implements Serializable{
 		                    		mediaPlayer.setVolume(5);
 		                    		mediaPlayer.setAutoPlay(true);  
 		                     }
-							 showResurrectmenu();
+							 if(no==0) {
+								 showResurrectmenu(); 
+							 }
 					 }
 					 
 					if (no==2) {
