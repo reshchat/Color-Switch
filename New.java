@@ -2,7 +2,6 @@ package application;
 //package colorswitch;
 
 import javafx.util.Duration;
-
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.io.File;
@@ -15,21 +14,15 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.JOptionPane;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.PathTransition;
-import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,15 +41,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -84,7 +74,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage theStage) throws Exception {
 		stage = theStage;
-		 homepage = new Homepage();
+		homepage = new Homepage();
 		homepage.displayMainmenu(theStage, pane, scene);
 	}
 }	
@@ -128,17 +118,18 @@ class SaveGame{
 	public static boolean checkFileExists(String filename) {
 		return new File(filename).isFile();
 	}
-	private static boolean deleteSavedFile(String filename) {
-		if(!checkFileExists(filename)) {
-			System.out.println("File doesn't exist");
-			return true;
-		}
-		File toDelete = new File(filename);
-		if(toDelete.canWrite()) {
-			return toDelete.delete();
-		}
-		System.out.println("Cannot delete file");
-		return false;
+	public static void deleteSavedGames() {
+		String path = new File("").getAbsolutePath();
+		File directoryPath = new File(path);
+		String contents[] = directoryPath.list();
+	    for(int i=0; i<contents.length; i++) {
+	    	if(contents[i].length()>4 && contents[i].substring(contents[i].length() - 4).equals(".txt")) {
+	        	File toDelete = new File(contents[i]);
+	        	if(toDelete.canWrite()) {
+	    			toDelete.delete();
+	    		}
+	    	}
+	    }
 	}
 	
 }
@@ -270,31 +261,40 @@ class Homepage {
 		theStage.show();
 	}
 	
-	public void showSavedgames(Stage theStage){
+	public void showSavedgames(Stage theStage, GridPane pane, Scene scene){
 		stage = theStage;
 		pane.setAlignment(Pos.CENTER);
 	    pane.setHgap(10);
 	    pane.setVgap(10);
 	    pane.setPadding(new Insets(25, 25, 25, 25));
 	    pane.setStyle("-fx-background-color: #202020");
+	    pane.setId("pane");
 	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         
 		VBox vbox = new VBox(5);
+		buttons = new ArrayList<Button>();
+		buttonHandler bh = new buttonHandler();
+		gamebuttonsHandler gh = new gamebuttonsHandler();
 		Text t = new Text();
 		t = new Text (10, 20, "Saved Games\n");
 		t.setFont(Font.font ("Montserrat", 20));
 		t.setFill(Color.WHITE);
+		vbox.getChildren().add(t);
+		
+		Button btn5 = new Button("Clear saved games");
+		btn5.setOnAction(bh);
+		vbox.getChildren().add(btn5);
+		Button btn4 = new Button("Back");
+		btn4.setOnAction(bh);
+		vbox.getChildren().add(btn4);
+		
 		Text t2 = new Text();
 		t2 = new Text (10, 20, "Choose a game to start playing:\n");
 		t2.setFont(Font.font ("Montserrat", 15));
 		t2.setFill(Color.WHITE);
-		vbox.getChildren().addAll(t, t2);
-
-		buttonHandler bh = new buttonHandler();
-		gamebuttonsHandler gh = new gamebuttonsHandler();
+		vbox.getChildren().add(t2);
 		
 		String path = new File("").getAbsolutePath();
-		System.out.println(path);
 		File directoryPath = new File(path);
 		String contents[] = directoryPath.list();
 	    for(int i=0; i<contents.length; i++) {
@@ -306,9 +306,6 @@ class Homepage {
 	    	b.setOnAction(gh);
 			vbox.getChildren().add(b);
 	    }
-		
-		Button btn4 = new Button("Back");
-		btn4.setOnAction(bh);
 
 		pane.getChildren().addAll(vbox);
 		theStage.setTitle("Colour Switch");
@@ -468,11 +465,12 @@ class Homepage {
         	}
         	else if(src.getText().equals("Resume a saved game")) {
         		pane.getChildren().clear();
-        		showSavedgames(stage);
+        		stage.close();
+        		showSavedgames(stage, pane, scene);
         	}
         	else if(src.getText().equals("Back")) {
-        		stage.close();
         		pane.getChildren().clear();
+        		stage.close();
         		displayMainmenu(stage, pane, scene);
         	}
         	else if(src.getText().equals("Settings")) {
@@ -490,6 +488,12 @@ class Homepage {
         	}
         	else if(src.getText().equals("Play sound effects")) {
         		Game.setPlaysounds(true);
+        	}
+        	else if(src.getText().equals("Clear saved games")) {
+        		SaveGame.deleteSavedGames();
+        		pane.getChildren().clear();
+        		stage.close();
+        		showSavedgames(stage, pane, scene);
         	}
         }
 	}
@@ -935,7 +939,6 @@ class Game extends Application implements Serializable{
 	                     }
 					 }
 					 if (obstacle1.obstacleHit( y)) {
-						 System.out.println("collisiomn1");
 						 pause=!pause;
 						 y = getAngle2() -25;
 						 
@@ -950,7 +953,6 @@ class Game extends Application implements Serializable{
 						 showResurrectmenu();
 					 }
 					 if (obstacle3.obstacleHit( y)) {
-						 System.out.println("coll3");
 						 pause=!pause;
 						 y = angle2 +obstacle3.getWidth() - 4*ddd-55;
 						 if(playsounds == true) {
@@ -962,8 +964,7 @@ class Game extends Application implements Serializable{
 					     }
 						 showResurrectmenu();
 										 }
-					 if (obstacle4.obstacleHit( y)) {
-							System.out.println("coll44");
+					 if (obstacle4.obstacleHit(y)) {
 							 pause=!pause;
 							 y = angle2- 5*ddd+obstacle4.getWidth() -55;
 							 if(playsounds == true) {
@@ -977,7 +978,6 @@ class Game extends Application implements Serializable{
 						}
 					 
 					 if (obstacle2.obstacleHit( y)) {
-						System.out.println("coll22");
 							 pause=!pause;
 							 y = angle2- 3*ddd -25;
 							 
@@ -993,8 +993,7 @@ class Game extends Application implements Serializable{
 					 }
 
 
-					 if (obstacle6.obstacleHit( y)) {
-						 	 System.out.println("coll66");
+					 if (obstacle6.obstacleHit(y)) {
 							 pause=!pause;
 							 y = angle2- 6*ddd -25;
 							 if(playsounds == true) {
@@ -1007,27 +1006,20 @@ class Game extends Application implements Serializable{
 							 showResurrectmenu();
 					 }
 					 
-					 System.out.println("angle");
-					 System.out.println(angle%360);
 					//obstacle 2
-					
-					 
 				 	 if (y<350 && y>150  ) {
 				 		 y=y+2*getGravity()+1;
 				 		 ball.setY(y);
-				 		System.out.println("y "+ y);
 				 	 }
 				 	 else if (y>=250) {
 				 		angle2=(int) (getAngle2()-getGravity() -1);
 				 		y=y+getGravity();
 				 		ball.setY(y);
-				 		System.out.println("up "+ y);
 				 	 }
 				 	 else if (y<250)	{
 				 		angle2=(int) (getAngle2()-2*getGravity() );
 				 		y=y+1;
 				 		ball.setY(y);
-				 		System.out.println("down "+ y);
 				 	 }
 				 	 
 				 	 if(xpos > 450) {
@@ -1038,7 +1030,6 @@ class Game extends Application implements Serializable{
 	            		 xshift *= -1;
 	            	 }
 	            	 xpos += xshift;
-	            	 System.out.println("xpos "+ xpos);
 					 gc.drawImage(ball.get_ball(), x, y, 30, 30);
 					 
 				 }
@@ -1069,8 +1060,10 @@ class Game extends Application implements Serializable{
         	}
         	else if(src.getText().equals("Save life and resume game")) {
         		if(player.getCollectedStars()<=0) {
-        			JOptionPane.showMessageDialog(null, "Not enough stars");
+        			JOptionPane.showMessageDialog(null, "Not enough stars. Game over!");
+        			pane.getChildren().clear();
         			stage.close();
+        			homepage.displayMainmenu(stage, pane, scene);
         		}
         		else {
         			y=y+0;
@@ -1413,7 +1406,8 @@ class Ball implements Serializable{
 	}
 }
 abstract class Obstacle implements Serializable{
-	
+
+	private static final long serialVersionUID = 1000L;
 	protected int noofcolours;
 	protected int passposition;
 	protected boolean hit;
@@ -1483,7 +1477,6 @@ class Obstacle1 extends Obstacle{
 	    Duration rotateDuration = Duration.millis(3);
     	
 	    Rotate rotate = new Rotate(0, 100, 100, 0, Rotate.Y_AXIS);
-	    // obstacle1.img.getTransforms().add(rotate);
 	    setY(angle2);
 	    int ddd= 500;
 	    this.angle =(int) duration;
@@ -1504,56 +1497,41 @@ class Obstacle1 extends Obstacle{
 	protected boolean obstacleHit(int y) {
 		if (y>=getY() -20 && y<=getY() -10) {
 			
-			 System.out.println("collup");
-			 System.out.println(angle%360);
-			
 			 int col=-1;
 			 if(angle%360 > 0 && angle%360 <90) {
-				 System.out.println("red");
 				 col =0; 
 			 }
 			 if(angle%360 > 90 && angle%360 <180) { 
-				 System.out.println("blue");
 				 col =1;
 			 }
 			 if(angle%360 > 180 && angle%360 <270) { 
-				 System.out.println("yellow");
 				 col =2;
 			 }
 			 if(angle%360 > 270 && angle%360 <360) { 
-				 System.out.println("green");
 				 col =3; 
 			 }
 			 if (col!=this.getPassposition()) {
-					return true;
-					 }
+				return true;
+			 }
 		 }
 		 if (y>=getY() +getWidth() -50 && y<=getY() +getWidth()-40) {
 			 
-			 System.out.println("colld");
-			 System.out.println(angle%360);
 			 int col=-1;
 			 if(angle%360 > 0 && angle%360 <90) {
-				 System.out.println("yellow");
 				 col =2; 
 		     }
 			 if(angle%360 > 90 && angle%360 <180) { 
-				 System.out.println("green");
 				 col =3;
 			 }
 			 if(angle%360 > 180 && angle%360 <270) { 
-				 System.out.println("red");
 				 col =0;
 			 }
 			 if(angle%360 > 270 && angle%360 <360) { 
-				 System.out.println("blue");
 				 col =1; 
 			 }
-			 
 			 if (col!=this.getPassposition()) {
 			return true;
 			 }
-				
 		 }
 		 return false;
 	}
@@ -1609,27 +1587,20 @@ class Obstacle2 extends Obstacle {
 	@Override
 	protected boolean obstacleHit(int y) {
 		 if (y>=getY()+(getWidth()/2) -50 && y<=getY() +(getWidth()/2)-10) {
-			 System.out.println("coll2");
-			 System.out.println(angle%360);
 			 int col=this.getPassposition();
 			 if((angle%360 > 0 && angle%360 <20)||(angle%360 > 340 && angle%360 <360)) {
-				 System.out.println("blue");
 				 col =1; 
 			 }
 			 if(angle%360 > 70 && angle%360 <110) { 
-				 System.out.println("yellow");
 				 col =2;
 			 }
 			 if(angle%360 > 160 && angle%360 <200) { 
-				 System.out.println("green");
 				 col =3;
 			 }
 			 if(angle%360 > 250 && angle%360 <290) { 
-				 System.out.println("red");
 				 col =0; 
 			 }
 			 if (col!=this.getPassposition()) {
-				 System.out.println("coll");
 				 return true;
 			 }
 		 }
@@ -1689,47 +1660,40 @@ class Obstacle3 extends Obstacle {
 		int ddd=500;
 		if (y>=getY() -20 && y<=getY()-10) {
 			
-			 System.out.println("collup");
-			 System.out.println(angle%360);
 			 int abc =(angle-45)%360;
 			 int col=-1;
-			 if(abc > 0 && abc <90)
-				 {System.out.println("red");
-				 col =0; }
-			 if(abc > 90 && abc <180)
-			 { System.out.println("blue");
-			 col =1;}
-			 if(abc > 180 && abc <270)
-			 { System.out.println("yellow");
-			 col =2;}
-			 if(abc > 270 && abc <360)
-			 { System.out.println("green");
-			 col =3; }
+			 if(abc > 0 && abc <90) {
+				 col =0; 
+			 }
+			 if(abc > 90 && abc <180) {
+				 col =1;
+			 }
+			 if(abc > 180 && abc <270) { 
+				 col =2;
+			 }
+			 if(abc > 270 && abc <360) { 
+				 col =3; 
+			 }
 			 if (col!=this.getPassposition()) {
-				 System.out.println("coll");
 				return true;
 			 }
 		 }
 		 if (y>=getY() +getWidth() -50 && y<=getY() +getWidth()-40) {
-			 
-			 System.out.println("colld");
-			 System.out.println(angle%360);
 			 int col=-1;
 			 int abc =(angle-45)%360;
-			 if(abc > 0 &&abc <90)
-				 {System.out.println("yellow");
-				 col =2; }
-			 if(abc > 90 && abc <180)
-			 { System.out.println("green");
-			 col =3;}
-			 if(abc > 180 && abc <270)
-			 { System.out.println("red");
-			 col =0;}
-			 if(abc > 270 && abc <360)
-			 { System.out.println("blue");
-			 col =1; }
+			 if(abc > 0 &&abc <90) {
+				 col =2; 
+			 }
+			 if(abc > 90 && abc <180) { 
+				 col =3;
+			 }
+			 if(abc > 180 && abc <270) {
+				 col =0;
+			 }
+			 if(abc > 270 && abc <360) { 
+				 col =1; 
+			 }
 			 if (col!=this.getPassposition()) {
-				 System.out.println("coll");
 				 return true;
 			 }
 				
@@ -1791,44 +1755,36 @@ class Obstacle4 extends Obstacle {
 
 		 if (y>=this.getY() +40 && y<=this.getY()+50) {
 				
-			 System.out.println("collup");
-			 System.out.println(angle%360);
 			 int abc =(angle)%360;
 			 int col=-1;
-			 if(abc > 0 && abc <120)
-				 {System.out.println("red");
-				 col =0; }
-			 if(abc > 120 && abc <240)
-			 { System.out.println("blue");
-			 col =1;}
-			  if(abc > 240 && abc <360)
-			 { System.out.println("green");
-			 col =3; }
+			 if(abc > 0 && abc <120) {
+				 col =0; 
+			 }
+			 if(abc > 120 && abc <240) { 
+				 col =1;
+			 }
+			 if(abc > 240 && abc <360) {
+				 col =3; 
+			 }
 			  if (this.getPassposition()!=2 && col!=this.getPassposition()) {
-				 System.out.println("coll");
 				return true;
 			 }
 		 }
 		 if (y>=this.getY() +getWidth()-50 && y<=this.getY() +getWidth()-40) {
-			 
-			 System.out.println("colld");
-			 System.out.println(angle%360);
 			 int col=-1;
 			 int abc =(angle-45)%360;
-			 if(abc > 0 && abc <120)
-			 { System.out.println("green");
-			 col =3;}
-			 if(abc > 120 && abc <240)
-			 { System.out.println("red");
-			 col =0;}
-			 if(abc > 240 && abc <360)
-			 { System.out.println("blue");
-			 col =1; }
+			 if(abc > 0 && abc <120) {
+				 col =3;
+			 }
+			 if(abc > 120 && abc <240) { 
+				 col =0;
+			 }
+			 if(abc > 240 && abc <360) { 
+				 col =1; 
+			 }
 			 if (this.getPassposition()!=2 && col!=this.getPassposition()) {
-				 System.out.println("coll");
 				 return true;
-				
-		 }
+			 }
 		
 	}
 		 return false;
@@ -1898,27 +1854,20 @@ class Obstacle6 extends Obstacle {
 		//obstacle 6
 		 if (y>=this.getY() -20 && y<=this.getY()-10) {
 			
-			 System.out.println("coll6");
-			
 			 int col=-1;
 			 if((xpos > -270 && xpos <-180)||(xpos > 90 && xpos <180)||(xpos > 360 && xpos <450)) {
-				 System.out.println("red");
 				 col =0; 
 			 }
 			 if((xpos > -450 && xpos <-360)||(xpos > -180 && xpos <-90)||(xpos > 180 && xpos <270)) { 
-				 System.out.println("blue");
 				 col =1;
 			 }
 			 if((xpos > -90 && xpos <0)||(xpos > 270 && xpos <360)) { 
-				 System.out.println("yellow");
 				 col =2;
 			 }
 			 if((xpos > -360 && xpos <-270)||(xpos > 0 && xpos <90)) { 
-				 System.out.println("green");
 				 col =3; 
 			 }
 			 if (col!=this.getPassposition()) {
-				 System.out.println("coll");
 				 return true;
 			 }
 		 }
@@ -1926,5 +1875,3 @@ class Obstacle6 extends Obstacle {
 	}
 	
 }
-
-
