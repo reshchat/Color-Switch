@@ -754,6 +754,7 @@ class Game extends Application implements Serializable{
         stack4 = new StackPane();
         stack5 = new StackPane();
     	player = data.getPlayer();
+    	share=new Shared();
         ball = data.getBall();
         obstacle1 = data.getOb1();
         obstacle2 = data.getOb2();
@@ -762,6 +763,11 @@ class Game extends Application implements Serializable{
         obstacle6 = data.getOb6();
         angle = data.getGame().getAngle();
         angle2 = data.getGame().getAngle2();
+        obstacle1=new Obstacle1();
+        obstacle2=new Obstacle2();
+        obstacle3=new Obstacle3();
+        obstacle4=new Obstacle4();
+        obstacle6=new Obstacle6();
         
         obstacle1.getImg().setFitWidth(Obstacle1.getWidth());
         obstacle1.getImg().setPreserveRatio(true);
@@ -1474,8 +1480,8 @@ class Ball implements Serializable{
 	private transient static int[] colours;
 	private int y;
 	private Ball ball;
-	private  Image pic = new Image("file:images/colourchanger.png");
-	private  ImageView img = new ImageView(pic);
+	private  transient   Image pic = new Image("file:images/colourchanger.png");
+	private  transient ImageView img = new ImageView(pic);
 	private static int width = 60;
 
 	public Colourchanger() throws FileNotFoundException{
@@ -1558,8 +1564,8 @@ abstract class Obstacle implements Serializable{
 class Obstacle1 extends Obstacle{
 	
 	private static final long serialVersionUID = 220L;
-	private  transient Image pic = new Image("file:images/obstacle1.png");
-	private  ImageView img = new ImageView(pic);
+	private   transient Image pic = new Image("file:images/obstacle1.png");
+	private   transient  ImageView img = new ImageView(pic);
 	private static int width = 250;
 	
 	public Obstacle1 () throws FileNotFoundException{
