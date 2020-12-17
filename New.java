@@ -637,7 +637,6 @@ class Game extends Application implements Serializable{
 		l.setLayoutX(60);
 		l.setLayoutY(220);
 		root.getChildren().add( l );
-		//Label l2= new Label();
 		t2.setFont(Font.font ("Montserrat", 15));
 		t2.setFill(Color.WHITE);
 		root.getChildren().addAll(t, t2);
@@ -753,24 +752,32 @@ class Game extends Application implements Serializable{
         	star1[i] = new Star();
         }
         //Group 
+        
         root = new Group();
         theScene = new Scene( root , Main.screenWidth, Main.screenHeight );
         theStage.setScene( theScene );
         canvas = new Canvas( Main.screenWidth, Main.screenHeight );
         stack1.setStyle("-fx-background-color: #202020");
-        pane.setId("pane");
-	    pane.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        stack1.setId("panegame");
+	    stack1.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
         stack1.getChildren().add(canvas);
         root.getChildren().add( stack1 );
+        
         t = new Text();
 		t = new Text (50, 100, "Score:\n\n" + player.getScore());
-		t.setFont(Font.font ("Montserrat", 15));
+		l2 = new Label(Integer.toString(player.getScore()));
+		l2.setTextFill(Color.WHITE);
+		l2.setLayoutX(60);
+		l2.setLayoutY(120);
+		root.getChildren().add( l2 );
 		t.setFill(Color.WHITE);
 		t2 = new Text();
-		t2 = new Text (50, 200, "Lives left:\n\n" + player.getCollectedStars());
-		t2.setFont(Font.font ("Montserrat", 15));
-		t2.setFill(Color.WHITE);
-		root.getChildren().addAll(t, t2);
+		t2 = new Text (50, 200, "Lives left:\n\n" );
+		l = new Label(Integer.toString(player.getCollectedStars()));
+		l.setTextFill(Color.WHITE);
+		l.setLayoutX(60);
+		l.setLayoutY(220);
+		root.getChildren().add( l );
         
         button2 = new Button("Pause");
         button2.setLayoutX(1000);
@@ -846,7 +853,6 @@ class Game extends Application implements Serializable{
 	            	if (angle2>2000 && angle2<3000) {
 	            		stack4.getChildren().get(0).setVisible(true);}
 	            	if (angle2>2000) {
-	            		//stack4.getChildren().get(0).setVisible(true);
 	            		kk=7;
 	            		cc=8;
 	            	}
@@ -916,7 +922,6 @@ class Game extends Application implements Serializable{
 						 player.setScore(player.getScore()+1);
 						 l2.setText(Integer.toString(player.getScore()));
 						 if(playsounds == true) {
-	                    		//String s = "scorepointsound.wav";
 	                    		String s = "starsound.wav";
 	                    		media = new Media(new File(s).toURI().toString()); 
 	                    		mediaPlayer = new MediaPlayer(media); 
@@ -1067,7 +1072,6 @@ class Game extends Application implements Serializable{
         		}
         		else {
         			y=y+0;
-        		
 	        		ball.setY(ball.getY()+70);
 	        		player.resurrect();
 	        		l.setText(Integer.toString(player.getCollectedStars()));
@@ -1077,12 +1081,10 @@ class Game extends Application implements Serializable{
 	        		canvas.setVisible(true);
 	        		try {
 	        		    Robot r = new Robot();
-	        		    //there are other methods such as positioning mouse and mouseclicks etc.
 	        		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
 	        		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
 	        		 } catch (AWTException e) {
-	        		    //Teleport penguins  
-	        		 }
+	        		 	}
 	        		pause = !pause;
 	        	}
         	}
@@ -1094,11 +1096,9 @@ class Game extends Application implements Serializable{
 					canvas.requestFocus();
 	        		try {
 	        		    Robot r = new Robot();
-	        		    //there are other methods such as positioning mouse and mouseclicks etc.
 	        		    r.keyPress(java.awt.event.KeyEvent.VK_UP);
 	        		    r.keyRelease(java.awt.event.KeyEvent.VK_UP);
 	        		 } catch (AWTException e) {
-	        		    //Teleport penguins  
 	        		 }
 	        		pause = !pause;
 				} catch (FileNotFoundException e) {
@@ -1108,7 +1108,6 @@ class Game extends Application implements Serializable{
         	else if(src.getText().equals("Exit game")) {
         		pane.getChildren().clear();
         		stage.close();
-        		//Platform.exit(); // or displayMainmenu
         		homepage.displayMainmenu(stage, pane, scene);
         	}
         }
@@ -1875,3 +1874,5 @@ class Obstacle6 extends Obstacle {
 	}
 	
 }
+
+
